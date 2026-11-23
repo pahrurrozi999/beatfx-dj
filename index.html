@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090812">
+<title>BEATFX DJ — Music Visualizer & DJ Video Maker</title>
+<style>
+:root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:auto;padding:18px 16px 40px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:25px}.brand{display:flex;align-items:center;gap:11px}.logo{width:48px;height:48px;border:1.5px solid #bca4ff;border-radius:15px;display:grid;place-items:center;color:#d9c7ff;box-shadow:0 0 22px #804cff88;background:#17112d}.logo svg{width:35px}.brand h1{font-size:19px;letter-spacing:1.4px;margin:0}.brand small{color:var(--muted);font-size:11px}.pro{border:1px solid #7543b9;background:#24143c;color:#e5caff;border-radius:30px;padding:9px 14px;font-weight:700}
+.hero{padding:25px 22px;border:1px solid #46316c;border-radius:24px;background:linear-gradient(120deg,#21133d,#101426 60%,#101d34);box-shadow:0 12px 45px #0008;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:220px;height:220px;border-radius:50%;right:-65px;top:-95px;background:#9d4dff33;filter:blur(5px)}.eyebrow{color:#c7a5ff;font-size:12px;font-weight:800;letter-spacing:2px}.hero h2{font-size:clamp(26px,5vw,42px);line-height:1.1;margin:10px 0}.hero p{color:#c5bfd6;max-width:580px;margin:0 0 20px}.primary{border:0;border-radius:13px;padding:12px 18px;color:#fff;font-weight:800;background:linear-gradient(100deg,#843cff,#287dff);box-shadow:0 5px 20px #713dff55}.secondary{border:1px solid #51436f;border-radius:12px;padding:11px 15px;color:#eee;background:#171329;font-weight:700}
+.section{margin-top:27px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:13px}.section h3{font-size:17px;margin:0}.section-head span{font-size:12px;color:var(--muted)}
+.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick button{min-height:82px;text-align:left;padding:13px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1a1530,#100f1b);color:#fff}.quick b{display:block;font-size:13px;margin-top:7px}.quick i{font-style:normal;font-size:21px;color:#c69bff}
+.templates{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.template{border:1px solid var(--line);border-radius:17px;background:#12101f;padding:10px;text-align:left;color:#fff;min-width:0}.template.active{border-color:var(--blue);box-shadow:0 0 0 1px #19c8ff55,0 0 22px #19c8ff22}.art{height:115px;border-radius:12px;display:grid;place-items:center;overflow:hidden;position:relative;background:radial-gradient(circle at center,#372064,#090914 70%)}.art.glass{background:linear-gradient(135deg,#5b5a67,#15131d 55%,#2b1c42)}.art.reflection{background:linear-gradient(#100b1c,#25132b 65%,#8c4a27)}.art.neon{background:radial-gradient(circle,#00536a,#10102d 65%)}.music-card{width:78%;height:68px;border:1px solid #ffffff80;border-radius:12px;background:#ffffff18;backdrop-filter:blur(8px);padding:10px;box-shadow:0 0 22px #8e50ff55}.bars{height:23px;display:flex;align-items:center;gap:3px;justify-content:center}.bars i{width:3px;border-radius:5px;background:linear-gradient(#29d9ff,#ba5cff);height:var(--h)}.art-label{font-size:10px;color:#fff;margin-top:5px}.template strong{display:block;font-size:13px;margin:9px 2px 2px}.template small{color:var(--muted);font-size:11px;margin-left:2px}
+.workspace{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.preview,.controls{background:#11101d;border:1px solid var(--line);border-radius:18px;padding:14px}.preview-screen{aspect-ratio:16/9;min-height:190px;border-radius:13px;background:radial-gradient(circle at 50% 55%,#28125b,#080711 68%);display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #3d2c63}.preview-screen canvas{position:absolute;inset:0;width:100%;height:100%}.preview-info{position:relative;z-index:1;text-align:center;text-shadow:0 2px 10px #000}.preview-info b{display:block;font-size:clamp(14px,2vw,22px)}.preview-info small{color:#c6b8e8}.control-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #51436f;background:#1a1630;padding:10px 13px;border-radius:11px;font-size:12px;font-weight:700}.file-label input{display:none}.track{margin-top:12px;color:var(--muted);font-size:12px}.track audio{width:100%;height:35px;margin-top:6px}.controls label{display:block;color:#c8c0d8;font-size:12px;margin:13px 0 6px}.controls input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#090812;color:white}.controls input[type=color]{width:100%;height:38px;background:#090812;border:1px solid var(--line);border-radius:9px}.hint{font-size:11px;color:var(--muted);line-height:1.5}.footer{text-align:center;color:#77718a;font-size:11px;margin-top:28px}
+@media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-label="BEATFX DJ logo">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 34V28a23 23 0 0 1 46 0v6"/><path d="M9 31h7a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5h-2A5 5 0 0 1 9 48V31Zm46 0h-7a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h2a5 5 0 0 0 5-5V31Z"/><path d="M23 40h5l3-7 5 16 4-12 3 5h4"/></svg>
+    </div>
+    <div><h1>BEATFX DJ</h1><small>MUSIC VISUALIZER & DJ VIDEO MAKER</small></div>
+  </div>
+  <button class="pro" id="proBtn">✦ PRO</button>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">CREATE • FEEL • VISUALIZE</div>
+  <h2>Turn your music<br>into a visual experience.</h2>
+  <p>Buat visualizer musik, Music Card, dan efek DJ yang bergerak mengikuti irama lagu.</p>
+  <button class="primary" id="startBtn">＋ Buat Proyek Baru</button>
+</section>
+
+<section class="section">
+  <div class="section-head"><h3>Studio</h3><span>Pilih fitur untuk mulai</span></div>
+  <div class="quick">
+    <button data-jump="workspace"><i>◉</i><b>Music Visualizer</b></button>
+    <button data-jump="templates"><i>▣</i><b>Music Card</b></button>
+    <button data-jump="effects"><i>✧</i><b>Beat Effects</b></button>
+    <button data-jump="projects"><i>▤</i><b>Projects</b></button>
+  </div>
+</section>
+
+<section class="section" id="templates">
+  <div class="section-head"><h3>Music Card Templates</h3><span>4 gaya awal</span></div>
+  <div class="templates">
+    <button class="template active" data-template="Glass Music"><div class="art glass"><div class="music-card"><div style="font-size:10px">♫ &nbsp; YOUR MUSIC</div><div class="bars"><i style="--h:9px"></i><i style="--h:18px"></i><i style="--h:13px"></i><i style="--h:22px"></i><i style="--h:11px"></i><i style="--h:19px"></i><i style="--h:8px"></i></div></div></div><strong>Glass Music</strong><small>Transparan seperti kaca</small></button>
+    <button class="template" data-template="3D Music Card"><div class="art"><div class="music-card" style="transform:perspective(300px) rotateY(-9deg);box-shadow:0 12px 24px #000"><div style="font-size:10px">◉ &nbsp; 3D MUSIC</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>3D Music Card</strong><small>Kartu musik melayang</small></button>
+    <button class="template" data-template="Reflection Music"><div class="art reflection"><div class="music-card" style="border-color:#e6b56d;background:#180e1dcc;box-shadow:0 10px 25px #ff9e3b55"><div style="font-size:10px;text-align:center">REFLECTION</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>Reflection Music</strong><small>Efek pantulan cahaya</small></button>
+    <button class="template" data-template="DJ Neon Card"><div class="art neon"><div class="music-card" style="border-color:#31eaff;box-shadow:0 0 25px #00cfff88"><div style="font-size:10px;color:#9ff5ff;text-align:center">DJ NEON</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>DJ Neon Card</strong><small>Neon biru dan cyan</small></button>
+  </div>
+</section>
+
+<section class="section" id="workspace">
+  <div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Glass Music</span></div>
+  <div class="workspace">
+    <div class="preview">
+      <div class="preview-screen"><canvas id="visualizer"></canvas><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
+      <div class="control-row">
+        <label class="file-label">♫ Upload Musik <input id="audioFile" type="file" accept="audio/*"></label>
+        <label class="file-label">▧ Foto Background <input id="imageFile" type="file" accept="image/*"></label>
+        <button class="secondary" id="playBtn">▶ Play</button>
+      </div>
+      <div class="track"><div id="fileName">Belum ada musik dipilih</div><audio id="audio" controls></audio></div>
+    </div>
+    <div class="controls">
+      <h3 style="margin:2px 0 8px;font-size:15px">Pengaturan Music Card</h3>
+      <label for="titleInput">Judul lagu</label><input id="titleInput" type="text" value="BEATFX DJ" placeholder="Judul lagu">
+      <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
+      <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
+      <p class="hint">Ini adalah fondasi awal studio. Upload musik dan coba visualizer. Analisis beat otomatis, layer editor, efek lanjutan, dan ekspor MP4 akan kita bangun pada tahap berikutnya.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="effects">
+  <div class="section-head"><h3>Beat Effects</h3><span>Segera dikembangkan</span></div>
+  <div class="quick">
+    <button><i>✦</i><b>Magic Particles</b></button><button><i>❄</i><b>Snow</b></button><button><i>⚡</i><b>Electric Storm</b></button><button><i>✧</i><b>Galaxy</b></button>
+  </div>
+</section>
+<section class="section" id="projects">
+  <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
+  <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
+</section>
+<div class="footer">BEATFX DJ • Build 0.1 • Made for music creators</div>
+</div>
+<script>
+const audio=document.getElementById('audio'), fileInput=document.getElementById('audioFile'), canvas=document.getElementById('visualizer'), ctx=canvas.getContext('2d');
+let audioContext=null, analyser=null, source=null, data=null, currentUrl=null, accent='#9b55ff', running=false;
+function resizeCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
+new ResizeObserver(resizeCanvas).observe(canvas);resizeCanvas();
+function draw(){
+ const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);
+ let values;
+ if(analyser&& !audio.paused){analyser.getByteFrequencyData(data);values=data}else{values=Array.from({length:64},(_,i)=>18+Math.abs(Math.sin(Date.now()/430+i*.42))*32)}
+ const cx=w/2,cy=h/2+15,r=Math.min(w,h)*.23;
+ ctx.save();ctx.translate(cx,cy);ctx.strokeStyle=accent;ctx.shadowColor=accent;ctx.shadowBlur=15;ctx.lineWidth=2;
+ ctx.beginPath();for(let i=0;i<96;i++){let a=i/96*Math.PI*2;let v=values[Math.floor(i/96*values.length)]/255;let rr=r+v*34;let x=Math.cos(a)*rr,y=Math.sin(a)*rr;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.stroke();
+ ctx.beginPath();ctx.arc(0,0,r*.68,0,Math.PI*2);ctx.strokeStyle=accent+'99';ctx.lineWidth=1;ctx.stroke();
+ ctx.restore();requestAnimationFrame(draw)
+}
+draw();
+fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=URL.createObjectURL(f);audio.src=currentUrl;document.getElementById('fileName').textContent=f.name;document.getElementById('songTitle').textContent=f.name.replace(/\.[^.]+$/,'');document.getElementById('titleInput').value=f.name.replace(/\.[^.]+$/,'');});
+document.getElementById('playBtn').addEventListener('click',async()=>{if(!audio.src){alert('Upload file musik terlebih dahulu.');return}if(!audioContext){audioContext=new(window.AudioContext||window.webkitAudioContext)();analyser=audioContext.createAnalyser();analyser.fftSize=256;source=audioContext.createMediaElementSource(audio);source.connect(analyser);analyser.connect(audioContext.destination);data=new Uint8Array(analyser.frequencyBinCount)}if(audioContext.state==='suspended')await audioContext.resume();if(audio.paused){await audio.play();document.getElementById('playBtn').textContent='Ⅱ Pause'}else{audio.pause();document.getElementById('playBtn').textContent='▶ Play'}});
+audio.addEventListener('ended',()=>document.getElementById('playBtn').textContent='▶ Play');
+document.getElementById('titleInput').addEventListener('input',e=>document.getElementById('songTitle').textContent=e.target.value||'BEATFX DJ');
+document.getElementById('artistInput').addEventListener('input',e=>document.getElementById('songArtist').textContent=e.target.value||'Your Artist');
+document.getElementById('accentInput').addEventListener('input',e=>{accent=e.target.value});
+document.querySelectorAll('.template').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.template').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('selectedTemplate').textContent=btn.dataset.template}));
+document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>document.getElementById(btn.dataset.jump).scrollIntoView({behavior:'smooth'})));
+document.getElementById('startBtn').addEventListener('click',()=>document.getElementById('workspace').scrollIntoView({behavior:'smooth'}));
+document.getElementById('proBtn').addEventListener('click',()=>alert('Paket Free dan Pro akan kita aktifkan pada tahap pengembangan berikutnya.'));
+document.getElementById('imageFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const w=canvas.clientWidth,h=canvas.clientHeight;c.width=w;c.height=h;const g=c.getContext('2d');const scale=Math.max(w/img.width,h/img.height);g.drawImage(img,(w-img.width*scale)/2,(h-img.height*scale)/2,img.width*scale,img.height*scale);canvas.style.backgroundImage=`url(${url})`;canvas.style.backgroundSize='cover';canvas.style.backgroundPosition='center'};img.src=url;});
+</script>
+</body>
+</html>
