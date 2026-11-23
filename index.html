@@ -79,9 +79,16 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 </section>
 
 <section class="section" id="effects">
-  <div class="section-head"><h3>Beat Effects</h3><span>Segera dikembangkan</span></div>
+  <div class="section-head"><h3>Beat Effects</h3><span id="effectSectionStatus">Pilih efek untuk preview</span></div>
   <div class="quick">
-    <button><i>✦</i><b>Magic Particles</b></button><button><i>❄</i><b>Snow</b></button><button><i>⚡</i><b>Electric Storm</b></button><button><i>✧</i><b>Galaxy</b></button>
+    <button id="magicParticlesBtn" type="button" aria-pressed="false"><i>✦</i><b>Magic Particles</b></button>
+    <button type="button" disabled style="opacity:.55"><i>❄</i><b>Snow — segera</b></button>
+    <button type="button" disabled style="opacity:.55"><i>⚡</i><b>Electric Storm — segera</b></button>
+    <button type="button" disabled style="opacity:.55"><i>✧</i><b>Galaxy — segera</b></button>
+  </div>
+  <div class="effect-controls">
+    <label><input id="particleIntensity" type="range" min="10" max="100" value="55"> Intensitas <b id="particleIntensityValue">55%</b></label>
+    <span class="effect-status" id="particleStatus">Magic Particles: OFF</span>
   </div>
 </section>
 <section class="section" id="projects">
@@ -92,7 +99,10 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 </div>
 <script>
 const audio=document.getElementById('audio'), fileInput=document.getElementById('audioFile'), canvas=document.getElementById('visualizer'), ctx=canvas.getContext('2d');
-let audioContext=null, analyser=null, source=null, data=null, currentUrl=null, accent='#9b55ff', running=false;\nlet particlesEnabled=false, particleIntensity=55, particles=[];\nconst particleColors=['#b879ff','#35d7ff','#ff5bd5','#ffffff'];\nfunction seedParticles(w,h){particles=Array.from({length:Math.round(18+particleIntensity*.85)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.55,vy:-(.25+Math.random()*.8),size:1+Math.random()*2.2,phase:Math.random()*Math.PI*2,color:particleColors[Math.floor(Math.random()*particleColors.length)]}));}
+let audioContext=null, analyser=null, source=null, data=null, currentUrl=null, accent='#9b55ff', running=false;
+let particlesEnabled=false, particleIntensity=55, particles=[];
+const particleColors=['#b879ff','#35d7ff','#ff5bd5','#ffffff'];
+function seedParticles(w,h){particles=Array.from({length:Math.round(18+particleIntensity*.85)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.55,vy:-(.25+Math.random()*.8),size:1+Math.random()*2.2,phase:Math.random()*Math.PI*2,color:particleColors[Math.floor(Math.random()*particleColors.length)]}));}
 function resizeCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
 new ResizeObserver(resizeCanvas).observe(canvas);resizeCanvas();
 function draw(){
@@ -103,7 +113,22 @@ function draw(){
  ctx.save();ctx.translate(cx,cy);ctx.strokeStyle=accent;ctx.shadowColor=accent;ctx.shadowBlur=15;ctx.lineWidth=2;
  ctx.beginPath();for(let i=0;i<96;i++){let a=i/96*Math.PI*2;let v=values[Math.floor(i/96*values.length)]/255;let rr=r+v*34;let x=Math.cos(a)*rr,y=Math.sin(a)*rr;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.stroke();
  ctx.beginPath();ctx.arc(0,0,r*.68,0,Math.PI*2);ctx.strokeStyle=accent+'99';ctx.lineWidth=1;ctx.stroke();
- ctx.restore();requestAnimationFrame(draw)
+ ctx.restore();
+ if(particlesEnabled){
+   const bass = analyser && !audio.paused ? values.slice(0, Math.max(1, Math.floor(values.length*.18))).reduce((a,b)=>a+b,0)/(Math.max(1,Math.floor(values.length*.18))*255) : .25;
+   if(particles.length < Math.round(18+particleIntensity*.85)) seedParticles(w,h);
+   particles.forEach(p=>{
+     p.x += p.vx + Math.sin(Date.now()/900+p.phase)*.25;
+     p.y += p.vy*(.65+bass*2);
+     if(p.y < -8){p.y=h+8;p.x=Math.random()*w}
+     if(p.x < -8)p.x=w+8; if(p.x>w+8)p.x=-8;
+     ctx.beginPath();ctx.fillStyle=p.color;ctx.globalAlpha=.45+bass*.5;
+     ctx.shadowColor=p.color;ctx.shadowBlur=7+bass*12;
+     ctx.arc(p.x,p.y,p.size+bass*1.5,0,Math.PI*2);ctx.fill();
+   });
+   ctx.globalAlpha=1;ctx.shadowBlur=0;
+ }
+ requestAnimationFrame(draw)
 }
 draw();
 fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=URL.createObjectURL(f);audio.src=currentUrl;document.getElementById('fileName').textContent=f.name;document.getElementById('songTitle').textContent=f.name.replace(/\.[^.]+$/,'');document.getElementById('titleInput').value=f.name.replace(/\.[^.]+$/,'');});
