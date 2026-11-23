@@ -73,7 +73,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
       <label for="titleInput">Judul lagu</label><input id="titleInput" type="text" value="BEATFX DJ" placeholder="Judul lagu">
       <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
       <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
-      <p class="hint">Ini adalah fondasi awal studio. Upload musik dan coba visualizer. Analisis beat otomatis, layer editor, efek lanjutan, dan ekspor MP4 akan kita bangun pada tahap berikutnya.</p>
+      <p class="hint">Visualizer membaca frekuensi bass secara real-time untuk mendeteksi hentakan beat. Atur sensitivitas dan intensitas efek sesuai lagu.</p>
     </div>
   </div>
 </section>
@@ -88,7 +88,9 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   </div>
   <div class="effect-controls">
     <label><input id="particleIntensity" type="range" min="10" max="100" value="55"> Intensitas <b id="particleIntensityValue">55%</b></label>
+    <label><input id="beatSensitivity" type="range" min="20" max="100" value="70"> Sensitivitas beat <b id="beatSensitivityValue">70%</b></label>
     <span class="effect-status" id="particleStatus">Magic Particles: OFF</span>
+    <span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
   </div>
 </section>
 <section class="section" id="projects">
@@ -98,65 +100,423 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 <div class="footer">BEATFX DJ • Build 0.1 • Made for music creators</div>
 </div>
 <script>
-const audio=document.getElementById('audio'), fileInput=document.getElementById('audioFile'), canvas=document.getElementById('visualizer'), ctx=canvas.getContext('2d');
-let audioContext=null, analyser=null, source=null, data=null, currentUrl=null, accent='#9b55ff', running=false;
-let particlesEnabled=false, particleIntensity=55, particles=[];
-const particleColors=['#b879ff','#35d7ff','#ff5bd5','#ffffff'];
-function seedParticles(w,h){particles=Array.from({length:Math.round(18+particleIntensity*.85)},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.55,vy:-(.25+Math.random()*.8),size:1+Math.random()*2.2,phase:Math.random()*Math.PI*2,color:particleColors[Math.floor(Math.random()*particleColors.length)]}));}
-function resizeCanvas(){const r=canvas.getBoundingClientRect();const dpr=Math.min(devicePixelRatio||1,2);canvas.width=Math.max(1,Math.floor(r.width*dpr));canvas.height=Math.max(1,Math.floor(r.height*dpr));ctx.setTransform(dpr,0,0,dpr,0,0)}
-new ResizeObserver(resizeCanvas).observe(canvas);resizeCanvas();
-function draw(){
- const w=canvas.clientWidth,h=canvas.clientHeight;ctx.clearRect(0,0,w,h);
- let values;
- if(analyser&& !audio.paused){analyser.getByteFrequencyData(data);values=data}else{values=Array.from({length:64},(_,i)=>18+Math.abs(Math.sin(Date.now()/430+i*.42))*32)}
- const cx=w/2,cy=h/2+15,r=Math.min(w,h)*.23;
- ctx.save();ctx.translate(cx,cy);ctx.strokeStyle=accent;ctx.shadowColor=accent;ctx.shadowBlur=15;ctx.lineWidth=2;
- ctx.beginPath();for(let i=0;i<96;i++){let a=i/96*Math.PI*2;let v=values[Math.floor(i/96*values.length)]/255;let rr=r+v*34;let x=Math.cos(a)*rr,y=Math.sin(a)*rr;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}ctx.closePath();ctx.stroke();
- ctx.beginPath();ctx.arc(0,0,r*.68,0,Math.PI*2);ctx.strokeStyle=accent+'99';ctx.lineWidth=1;ctx.stroke();
- ctx.restore();
- if(particlesEnabled){
-   const bass = analyser && !audio.paused ? values.slice(0, Math.max(1, Math.floor(values.length*.18))).reduce((a,b)=>a+b,0)/(Math.max(1,Math.floor(values.length*.18))*255) : .25;
-   if(particles.length < Math.round(18+particleIntensity*.85)) seedParticles(w,h);
-   particles.forEach(p=>{
-     p.x += p.vx + Math.sin(Date.now()/900+p.phase)*.25;
-     p.y += p.vy*(.65+bass*2);
-     if(p.y < -8){p.y=h+8;p.x=Math.random()*w}
-     if(p.x < -8)p.x=w+8; if(p.x>w+8)p.x=-8;
-     ctx.beginPath();ctx.fillStyle=p.color;ctx.globalAlpha=.45+bass*.5;
-     ctx.shadowColor=p.color;ctx.shadowBlur=7+bass*12;
-     ctx.arc(p.x,p.y,p.size+bass*1.5,0,Math.PI*2);ctx.fill();
-   });
-   ctx.globalAlpha=1;ctx.shadowBlur=0;
- }
- requestAnimationFrame(draw)
+const audio = document.getElementById('audio');
+const fileInput = document.getElementById('audioFile');
+const canvas = document.getElementById('visualizer');
+const ctx = canvas.getContext('2d');
+
+let audioContext = null;
+let analyser = null;
+let source = null;
+let frequencyData = null;
+let currentUrl = null;
+let accent = '#9b55ff';
+
+let particlesEnabled = false;
+let particleIntensity = 55;
+let beatSensitivity = 70;
+let particles = [];
+
+let bassEnergy = 0;
+let bassAverage = 0.035;
+let previousBassEnergy = 0;
+let beatPulse = 0;
+let lastBeatAt = 0;
+let lastBeatUiAt = 0;
+let lastFrameAt = 0;
+let beatCount = 0;
+
+const particleColors = ['#b879ff', '#35d7ff', '#ff5bd5', '#ffffff'];
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value));
 }
-draw();
-fileInput.addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;if(currentUrl)URL.revokeObjectURL(currentUrl);currentUrl=URL.createObjectURL(f);audio.src=currentUrl;document.getElementById('fileName').textContent=f.name;document.getElementById('songTitle').textContent=f.name.replace(/\.[^.]+$/,'');document.getElementById('titleInput').value=f.name.replace(/\.[^.]+$/,'');});
-document.getElementById('playBtn').addEventListener('click',async()=>{if(!audio.src){alert('Upload file musik terlebih dahulu.');return}if(!audioContext){audioContext=new(window.AudioContext||window.webkitAudioContext)();analyser=audioContext.createAnalyser();analyser.fftSize=256;source=audioContext.createMediaElementSource(audio);source.connect(analyser);analyser.connect(audioContext.destination);data=new Uint8Array(analyser.frequencyBinCount)}if(audioContext.state==='suspended')await audioContext.resume();if(audio.paused){await audio.play();document.getElementById('playBtn').textContent='Ⅱ Pause'}else{audio.pause();document.getElementById('playBtn').textContent='▶ Play'}});
-audio.addEventListener('ended',()=>document.getElementById('playBtn').textContent='▶ Play');
-document.getElementById('titleInput').addEventListener('input',e=>document.getElementById('songTitle').textContent=e.target.value||'BEATFX DJ');
-document.getElementById('artistInput').addEventListener('input',e=>document.getElementById('songArtist').textContent=e.target.value||'Your Artist');
-document.getElementById('accentInput').addEventListener('input',e=>{accent=e.target.value});
-document.querySelectorAll('.template').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.template').forEach(x=>x.classList.remove('active'));btn.classList.add('active');document.getElementById('selectedTemplate').textContent=btn.dataset.template}));
-document.querySelectorAll('[data-jump]').forEach(btn=>btn.addEventListener('click',()=>document.getElementById(btn.dataset.jump).scrollIntoView({behavior:'smooth'})));
-document.getElementById('startBtn').addEventListener('click',()=>document.getElementById('workspace').scrollIntoView({behavior:'smooth'}));
-document.getElementById('proBtn').addEventListener('click',()=>alert('Paket Free dan Pro akan kita aktifkan pada tahap pengembangan berikutnya.'));
-const magicBtn=document.getElementById('magicParticlesBtn');
-const particleSlider=document.getElementById('particleIntensity');
-magicBtn.addEventListener('click',()=>{
-  particlesEnabled=!particlesEnabled;
-  magicBtn.classList.toggle('effect-active',particlesEnabled);
-  magicBtn.setAttribute('aria-pressed',String(particlesEnabled));
-  document.getElementById('particleStatus').textContent='Magic Particles: '+(particlesEnabled?'ON':'OFF');
-  document.getElementById('effectSectionStatus').textContent=particlesEnabled?'Magic Particles aktif':'Magic Particles siap dicoba';
-  if(particlesEnabled)seedParticles(canvas.clientWidth,canvas.clientHeight);
+
+function seedParticles(width, height) {
+  const count = Math.round(18 + particleIntensity * 0.85);
+  particles = Array.from({ length: count }, () => ({
+    x: Math.random() * width,
+    y: Math.random() * height,
+    vx: (Math.random() - 0.5) * 0.45,
+    vy: -(0.2 + Math.random() * 0.65),
+    size: 1 + Math.random() * 2.2,
+    phase: Math.random() * Math.PI * 2,
+    color: particleColors[Math.floor(Math.random() * particleColors.length)],
+    boost: 0,
+    burstX: 0,
+    burstY: 0
+  }));
+}
+
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+  canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (particlesEnabled) seedParticles(rect.width, rect.height);
+}
+
+if ('ResizeObserver' in window) {
+  new ResizeObserver(resizeCanvas).observe(canvas);
+} else {
+  window.addEventListener('resize', resizeCanvas);
+}
+resizeCanvas();
+
+/*
+ * The audio graph is initialized when the native audio control starts playback,
+ * as well as when the custom Play button is pressed. This is important on mobile:
+ * otherwise the song plays normally while the visualizer receives no audio data.
+ */
+async function ensureAudioGraph() {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) {
+    throw new Error('Browser ini belum mendukung Web Audio API.');
+  }
+
+  if (!audioContext) {
+    audioContext = new AudioContextClass();
+  }
+
+  if (!analyser) {
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.16;
+    analyser.minDecibels = -90;
+    analyser.maxDecibels = -18;
+
+    source = audioContext.createMediaElementSource(audio);
+    source.connect(analyser);
+    analyser.connect(audioContext.destination);
+
+    frequencyData = new Uint8Array(analyser.frequencyBinCount);
+  }
+
+  if (audioContext.state === 'suspended') {
+    await audioContext.resume();
+  }
+}
+
+function readAudioBands() {
+  if (!analyser || !frequencyData || audio.paused) {
+    bassEnergy *= 0.88;
+    previousBassEnergy *= 0.92;
+    return { bass: bassEnergy, mid: 0, treble: 0, beat: false, strength: 0 };
+  }
+
+  analyser.getByteFrequencyData(frequencyData);
+
+  const binHz = audioContext.sampleRate / analyser.fftSize;
+  const averageBand = (lowHz, highHz) => {
+    const first = Math.max(1, Math.floor(lowHz / binHz));
+    const last = Math.min(frequencyData.length - 1, Math.ceil(highHz / binHz));
+    let total = 0;
+    let count = 0;
+    for (let i = first; i <= last; i++) {
+      total += frequencyData[i] / 255;
+      count++;
+    }
+    return count ? total / count : 0;
+  };
+
+  // Low band is focused on kick/bass energy; mid and treble are used by the spectrum.
+  const rawBass = averageBand(35, 160);
+  const mid = averageBand(160, 2000);
+  const treble = averageBand(2000, 9000);
+
+  // Fast envelope for transients, slower moving average as an adaptive noise floor.
+  bassEnergy += (rawBass - bassEnergy) * 0.42;
+  bassAverage += (bassEnergy - bassAverage) * 0.018;
+
+  const rise = bassEnergy - previousBassEnergy;
+  const sensitivity = beatSensitivity / 100;
+  const adaptiveThreshold = Math.max(0.035, bassAverage * (1.55 - sensitivity * 0.004));
+  const minimumRise = 0.025 - sensitivity * 0.00013;
+  const now = performance.now();
+
+  let beat = false;
+  let strength = 0;
+
+  // A rising bass transient and a short cooldown prevent continuous bass from
+  // being mistaken for a new beat on every animation frame.
+  if (
+    bassEnergy > adaptiveThreshold &&
+    rise > minimumRise &&
+    now - lastBeatAt > 245
+  ) {
+    beat = true;
+    strength = clamp(0.55 + (bassEnergy - adaptiveThreshold) * 2.8, 0.55, 1);
+    lastBeatAt = now;
+    beatCount++;
+
+    if (now - lastBeatUiAt > 220) {
+      const status = document.getElementById('beatStatus');
+      status.textContent = 'Beat Sync: terdeteksi · ' + beatCount;
+      lastBeatUiAt = now;
+    }
+  }
+
+  previousBassEnergy = bassEnergy;
+  return { bass: bassEnergy, mid, treble, beat, strength };
+}
+
+function draw() {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  const now = performance.now();
+  const delta = lastFrameAt ? Math.min(40, now - lastFrameAt) : 16;
+  lastFrameAt = now;
+
+  ctx.clearRect(0, 0, width, height);
+
+  const bands = readAudioBands();
+  const values = frequencyData || new Uint8Array(128);
+  const centerX = width / 2;
+  const centerY = height / 2 + 15;
+  const radius = Math.min(width, height) * 0.23;
+
+  if (bands.beat) {
+    beatPulse = Math.max(beatPulse, bands.strength);
+    if (particlesEnabled) {
+      particles.forEach(p => {
+        const dx = p.x - centerX;
+        const dy = p.y - centerY;
+        const distance = Math.max(1, Math.hypot(dx, dy));
+        p.burstX = (dx / distance) * (0.9 + bands.strength * 1.7);
+        p.burstY = (dy / distance) * (0.9 + bands.strength * 1.7);
+        p.boost = bands.strength;
+      });
+    }
+  }
+
+  // Beat pulse has a quick attack and smooth release.
+  beatPulse *= Math.exp(-delta / 190);
+
+  ctx.save();
+  ctx.translate(centerX, centerY);
+  ctx.strokeStyle = accent;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 13 + bands.bass * 22 + beatPulse * 22;
+  ctx.lineWidth = 2;
+
+  ctx.beginPath();
+  for (let i = 0; i < 112; i++) {
+    const angle = (i / 112) * Math.PI * 2;
+    const dataIndex = Math.min(values.length - 1, Math.floor((i / 112) * values.length * 0.88));
+    const spectrum = values[dataIndex] / 255;
+    const kickExpansion = bands.bass * 16 + beatPulse * 31;
+    const radialDistance = radius + spectrum * 27 + kickExpansion;
+    const x = Math.cos(angle) * radialDistance;
+    const y = Math.sin(angle) * radialDistance;
+    if (i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  ctx.stroke();
+
+  // Inner ring responds more directly to bass/kick transients.
+  ctx.beginPath();
+  ctx.arc(0, 0, radius * 0.68 + bands.bass * 8 + beatPulse * 15, 0, Math.PI * 2);
+  ctx.strokeStyle = accent + 'aa';
+  ctx.lineWidth = 1.5 + beatPulse * 1.4;
+  ctx.stroke();
+  ctx.restore();
+
+  if (particlesEnabled) {
+    const expectedCount = Math.round(18 + particleIntensity * 0.85);
+    if (particles.length !== expectedCount) seedParticles(width, height);
+
+    particles.forEach(p => {
+      p.phase += 0.025 + bands.treble * 0.06;
+      p.x += p.vx + Math.sin(p.phase) * 0.12;
+      p.y += p.vy * (0.75 + bands.bass * 1.8);
+
+      if (p.boost > 0.01) {
+        p.x += p.burstX * p.boost;
+        p.y += p.burstY * p.boost;
+        p.boost *= 0.87;
+      }
+
+      p.vx *= 0.997;
+      p.vy *= 0.999;
+
+      if (p.y < -10 || p.y > height + 10 || p.x < -10 || p.x > width + 10) {
+        p.x = Math.random() * width;
+        p.y = height + 8;
+        p.vx = (Math.random() - 0.5) * 0.45;
+        p.vy = -(0.2 + Math.random() * 0.65);
+        p.boost = 0;
+      }
+
+      const beatSize = beatPulse * 2.3 + p.boost * 1.8;
+      ctx.beginPath();
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = 0.42 + bands.bass * 0.38 + beatPulse * 0.2;
+      ctx.shadowColor = p.color;
+      ctx.shadowBlur = 6 + bands.treble * 10 + beatPulse * 13;
+      ctx.arc(p.x, p.y, p.size + beatSize, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  }
+
+  requestAnimationFrame(draw);
+}
+requestAnimationFrame(draw);
+
+// Upload a local audio file without sending it to a server.
+fileInput.addEventListener('change', event => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (currentUrl) URL.revokeObjectURL(currentUrl);
+  currentUrl = URL.createObjectURL(file);
+  audio.src = currentUrl;
+
+  const title = file.name.replace(/\.[^.]+$/, '');
+  document.getElementById('fileName').textContent = file.name;
+  document.getElementById('songTitle').textContent = title;
+  document.getElementById('titleInput').value = title;
+  document.getElementById('beatStatus').textContent = 'Beat Sync: siap menganalisis';
+  beatCount = 0;
+  bassEnergy = 0;
+  bassAverage = 0.035;
+  previousBassEnergy = 0;
+  beatPulse = 0;
 });
-particleSlider.addEventListener('input',e=>{
-  particleIntensity=Number(e.target.value);
-  document.getElementById('particleIntensityValue').textContent=particleIntensity+'%';
-  if(particlesEnabled)seedParticles(canvas.clientWidth,canvas.clientHeight);
+
+// Native audio-player playback must also initialize the audio analyser.
+audio.addEventListener('play', () => {
+  ensureAudioGraph().then(() => {
+    document.getElementById('beatStatus').textContent = 'Beat Sync: mendengarkan bass…';
+  }).catch(error => {
+    document.getElementById('beatStatus').textContent = 'Audio analysis tidak tersedia';
+    console.error('BEATFX audio graph:', error);
+  });
+  document.getElementById('playBtn').textContent = 'Ⅱ Pause';
 });
-document.getElementById('imageFile').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const url=URL.createObjectURL(f);const img=new Image();img.onload=()=>{const c=document.createElement('canvas');const w=canvas.clientWidth,h=canvas.clientHeight;c.width=w;c.height=h;const g=c.getContext('2d');const scale=Math.max(w/img.width,h/img.height);g.drawImage(img,(w-img.width*scale)/2,(h-img.height*scale)/2,img.width*scale,img.height*scale);canvas.style.backgroundImage=`url(${url})`;canvas.style.backgroundSize='cover';canvas.style.backgroundPosition='center'};img.src=url;});
+
+audio.addEventListener('pause', () => {
+  document.getElementById('playBtn').textContent = '▶ Play';
+});
+
+audio.addEventListener('ended', () => {
+  document.getElementById('playBtn').textContent = '▶ Play';
+  document.getElementById('beatStatus').textContent = 'Beat Sync: lagu selesai';
+});
+
+// Custom Play button uses the same audio graph as the native audio controls.
+document.getElementById('playBtn').addEventListener('click', async () => {
+  if (!audio.src) {
+    alert('Upload file musik terlebih dahulu.');
+    return;
+  }
+
+  try {
+    await ensureAudioGraph();
+    if (audio.paused) await audio.play();
+    else audio.pause();
+  } catch (error) {
+    document.getElementById('beatStatus').textContent = 'Gagal mengaktifkan analisis audio';
+    console.error('BEATFX playback:', error);
+    alert('Audio belum dapat dianalisis. Coba muat ulang halaman dan pilih musik lagi.');
+  }
+});
+
+document.getElementById('titleInput').addEventListener('input', event => {
+  document.getElementById('songTitle').textContent = event.target.value || 'BEATFX DJ';
+});
+
+document.getElementById('artistInput').addEventListener('input', event => {
+  document.getElementById('songArtist').textContent = event.target.value || 'Your Artist';
+});
+
+document.getElementById('accentInput').addEventListener('input', event => {
+  accent = event.target.value;
+});
+
+document.querySelectorAll('.template').forEach(button => {
+  button.addEventListener('click', () => {
+    document.querySelectorAll('.template').forEach(item => item.classList.remove('active'));
+    button.classList.add('active');
+    document.getElementById('selectedTemplate').textContent = button.dataset.template;
+  });
+});
+
+document.querySelectorAll('[data-jump]').forEach(button => {
+  button.addEventListener('click', () => {
+    document.getElementById(button.dataset.jump).scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  document.getElementById('workspace').scrollIntoView({ behavior: 'smooth' });
+});
+
+document.getElementById('proBtn').addEventListener('click', () => {
+  alert('Paket Free dan Pro akan kita aktifkan pada tahap pengembangan berikutnya.');
+});
+
+const magicButton = document.getElementById('magicParticlesBtn');
+const particleSlider = document.getElementById('particleIntensity');
+const sensitivitySlider = document.getElementById('beatSensitivity');
+
+magicButton.addEventListener('click', () => {
+  particlesEnabled = !particlesEnabled;
+  magicButton.classList.toggle('effect-active', particlesEnabled);
+  magicButton.setAttribute('aria-pressed', String(particlesEnabled));
+  document.getElementById('particleStatus').textContent = 'Magic Particles: ' + (particlesEnabled ? 'ON' : 'OFF');
+  document.getElementById('effectSectionStatus').textContent = particlesEnabled
+    ? 'Magic Particles aktif'
+    : 'Pilih efek untuk preview';
+  if (particlesEnabled) seedParticles(canvas.clientWidth, canvas.clientHeight);
+});
+
+particleSlider.addEventListener('input', event => {
+  particleIntensity = Number(event.target.value);
+  document.getElementById('particleIntensityValue').textContent = particleIntensity + '%';
+  if (particlesEnabled) seedParticles(canvas.clientWidth, canvas.clientHeight);
+});
+
+sensitivitySlider.addEventListener('input', event => {
+  beatSensitivity = Number(event.target.value);
+  document.getElementById('beatSensitivityValue').textContent = beatSensitivity + '%';
+});
+
+document.getElementById('imageFile').addEventListener('change', event => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const imageUrl = URL.createObjectURL(file);
+  const image = new Image();
+  image.onload = () => {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = width;
+    offscreen.height = height;
+    const imageContext = offscreen.getContext('2d');
+    const scale = Math.max(width / image.width, height / image.height);
+    imageContext.drawImage(
+      image,
+      (width - image.width * scale) / 2,
+      (height - image.height * scale) / 2,
+      image.width * scale,
+      image.height * scale
+    );
+    canvas.style.backgroundImage = `url(${imageUrl})`;
+    canvas.style.backgroundSize = 'cover';
+    canvas.style.backgroundPosition = 'center';
+  };
+  image.onerror = () => {
+    URL.revokeObjectURL(imageUrl);
+    alert('Foto tidak dapat dibuka. Coba pilih gambar lain.');
+  };
+  image.src = imageUrl;
+});
 </script>
 </body>
 </html>
