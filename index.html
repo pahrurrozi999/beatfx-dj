@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v0.8 — Effects Fix & Audio Response</title>
+<title>BEATFX DJ v1.0 — Orbit Effects Studio</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -76,6 +76,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .layer-action-row button{border:1px solid var(--line);border-radius:9px;background:#1a1630;color:#eee;padding:8px 10px;font-size:11px}
 .layer-action-row button.danger{border-color:#8c385f;color:#ffb6d7}
 .layer-empty{padding:11px 0;color:var(--muted);font-size:11px}
+.orbit-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding-top:11px}.orbit-controls label{margin:0!important}.orbit-controls select,.orbit-controls input{width:100%;margin-top:5px;background:#171329;color:#fff;border:1px solid var(--line);border-radius:9px;padding:8px}.orbit-controls input[type=range]{padding:0;accent-color:var(--purple)}
 @media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
@@ -229,6 +230,23 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
           <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
         </div>
       </details>
+      <details class="editor-panel" id="orbitEffectPanel">
+        <summary>✧ Efek Bentuk Mengelilingi Foto</summary>
+        <div class="editor-panel-body">
+          <label class="band-option"><input id="orbitEffectToggle" type="checkbox" checked> <span><b>Aktifkan efek orbit</b><br><small class="hint">Bentuk kecil berwarna muncul dari belakang foto dan bergerak mengikuti audio.</small></span></label>
+          <div class="orbit-controls">
+            <label>Bentuk efek
+              <select id="orbitShape"><option value="mix">Campuran bentuk</option><option value="triangle">Segitiga</option><option value="diamond">Diamond</option><option value="hexagon">Heksagon</option><option value="star">Bintang</option><option value="circle">Bulat</option></select>
+            </label>
+            <label>Warna
+              <select id="orbitPalette"><option value="neon">Neon warna-warni</option><option value="blue">Biru elektrik</option><option value="purple">Ungu-pink</option><option value="fire">Merah-oranye</option></select>
+            </label>
+            <label>Jumlah bentuk <input id="orbitCount" type="range" min="4" max="24" value="12"><small class="hint"><span id="orbitCountValue">12</span> bentuk</small></label>
+            <label>Ukuran bentuk <input id="orbitSize" type="range" min="3" max="16" value="8"><small class="hint"><span id="orbitSizeValue">8</span> px</small></label>
+          </div>
+          <p class="hint">Bass memberi hentakan besar, mid menggerakkan orbit, treble memunculkan kilau kecil. Foto tengah tetap diam dan tidak ikut membesar.</p>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -307,6 +325,12 @@ let centerPhotoUrl = null;
 let photoSize = 72;
 let bassImpact = 90;
 let photoShape = 'circle';
+let orbitEnabled = true;
+let orbitShape = 'mix';
+let orbitPalette = 'neon';
+let orbitCount = 12;
+let orbitSize = 8;
+const orbitPalettes = { neon:['#20eaff','#ff42c8','#a66bff','#ffe45c','#49ffd1'], blue:['#20eaff','#388bff','#b7f4ff','#5c79ff'], purple:['#ff42c8','#b65cff','#8b7bff','#f2a6ff'], fire:['#ff4b3e','#ff8a32','#ffd34d','#ff3c83'] };
 let bassEffectEnabled = true;
 let midEffectEnabled = true;
 let trebleEffectEnabled = true;
@@ -585,6 +609,35 @@ function getPhotoBox(shape, base) {
   return { width: base * 1.78, height: base * 1.78 };
 }
 
+function drawOrbitDecorations(outerBase, bands, sample, now) {
+  if (!orbitEnabled) return;
+  const count = orbitCount;
+  const palette = orbitPalettes[orbitPalette] || orbitPalettes.neon;
+  const shapeFor = i => orbitShape === 'mix' ? ['triangle','diamond','hexagon','star','circle'][i % 5] : orbitShape;
+  const motion = Math.min(1.2, bands.bass * .45 + bands.mid * .42 + trebleSparkPulse * .35 + bassImpactPulse * .22);
+  for (let i=0;i<count;i++) {
+    const phase = now * (0.00022 + (i%4)*0.000035) * (1 + bands.mid*1.7) + i/count*Math.PI*2;
+    const energy = sample(i, count);
+    const radius = outerBase + 15 + Math.sin(phase*2+i)*5 + bands.mid*13 + bassImpactPulse*11;
+    const size = orbitSize * (0.55 + energy*.55 + trebleSparkPulse*.65 + (i%3)*.08);
+    const x = Math.cos(phase)*radius;
+    const y = Math.sin(phase)*radius;
+    const color = palette[i % palette.length];
+    const shape = shapeFor(i);
+    ctx.save(); ctx.translate(x,y); ctx.rotate(phase*.65);
+    ctx.globalAlpha = Math.min(.98, .48 + motion*.42 + energy*.22);
+    ctx.fillStyle = color; ctx.strokeStyle = color; ctx.lineWidth = 1.4;
+    ctx.shadowColor = color; ctx.shadowBlur = 5 + motion*13;
+    ctx.beginPath();
+    if (shape === 'circle') ctx.arc(0,0,size*.72,0,Math.PI*2);
+    else if (shape === 'diamond') {ctx.moveTo(0,-size);ctx.lineTo(size*.72,0);ctx.lineTo(0,size);ctx.lineTo(-size*.72,0);ctx.closePath();}
+    else if (shape === 'hexagon') {for(let k=0;k<6;k++){const a=k*Math.PI/3-Math.PI/2;const px=Math.cos(a)*size,py=Math.sin(a)*size;k?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();}
+    else if (shape === 'star') {for(let k=0;k<10;k++){const a=k*Math.PI/5-Math.PI/2,r=k%2?size*.42:size;const px=Math.cos(a)*r,py=Math.sin(a)*r;k?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.closePath();}
+    else {ctx.moveTo(0,-size);ctx.lineTo(size*.86,size*.72);ctx.lineTo(-size*.86,size*.72);ctx.closePath();}
+    ctx.fill(); ctx.globalAlpha *= .85; ctx.stroke(); ctx.restore();
+  }
+}
+
 function drawPhotoBassCircle(radius, bands, sample, now) {
   const impact = bassImpact / 100;
   const base = radius * 0.66 * (photoSize / 72);
@@ -669,6 +722,9 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
     }
   }
   ctx.globalAlpha=1;ctx.shadowBlur=0;
+
+  // Colorful small geometric accents orbit around the photo, reacting independently to audio bands.
+  drawOrbitDecorations(outerBase, bands, sample, now);
 
   // Keep the center photo a stable size; only the surrounding effects react.
   ctx.save();
@@ -1037,6 +1093,13 @@ function updateBandEffectState() {
 ['bassEffectToggle','midEffectToggle','trebleEffectToggle'].forEach(id => {
   document.getElementById(id).addEventListener('change', updateBandEffectState);
 });
+
+// Colorful orbit effect controls.
+document.getElementById('orbitEffectToggle').addEventListener('change', event => { orbitEnabled = event.target.checked; });
+document.getElementById('orbitShape').addEventListener('change', event => { orbitShape = event.target.value; });
+document.getElementById('orbitPalette').addEventListener('change', event => { orbitPalette = event.target.value; });
+document.getElementById('orbitCount').addEventListener('input', event => { orbitCount = Number(event.target.value); document.getElementById('orbitCountValue').textContent = orbitCount; });
+document.getElementById('orbitSize').addEventListener('input', event => { orbitSize = Number(event.target.value); document.getElementById('orbitSizeValue').textContent = orbitSize; });
 
 const centerPhotoInput = document.getElementById('centerPhotoFile');
 centerPhotoInput.addEventListener('change', event => {
