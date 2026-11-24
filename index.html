@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v0.6 — Music Visualizer & DJ Video Maker</title>
+<title>BEATFX DJ v0.7 — Multi-Band Effects Studio</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -32,6 +32,48 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .photo-settings{margin-top:14px;padding:12px;border:1px solid #30264c;border-radius:12px;background:#0d0b18}
 .photo-settings input[type=range]{width:100%;accent-color:var(--purple)}
 .photo-settings label{margin-top:8px}
+
+/* v0.7 compact editor panels */
+.editor-panel{margin-top:10px;border:1px solid var(--line);border-radius:13px;background:#0d0b18;overflow:hidden}
+.editor-panel summary{list-style:none;cursor:pointer;padding:13px 14px;font-size:13px;font-weight:800;color:#f4edff;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.editor-panel summary::-webkit-details-marker{display:none}
+.editor-panel summary:after{content:'＋';color:#bba0ff;font-size:17px}
+.editor-panel[open] summary:after{content:'−'}
+.editor-panel-body{padding:0 12px 13px;border-top:1px solid #30264c}
+.shape-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding-top:11px}
+.shape-option{min-height:62px;border:1px solid var(--line);border-radius:10px;background:#171329;color:#e8e0f7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-size:11px}
+.shape-option .shape-icon{width:25px;height:25px;border:2px solid #8edfff;display:block;box-shadow:0 0 10px #19c8ff55}
+.shape-option.active{border-color:var(--blue);background:#14253a;box-shadow:0 0 14px #19c8ff22}
+.shape-circle{border-radius:50%}.shape-square{border-radius:2px}.shape-rounded{border-radius:8px}.shape-rectangle{width:31px!important;height:20px!important;border-radius:3px}.shape-diamond{transform:rotate(45deg);width:19px!important;height:19px!important}.shape-hex{clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)}.shape-triangle{clip-path:polygon(50% 0,100% 100%,0 100%)}.shape-star{clip-path:polygon(50% 0,62% 35%,100% 35%,69% 58%,80% 100%,50% 74%,20% 100%,31% 58%,0 35%,38% 35%)}.shape-heart{border:0!important;background:#ff55c5;clip-path:path('M12 23 C-7 10 2 -2 12 5 C22 -2 31 10 12 23')}
+.band-options{display:grid;grid-template-columns:1fr;gap:8px;padding-top:11px}
+.band-option{display:flex!important;align-items:center;gap:9px!important;margin:0!important;padding:9px 10px;border:1px solid #30264c;border-radius:9px;background:#151226}
+.band-option input{accent-color:var(--purple);width:17px;height:17px}
+.photo-settings{margin-top:10px;padding:0;border:0;background:transparent}
+.photo-settings input[type=range],.layer-controls input[type=range]{width:100%;accent-color:var(--purple)}
+.photo-settings label,.layer-controls label{display:block;color:#c8c0d8;font-size:12px;margin:11px 0 5px}
+.photo-settings .hint{margin:4px 0 8px}
+.effect-layer-root{position:absolute;inset:0;z-index:4;pointer-events:none;overflow:hidden}
+.effect-layer{position:absolute;left:50%;top:50%;width:35%;height:35%;transform:translate(-50%,-50%);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;user-select:none;outline:1px dashed transparent;border-radius:10px}
+.effect-layer:active{cursor:grabbing}
+.effect-layer.selected{outline:1px dashed #ffffffbb;filter:drop-shadow(0 0 5px #19c8ff)}
+.layer-halo{border:3px solid #22d8ff;border-radius:50%;box-shadow:0 0 12px #22d8ff,0 0 28px #ff42c8,inset 0 0 14px #22d8ff66}
+.layer-orbit{border:2px dashed #ff5bd5;border-radius:50%;box-shadow:0 0 16px #ff42c8}
+.layer-spark{color:#f8e8ff;font-size:clamp(22px,6vw,54px);text-shadow:0 0 8px #19c8ff,0 0 18px #ff42c8;letter-spacing:.12em}
+.layer-laser{height:9%!important;background:linear-gradient(90deg,transparent,#19c8ff 25%,#fff 50%,#ff42c8 75%,transparent);box-shadow:0 0 12px #19c8ff,0 0 25px #ff42c8;border-radius:99px}
+.layer-frame{border:3px solid #b879ff;border-radius:12px;box-shadow:0 0 12px #b879ff,inset 0 0 14px #b879ff66}
+.layer-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-top:11px}
+.layer-preset{border:1px solid var(--line);border-radius:10px;padding:10px;background:#171329;color:#eee;font-size:12px;font-weight:700;text-align:left}
+.layer-preset span{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:3px}
+.layer-list{display:flex;flex-direction:column;gap:6px;padding-top:10px}
+.layer-list-item{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);background:#151226;color:#eee;border-radius:9px;padding:8px 10px;font-size:11px}
+.layer-list-item.active{border-color:var(--blue);background:#122438}
+.layer-controls{padding-top:10px}
+.layer-action-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.layer-action-row button{border:1px solid var(--line);border-radius:9px;background:#1a1630;color:#eee;padding:8px 10px;font-size:11px}
+.layer-action-row button.danger{border-color:#8c385f;color:#ffb6d7}
+.layer-empty{padding:11px 0;color:var(--muted);font-size:11px}
+@media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
 @media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
 </style>
@@ -129,7 +171,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Neon Bass Circle</span></div>
   <div class="workspace">
     <div class="preview">
-      <div class="preview-screen"><canvas id="visualizer"></canvas><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
+      <div class="preview-screen"><canvas id="visualizer"></canvas><div class="effect-layer-root" id="effectLayerRoot" aria-label="Movable effect layers"></div><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
       <div class="control-row">
         <label class="file-label">♫ Upload Musik <input id="audioFile" type="file" accept="audio/*"></label>
         <label class="file-label">▧ Foto Background <input id="imageFile" type="file" accept="image/*"></label>
@@ -144,14 +186,45 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
       <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
       <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
       <p class="hint" id="visualizerHint">Neon Bass Circle: lingkaran neon bereaksi terhadap bass dan frekuensi musik. Pilih gaya visualizer melalui satu galeri di atas.</p>
-      <div class="photo-settings" id="photoSettings">
-        <label for="photoSizeInput">Ukuran foto tengah</label>
-        <input id="photoSizeInput" type="range" min="50" max="100" value="72">
-        <p class="hint"><span id="photoSizeValue">72%</span> · Atur besar foto di dalam lingkaran.</p>
-        <label for="bassImpactInput">Kekuatan hentakan foto & gelombang bass</label>
-        <input id="bassImpactInput" type="range" min="0" max="150" value="90">
-        <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur seberapa kuat foto dan gelombang mengembang saat bass terdeteksi.</p>
-      </div>
+      <details class="editor-panel" id="photoShapePanel" open>
+        <summary>▦ Bentuk Foto Tengah</summary>
+        <div class="editor-panel-body">
+          <div class="shape-grid" id="photoShapePicker">
+            <button class="shape-option active" type="button" data-photo-shape="circle"><span class="shape-icon shape-circle"></span>Lingkaran</button>
+            <button class="shape-option" type="button" data-photo-shape="square"><span class="shape-icon shape-square"></span>Kotak</button>
+            <button class="shape-option" type="button" data-photo-shape="rounded"><span class="shape-icon shape-rounded"></span>Kotak bulat</button>
+            <button class="shape-option" type="button" data-photo-shape="rectangle"><span class="shape-icon shape-rectangle"></span>Persegi panjang</button>
+            <button class="shape-option" type="button" data-photo-shape="diamond"><span class="shape-icon shape-diamond"></span>Diamond</button>
+            <button class="shape-option" type="button" data-photo-shape="hexagon"><span class="shape-icon shape-hex"></span>Heksagon</button>
+            <button class="shape-option" type="button" data-photo-shape="triangle"><span class="shape-icon shape-triangle"></span>Segitiga</button>
+            <button class="shape-option" type="button" data-photo-shape="star"><span class="shape-icon shape-star"></span>Bintang</button>
+            <button class="shape-option" type="button" data-photo-shape="heart"><span class="shape-icon shape-heart"></span>Hati</button>
+          </div>
+          <p class="hint">Bentuk foto bisa diganti tanpa mengubah efek gelombang audio.</p>
+        </div>
+      </details>
+      <details class="editor-panel" id="photoSettings">
+        <summary>⚙ Atur Foto & Intensitas Bass</summary>
+        <div class="editor-panel-body photo-settings">
+          <label for="photoSizeInput">Ukuran foto tengah</label>
+          <input id="photoSizeInput" type="range" min="50" max="100" value="72">
+          <p class="hint"><span id="photoSizeValue">72%</span> · Ukuran foto tetap saat musik menghentak.</p>
+          <label for="bassImpactInput">Kekuatan efek bass</label>
+          <input id="bassImpactInput" type="range" min="0" max="150" value="90">
+          <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur kekuatan gelombang, bukan ukuran foto.</p>
+        </div>
+      </details>
+      <details class="editor-panel" id="bandEffectPanel">
+        <summary>♫ Efek Audio Terpisah</summary>
+        <div class="editor-panel-body">
+          <div class="band-options">
+            <label class="band-option"><input id="bassEffectToggle" type="checkbox" checked> <span><b>Bass / Kick Impact</b><br><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
+            <label class="band-option"><input id="midEffectToggle" type="checkbox" checked> <span><b>Mid Wave</b><br><small class="hint">Gelombang kedua bergoyang secara terpisah.</small></span></label>
+            <label class="band-option"><input id="trebleEffectToggle" type="checkbox" checked> <span><b>Treble Sparks</b><br><small class="hint">Percikan kecil muncul saat frekuensi tinggi terdengar.</small></span></label>
+          </div>
+          <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -169,13 +242,47 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
     <label><input id="beatSensitivity" type="range" min="20" max="100" value="70"> Sensitivitas beat <b id="beatSensitivityValue">70%</b></label>
     <span class="effect-status" id="particleStatus">Magic Particles: OFF</span>
     <span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
+    <span class="effect-status" id="bandStatus">Audio bands: menunggu musik</span>
   </div>
+  <details class="editor-panel" id="addLayerPanel" open>
+    <summary>✦ Tambah Efek yang Bisa Digeser</summary>
+    <div class="editor-panel-body">
+      <div class="layer-presets">
+        <button class="layer-preset" type="button" data-add-layer="halo">◎ Neon Halo<span>Cincin neon di preview</span></button>
+        <button class="layer-preset" type="button" data-add-layer="orbit">◌ Orbit Ring<span>Lingkaran putus-putus</span></button>
+        <button class="layer-preset" type="button" data-add-layer="spark">✦ Star Sparks<span>Hiasan kilau bintang</span></button>
+        <button class="layer-preset" type="button" data-add-layer="laser">━ Laser Beam<span>Garis laser bercahaya</span></button>
+        <button class="layer-preset" type="button" data-add-layer="frame">▢ Neon Frame<span>Bingkai neon</span></button>
+      </div>
+      <p class="hint">Pilih efek, lalu geser langsung di area Live Studio Preview untuk menentukan posisinya.</p>
+    </div>
+  </details>
+  <details class="editor-panel" id="layerManagerPanel">
+    <summary>☷ Atur Layer</summary>
+    <div class="editor-panel-body">
+      <div class="layer-list" id="layerList"><div class="layer-empty">Belum ada layer tambahan.</div></div>
+      <div class="layer-controls">
+        <label for="layerSizeInput">Ukuran layer <span id="layerSizeValue">35%</span></label>
+        <input id="layerSizeInput" type="range" min="8" max="100" value="35" disabled>
+        <label for="layerOpacityInput">Transparansi <span id="layerOpacityValue">100%</span></label>
+        <input id="layerOpacityInput" type="range" min="10" max="100" value="100" disabled>
+        <label for="layerRotationInput">Rotasi <span id="layerRotationValue">0°</span></label>
+        <input id="layerRotationInput" type="range" min="-180" max="180" value="0" disabled>
+      </div>
+      <div class="layer-action-row">
+        <button type="button" id="layerFrontBtn" disabled>Ke depan</button>
+        <button type="button" id="layerBackBtn" disabled>Ke belakang</button>
+        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus</button>
+      </div>
+      <p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
+    </div>
+  </details>
 </section>
 <section class="section" id="projects">
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • Build 0.6 • Photo Bass Circle</div>
+<div class="footer">BEATFX DJ • Build 0.7 • Multi-Band Effects Studio</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -195,6 +302,34 @@ let centerPhoto = null;
 let centerPhotoUrl = null;
 let photoSize = 72;
 let bassImpact = 90;
+let photoShape = 'circle';
+let bassEffectEnabled = true;
+let midEffectEnabled = true;
+let trebleEffectEnabled = true;
+let bassImpactPulse = 0;
+let midWavePulse = 0;
+let trebleSparkPulse = 0;
+let midEnergy = 0;
+let midAverage = 0.035;
+let previousMidEnergy = 0;
+let trebleEnergy = 0;
+let trebleAverage = 0.025;
+let previousTrebleEnergy = 0;
+let lastMidAt = 0;
+let lastTrebleAt = 0;
+const bassPalette = ['#19c8ff','#388bff','#9b55ff','#ff42c8','#38e6c2','#f5a623'];
+const midPalette = ['#ff42c8','#bd68ff','#ff8d5b','#e75cff'];
+const treblePalette = ['#c7ff50','#fff06a','#5dffd1','#8eeaff'];
+let bassColorIndex = 0;
+let midColorIndex = 0;
+let trebleColorIndex = 0;
+let currentBassColor = bassPalette[0];
+let currentMidColor = midPalette[0];
+let currentTrebleColor = treblePalette[0];
+
+let effectLayers = [];
+let selectedLayerId = null;
+let layerIdCounter = 1;
 
 let particlesEnabled = false;
 let particleIntensity = 55;
@@ -284,65 +419,80 @@ async function ensureAudioGraph() {
 
 function readAudioBands() {
   if (!analyser || !frequencyData || audio.paused) {
-    bassEnergy *= 0.88;
+    bassEnergy *= 0.86;
+    midEnergy *= 0.88;
+    trebleEnergy *= 0.90;
     previousBassEnergy *= 0.92;
-    return { bass: bassEnergy, mid: 0, treble: 0, beat: false, strength: 0 };
+    previousMidEnergy *= 0.92;
+    previousTrebleEnergy *= 0.92;
+    return { bass: bassEnergy, mid: midEnergy, treble: trebleEnergy, beat: false, strength: 0, bassHit: false, midHit: false, trebleHit: false, bassStrength: 0, midStrength: 0, trebleStrength: 0 };
   }
 
   analyser.getByteFrequencyData(frequencyData);
-
   const binHz = audioContext.sampleRate / analyser.fftSize;
   const averageBand = (lowHz, highHz) => {
     const first = Math.max(1, Math.floor(lowHz / binHz));
     const last = Math.min(frequencyData.length - 1, Math.ceil(highHz / binHz));
-    let total = 0;
-    let count = 0;
-    for (let i = first; i <= last; i++) {
-      total += frequencyData[i] / 255;
-      count++;
-    }
+    let total = 0, count = 0;
+    for (let i = first; i <= last; i++) { total += frequencyData[i] / 255; count++; }
     return count ? total / count : 0;
   };
 
-  // Low band is focused on kick/bass energy; mid and treble are used by the spectrum.
-  const rawBass = averageBand(35, 160);
-  const mid = averageBand(160, 2000);
-  const treble = averageBand(2000, 9000);
+  // Independent frequency bands: low kick/bass, mid body, and high treble.
+  const rawBass = averageBand(35, 150);
+  const mid = averageBand(180, 1800);
+  const treble = averageBand(2500, 10000);
+  const smooth = (current, raw, attack, release) => current + (raw - current) * (raw > current ? attack : release);
+  bassEnergy = smooth(bassEnergy, rawBass, 0.58, 0.19);
+  midEnergy = smooth(midEnergy, mid, 0.46, 0.17);
+  trebleEnergy = smooth(trebleEnergy, treble, 0.55, 0.22);
+  bassAverage += (bassEnergy - bassAverage) * 0.014;
+  midAverage += (midEnergy - midAverage) * 0.012;
+  trebleAverage += (trebleEnergy - trebleAverage) * 0.012;
 
-  // Fast envelope for transients, slower moving average as an adaptive noise floor.
-  bassEnergy += (rawBass - bassEnergy) * 0.42;
-  bassAverage += (bassEnergy - bassAverage) * 0.018;
-
-  const rise = bassEnergy - previousBassEnergy;
-  const sensitivity = beatSensitivity / 100;
-  const adaptiveThreshold = Math.max(0.035, bassAverage * (1.55 - sensitivity * 0.004));
-  const minimumRise = 0.025 - sensitivity * 0.00013;
   const now = performance.now();
+  const sensitivity = beatSensitivity / 100;
+  const bassRise = bassEnergy - previousBassEnergy;
+  const midRise = midEnergy - previousMidEnergy;
+  const trebleRise = trebleEnergy - previousTrebleEnergy;
+  const bassThreshold = Math.max(0.028, bassAverage * (1.34 - sensitivity * 0.32));
+  const midThreshold = Math.max(0.032, midAverage * 1.42);
+  const trebleThreshold = Math.max(0.026, trebleAverage * 1.48);
 
-  let beat = false;
-  let strength = 0;
+  const bassHit = bassEffectEnabled && bassEnergy > bassThreshold && bassRise > (0.010 - sensitivity * 0.003) && now - lastBeatAt > 185;
+  const midHit = midEffectEnabled && midEnergy > midThreshold && midRise > 0.012 && now - lastMidAt > 145;
+  const trebleHit = trebleEffectEnabled && trebleEnergy > trebleThreshold && trebleRise > 0.010 && now - lastTrebleAt > 105;
+  let strength = 0, bassStrength = 0, midStrength = 0, trebleStrength = 0;
 
-  // A rising bass transient and a short cooldown prevent continuous bass from
-  // being mistaken for a new beat on every animation frame.
-  if (
-    bassEnergy > adaptiveThreshold &&
-    rise > minimumRise &&
-    now - lastBeatAt > 245
-  ) {
-    beat = true;
-    strength = clamp(0.55 + (bassEnergy - adaptiveThreshold) * 2.8, 0.55, 1);
+  if (bassHit) {
+    bassStrength = clamp(0.35 + (bassEnergy - bassThreshold) * 4.2 + bassRise * 7, 0.35, 1.35);
+    strength = bassStrength;
     lastBeatAt = now;
     beatCount++;
-
+    bassColorIndex = (bassColorIndex + 1) % bassPalette.length;
+    currentBassColor = bassPalette[bassColorIndex];
     if (now - lastBeatUiAt > 220) {
-      const status = document.getElementById('beatStatus');
-      status.textContent = 'Beat Sync: terdeteksi · ' + beatCount;
+      document.getElementById('beatStatus').textContent = 'Bass impact: ' + beatCount;
       lastBeatUiAt = now;
     }
   }
+  if (midHit) {
+    midStrength = clamp(0.30 + (midEnergy - midThreshold) * 3.8 + midRise * 6, 0.30, 1.2);
+    lastMidAt = now;
+    midColorIndex = (midColorIndex + 1) % midPalette.length;
+    currentMidColor = midPalette[midColorIndex];
+  }
+  if (trebleHit) {
+    trebleStrength = clamp(0.28 + (trebleEnergy - trebleThreshold) * 4.5 + trebleRise * 7, 0.28, 1.1);
+    lastTrebleAt = now;
+    trebleColorIndex = (trebleColorIndex + 1) % treblePalette.length;
+    currentTrebleColor = treblePalette[trebleColorIndex];
+  }
 
   previousBassEnergy = bassEnergy;
-  return { bass: bassEnergy, mid, treble, beat, strength };
+  previousMidEnergy = midEnergy;
+  previousTrebleEnergy = trebleEnergy;
+  return { bass: bassEnergy, mid: midEnergy, treble: trebleEnergy, beat: bassHit, strength, bassHit, midHit, trebleHit, bassStrength, midStrength, trebleStrength };
 }
 
 function drawTunnelBackdrop(width, height, now, bass, pulse) {
@@ -400,69 +550,104 @@ function drawDjNeonFrame(width, height, bass, pulse) {
   ctx.restore();
 }
 
-function drawPhotoBassCircle(radius, bands, beatPulse, sample) {
-  const impact = bassImpact / 100;
-  const pulse = clamp((bands.bass * 0.55 + beatPulse * 0.85) * impact, 0, 1.6);
-  const outerBase = radius * 0.98;
-  const points = 160;
-
-  // Three soft, colored waveform layers form the reactive photo ring.
-  const layers = [
-    { color: '#19c8ff', width: 5.5, offset: -2.8, gain: 1.0 },
-    { color: '#ff42c8', width: 3.8, offset: 2.8, gain: 0.82 },
-    { color: accent, width: 2.4, offset: 0, gain: 1.12 }
-  ];
-  layers.forEach(layer => {
-    ctx.beginPath();
-    for (let i = 0; i <= points; i++) {
-      const angle = (i / points) * Math.PI * 2;
-      const freq = sample(i, points);
-      const kickShape = Math.pow(Math.max(0, Math.cos(angle * 4)), 2) * bands.bass * 7 * impact;
-      const r = outerBase + layer.offset + freq * 10 * layer.gain + pulse * 18 * layer.gain + kickShape;
-      const x = Math.cos(angle) * r;
-      const y = Math.sin(angle) * r;
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.strokeStyle = layer.color;
-    ctx.lineWidth = layer.width + pulse * 1.4;
-    ctx.shadowColor = layer.color;
-    ctx.shadowBlur = 10 + pulse * 18;
-    ctx.globalAlpha = 0.82;
-    ctx.stroke();
-  });
-  ctx.globalAlpha = 1;
-  ctx.shadowBlur = 0;
-
-  // Photo grows on bass impacts but stays clipped to a clean circle.
-  const photoRadius = radius * 0.66 * (photoSize / 72) * (1 + pulse * 0.105);
-  ctx.save();
+function photoShapePath(shape, width, height) {
+  const hw = width / 2, hh = height / 2;
   ctx.beginPath();
-  ctx.arc(0, 0, photoRadius, 0, Math.PI * 2);
+  if (shape === 'circle') {
+    ctx.ellipse(0, 0, hw, hh, 0, 0, Math.PI * 2);
+  } else if (shape === 'square') {
+    const side = Math.min(width, height); ctx.rect(-side/2, -side/2, side, side);
+  } else if (shape === 'rounded') {
+    const side = Math.min(width, height); ctx.roundRect(-side/2, -side/2, side, side, side * 0.18);
+  } else if (shape === 'rectangle') {
+    ctx.roundRect(-hw, -hh * 0.68, width, height * 1.36, Math.min(width, height) * 0.10);
+  } else if (shape === 'diamond') {
+    ctx.moveTo(0, -hh); ctx.lineTo(hw, 0); ctx.lineTo(0, hh); ctx.lineTo(-hw, 0); ctx.closePath();
+  } else if (shape === 'hexagon') {
+    for (let i=0;i<6;i++){const a=-Math.PI/2+i*Math.PI/3;const x=Math.cos(a)*hw;const y=Math.sin(a)*hh;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();
+  } else if (shape === 'triangle') {
+    ctx.moveTo(0,-hh);ctx.lineTo(hw,hh);ctx.lineTo(-hw,hh);ctx.closePath();
+  } else if (shape === 'star') {
+    for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5;const r=i%2?0.48:1;const x=Math.cos(a)*hw*r;const y=Math.sin(a)*hh*r;if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);}ctx.closePath();
+  } else if (shape === 'heart') {
+    ctx.moveTo(0, hh*0.92);ctx.bezierCurveTo(-hw*1.25,hh*0.10,-hw*0.95,-hh*0.86,-hw*0.28,-hh*0.72);ctx.bezierCurveTo(-hw*0.04,-hh*0.66,0,-hh*0.45,0,-hh*0.40);ctx.bezierCurveTo(0,-hh*0.45,hw*0.04,-hh*0.66,hw*0.28,-hh*0.72);ctx.bezierCurveTo(hw*0.95,-hh*0.86,hw*1.25,hh*0.10,0,hh*0.92);ctx.closePath();
+  }
+}
+
+function getPhotoBox(shape, base) {
+  if (shape === 'rectangle') return { width: base * 2.05, height: base * 1.38 };
+  if (shape === 'heart') return { width: base * 1.85, height: base * 1.72 };
+  if (shape === 'triangle' || shape === 'diamond') return { width: base * 1.72, height: base * 1.72 };
+  return { width: base * 1.78, height: base * 1.78 };
+}
+
+function drawPhotoBassCircle(radius, bands, sample, now) {
+  const impact = bassImpact / 100;
+  const base = radius * 0.66 * (photoSize / 72);
+  const box = getPhotoBox(photoShape, base);
+  const outerBase = radius * 0.98;
+  const points = 180;
+
+  // Bass/kick is the wide, punchy outer wave. Photo dimensions stay fixed.
+  if (bassEffectEnabled) {
+    ctx.beginPath();
+    for (let i=0;i<=points;i++) {
+      const angle = i / points * Math.PI * 2;
+      const lowShape = Math.pow(Math.max(0, Math.cos(angle * 4)), 2);
+      const lowDetail = sample(i, points);
+      const r = outerBase + lowDetail * 7 + bassImpactPulse * 27 * impact + lowShape * bands.bass * 22 * impact;
+      const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.closePath();ctx.strokeStyle=currentBassColor;ctx.lineWidth=3.2+bassImpactPulse*3.5;ctx.shadowColor=currentBassColor;ctx.shadowBlur=10+bassImpactPulse*24;ctx.globalAlpha=.92;ctx.stroke();
+  }
+
+  // Mid frequencies create a separate softer, continuously changing wave.
+  if (midEffectEnabled) {
+    ctx.beginPath();
+    for (let i=0;i<=points;i++) {
+      const angle=i/points*Math.PI*2;
+      const midShape=Math.sin(angle*11 + now*0.0032) * (3 + bands.mid*9 + midWavePulse*15);
+      const harmonic=Math.sin(angle*5-now*0.0018)*(2+bands.mid*4);
+      const r=outerBase-8+midShape+harmonic;
+      const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.closePath();ctx.strokeStyle=currentMidColor;ctx.lineWidth=2+midWavePulse*2.2;ctx.shadowColor=currentMidColor;ctx.shadowBlur=7+midWavePulse*16;ctx.globalAlpha=.86;ctx.stroke();
+  }
+
+  // Treble creates small independent sparks rather than expanding the whole ring.
+  if (trebleEffectEnabled) {
+    const sparkCount=34;
+    ctx.strokeStyle=currentTrebleColor;ctx.fillStyle=currentTrebleColor;ctx.shadowColor=currentTrebleColor;ctx.shadowBlur=5+trebleSparkPulse*15;ctx.globalAlpha=.45+trebleSparkPulse*.5;
+    for(let i=0;i<sparkCount;i++){
+      const angle=(i/sparkCount)*Math.PI*2 + Math.sin(now*.001+i)*.025;
+      const energy=sample(i,sparkCount);
+      const inner=outerBase+5+energy*4;
+      const length=3+energy*8+trebleSparkPulse*13;
+      const outer=inner+length;
+      ctx.beginPath();ctx.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);ctx.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);ctx.lineWidth=1+trebleSparkPulse*1.4;ctx.stroke();
+      if (trebleSparkPulse>.16 && i%3===0){ctx.beginPath();ctx.arc(Math.cos(angle)*outer,Math.sin(angle)*outer,1+trebleSparkPulse*2,0,Math.PI*2);ctx.fill();}
+    }
+  }
+  ctx.globalAlpha=1;ctx.shadowBlur=0;
+
+  // Keep the center photo a stable size; only the surrounding effects react.
+  ctx.save();
+  photoShapePath(photoShape, box.width, box.height);
   ctx.clip();
   if (centerPhoto && centerPhoto.complete && centerPhoto.naturalWidth > 0) {
-    const scale = Math.max((photoRadius * 2) / centerPhoto.naturalWidth, (photoRadius * 2) / centerPhoto.naturalHeight);
-    const drawWidth = centerPhoto.naturalWidth * scale;
-    const drawHeight = centerPhoto.naturalHeight * scale;
-    ctx.drawImage(centerPhoto, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
+    const scale=Math.max(box.width/centerPhoto.naturalWidth,box.height/centerPhoto.naturalHeight);
+    const drawWidth=centerPhoto.naturalWidth*scale,drawHeight=centerPhoto.naturalHeight*scale;
+    ctx.drawImage(centerPhoto,-drawWidth/2,-drawHeight/2,drawWidth,drawHeight);
   } else {
-    const placeholder = ctx.createRadialGradient(-photoRadius * 0.3, -photoRadius * 0.35, 2, 0, 0, photoRadius);
-    placeholder.addColorStop(0, '#35245a');
-    placeholder.addColorStop(1, '#080711');
-    ctx.fillStyle = placeholder;
-    ctx.fillRect(-photoRadius, -photoRadius, photoRadius * 2, photoRadius * 2);
+    const placeholder=ctx.createLinearGradient(-base,-base,base,base);
+    placeholder.addColorStop(0,'#35245a');placeholder.addColorStop(.5,'#18536c');placeholder.addColorStop(1,'#080711');
+    ctx.fillStyle=placeholder;ctx.fillRect(-box.width/2,-box.height/2,box.width,box.height);
   }
   ctx.restore();
-
-  // Crisp photo outline and inner highlight.
-  ctx.beginPath();
-  ctx.arc(0, 0, photoRadius, 0, Math.PI * 2);
-  ctx.strokeStyle = '#ffffff';
-  ctx.lineWidth = 2;
-  ctx.shadowColor = '#19c8ff';
-  ctx.shadowBlur = 12 + pulse * 12;
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+  photoShapePath(photoShape,box.width,box.height);
+  ctx.strokeStyle='#ffffff';ctx.lineWidth=2;ctx.shadowColor=currentBassColor;ctx.shadowBlur=9;ctx.stroke();ctx.shadowBlur=0;
 }
 
 function draw() {
@@ -485,10 +670,10 @@ function draw() {
 
   if (bands.beat) {
     beatPulse = Math.max(beatPulse, bands.strength);
+    bassImpactPulse = Math.max(bassImpactPulse, bands.bassStrength);
     if (particlesEnabled) {
       particles.forEach(p => {
-        const dx = p.x - centerX;
-        const dy = p.y - centerY;
+        const dx = p.x - centerX, dy = p.y - centerY;
         const distance = Math.max(1, Math.hypot(dx, dy));
         p.burstX = (dx / distance) * (0.9 + bands.strength * 1.7);
         p.burstY = (dy / distance) * (0.9 + bands.strength * 1.7);
@@ -496,9 +681,16 @@ function draw() {
       });
     }
   }
+  if (bands.midHit) midWavePulse = Math.max(midWavePulse, bands.midStrength);
+  if (bands.trebleHit) trebleSparkPulse = Math.max(trebleSparkPulse, bands.trebleStrength);
 
-  // Beat pulse has a quick attack and smooth release.
+  // Each band has its own attack/release timing so effects do not move as one.
   beatPulse *= Math.exp(-delta / 190);
+  bassImpactPulse *= Math.exp(-delta / 145);
+  midWavePulse *= Math.exp(-delta / 225);
+  trebleSparkPulse *= Math.exp(-delta / 90);
+  const bandStatus = document.getElementById('bandStatus');
+  if (bandStatus && !audio.paused) bandStatus.textContent = `Bass ${Math.round(bands.bass*100)}% · Mid ${Math.round(bands.mid*100)}% · Treble ${Math.round(bands.treble*100)}%`;
 
   ctx.save();
   ctx.translate(centerX, centerY);
@@ -512,7 +704,7 @@ function draw() {
   const pulse = bands.bass * 16 + beatPulse * 31;
 
   if (visualizerTemplate === 'photo-bass-circle') {
-    drawPhotoBassCircle(radius, bands, beatPulse, sample);
+    drawPhotoBassCircle(radius, bands, sample, now);
   } else if (visualizerType === 'circle') {
     ctx.beginPath();
     for (let i = 0; i < 112; i++) {
@@ -641,10 +833,11 @@ fileInput.addEventListener('change', event => {
   document.getElementById('titleInput').value = title;
   document.getElementById('beatStatus').textContent = 'Beat Sync: siap menganalisis';
   beatCount = 0;
-  bassEnergy = 0;
-  bassAverage = 0.035;
-  previousBassEnergy = 0;
-  beatPulse = 0;
+  bassEnergy = 0; bassAverage = 0.035; previousBassEnergy = 0;
+  midEnergy = 0; midAverage = 0.035; previousMidEnergy = 0;
+  trebleEnergy = 0; trebleAverage = 0.025; previousTrebleEnergy = 0;
+  beatPulse = 0; bassImpactPulse = 0; midWavePulse = 0; trebleSparkPulse = 0;
+  document.getElementById('bandStatus').textContent = 'Audio bands: siap menganalisis';
 });
 
 // Native audio-player playback must also initialize the audio analyser.
@@ -787,6 +980,26 @@ sensitivitySlider.addEventListener('input', event => {
 });
 
 
+// Compact photo-shape and independent band-effect controls.
+document.querySelectorAll('[data-photo-shape]').forEach(button => {
+  button.addEventListener('click', () => {
+    photoShape = button.dataset.photoShape;
+    document.querySelectorAll('[data-photo-shape]').forEach(item => item.classList.toggle('active', item === button));
+    document.getElementById('visualizerTemplateStatus').textContent = 'Bentuk foto: ' + button.textContent.trim();
+  });
+});
+
+function updateBandEffectState() {
+  bassEffectEnabled = document.getElementById('bassEffectToggle').checked;
+  midEffectEnabled = document.getElementById('midEffectToggle').checked;
+  trebleEffectEnabled = document.getElementById('trebleEffectToggle').checked;
+  const enabled = [bassEffectEnabled,midEffectEnabled,trebleEffectEnabled].filter(Boolean).length;
+  document.getElementById('bandEffectStatus').textContent = enabled + ' dari 3 efek audio aktif.';
+}
+['bassEffectToggle','midEffectToggle','trebleEffectToggle'].forEach(id => {
+  document.getElementById(id).addEventListener('change', updateBandEffectState);
+});
+
 const centerPhotoInput = document.getElementById('centerPhotoFile');
 centerPhotoInput.addEventListener('change', event => {
   const file = event.target.files && event.target.files[0];
@@ -819,6 +1032,148 @@ bassImpactInput.addEventListener('input', event => {
   bassImpact = Number(event.target.value);
   document.getElementById('bassImpactValue').textContent = bassImpact + '%';
 });
+
+// Movable effect overlays: positions/settings are stored locally on this device.
+const layerRoot = document.getElementById('effectLayerRoot');
+const layerList = document.getElementById('layerList');
+const layerPresets = {
+  halo: { name:'Neon Halo', cls:'layer-halo', width:36, height:36, markup:'' },
+  orbit: { name:'Orbit Ring', cls:'layer-orbit', width:43, height:43, markup:'' },
+  spark: { name:'Star Sparks', cls:'layer-spark', width:42, height:34, markup:'✦　✧　✦' },
+  laser: { name:'Laser Beam', cls:'layer-laser', width:58, height:9, markup:'' },
+  frame: { name:'Neon Frame', cls:'layer-frame', width:46, height:46, markup:'' }
+};
+
+function saveLayers() {
+  try { localStorage.setItem('beatfx_v07_layers', JSON.stringify(effectLayers)); } catch (error) { console.warn('BEATFX local layer save:', error); }
+}
+function selectedLayer() { return effectLayers.find(layer => layer.id === selectedLayerId) || null; }
+function selectLayer(id) {
+  selectedLayerId = id;
+  renderLayers();
+}
+function renderLayers() {
+  layerRoot.innerHTML = '';
+  effectLayers.forEach(layer => {
+    const preset = layerPresets[layer.type];
+    if (!preset) return;
+    const el = document.createElement('div');
+    el.className = 'effect-layer ' + preset.cls + (layer.id === selectedLayerId ? ' selected' : '');
+    el.dataset.layerId = String(layer.id);
+    el.style.left = layer.x + '%';
+    el.style.top = layer.y + '%';
+    el.style.width = layer.width + '%';
+    el.style.height = layer.height + '%';
+    el.style.opacity = String(layer.opacity / 100);
+    el.style.zIndex = String(layer.z || 1);
+    el.style.transform = `translate(-50%,-50%) rotate(${layer.rotation || 0}deg)`;
+    if (preset.markup) el.textContent = preset.markup;
+    el.setAttribute('role','button');
+    el.setAttribute('aria-label',preset.name + ', dapat digeser');
+    el.addEventListener('pointerdown', event => {
+      event.preventDefault(); event.stopPropagation();
+      selectedLayerId = layer.id;
+      layerRoot.querySelectorAll('.effect-layer').forEach(node => node.classList.toggle('selected', node === el));
+      layerList.querySelectorAll('.layer-list-item').forEach((node, index) => node.classList.toggle('active', effectLayers[index] && effectLayers[index].id === layer.id));
+      document.getElementById('layerSizeInput').disabled = false;
+      document.getElementById('layerOpacityInput').disabled = false;
+      document.getElementById('layerRotationInput').disabled = false;
+      document.getElementById('layerSizeInput').value = layer.width;
+      document.getElementById('layerOpacityInput').value = layer.opacity;
+      document.getElementById('layerRotationInput').value = layer.rotation || 0;
+      document.getElementById('layerSizeValue').textContent = Math.round(layer.width) + '%';
+      document.getElementById('layerOpacityValue').textContent = Math.round(layer.opacity) + '%';
+      document.getElementById('layerRotationValue').textContent = Math.round(layer.rotation || 0) + '°';
+      ['layerFrontBtn','layerBackBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = false);
+      const rect = document.querySelector('.preview-screen').getBoundingClientRect();
+      const startX = event.clientX, startY = event.clientY;
+      const originX = layer.x, originY = layer.y;
+      try { el.setPointerCapture(event.pointerId); } catch (captureError) { /* Pointer capture may be unavailable in an embedded preview. */ }
+      const move = moveEvent => {
+        layer.x = clamp(originX + (moveEvent.clientX - startX) / rect.width * 100, 4, 96);
+        layer.y = clamp(originY + (moveEvent.clientY - startY) / rect.height * 100, 5, 95);
+        el.style.left = layer.x + '%';
+        el.style.top = layer.y + '%';
+      };
+      const finish = () => {
+        el.removeEventListener('pointermove', move);
+        el.removeEventListener('pointerup', finish);
+        el.removeEventListener('pointercancel', finish);
+        saveLayers();
+        renderLayers();
+      };
+      el.addEventListener('pointermove', move);
+      el.addEventListener('pointerup', finish);
+      el.addEventListener('pointercancel', finish);
+    });
+    layerRoot.appendChild(el);
+  });
+
+  if (!effectLayers.length) {
+    layerList.innerHTML = '<div class="layer-empty">Belum ada layer tambahan.</div>';
+  } else {
+    layerList.innerHTML = '';
+    effectLayers.forEach(layer => {
+      const preset = layerPresets[layer.type];
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'layer-list-item' + (layer.id === selectedLayerId ? ' active' : '');
+      const title = document.createElement('span'); title.textContent = preset.name;
+      const pos = document.createElement('small'); pos.textContent = Math.round(layer.x) + '%, ' + Math.round(layer.y) + '%';
+      item.append(title,pos);
+      item.addEventListener('click', () => selectLayer(layer.id));
+      layerList.appendChild(item);
+    });
+  }
+  const layer = selectedLayer();
+  const controls = [
+    ['layerSizeInput',layer ? layer.width : 35],
+    ['layerOpacityInput',layer ? layer.opacity : 100],
+    ['layerRotationInput',layer ? layer.rotation : 0]
+  ];
+  controls.forEach(([id,value]) => { const input=document.getElementById(id);input.disabled=!layer;input.value=value; });
+  document.getElementById('layerSizeValue').textContent = layer ? Math.round(layer.width)+'%' : '—';
+  document.getElementById('layerOpacityValue').textContent = layer ? Math.round(layer.opacity)+'%' : '—';
+  document.getElementById('layerRotationValue').textContent = layer ? Math.round(layer.rotation)+'°' : '—';
+  ['layerFrontBtn','layerBackBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = !layer);
+}
+
+document.querySelectorAll('[data-add-layer]').forEach(button => {
+  button.addEventListener('click', () => {
+    const type = button.dataset.addLayer, preset = layerPresets[type];
+    if (!preset) return;
+    const layer = { id: layerIdCounter++, type, x:50, y:50, width:preset.width, height:preset.height, opacity:100, rotation:0, z:effectLayers.length+1 };
+    effectLayers.push(layer);
+    selectedLayerId = layer.id;
+    renderLayers(); saveLayers();
+    document.getElementById('layerManagerPanel').open = true;
+  });
+});
+
+function updateSelectedLayer(key, value) {
+  const layer = selectedLayer(); if (!layer) return;
+  layer[key] = Number(value);
+  if (key === 'width') {
+    const preset = layerPresets[layer.type];
+    const ratio = preset.height / preset.width;
+    layer.height = Math.max(5, Math.min(100, layer.width * ratio));
+  }
+  renderLayers(); saveLayers();
+}
+document.getElementById('layerSizeInput').addEventListener('input', event => updateSelectedLayer('width',event.target.value));
+document.getElementById('layerOpacityInput').addEventListener('input', event => updateSelectedLayer('opacity',event.target.value));
+document.getElementById('layerRotationInput').addEventListener('input', event => updateSelectedLayer('rotation',event.target.value));
+document.getElementById('layerFrontBtn').addEventListener('click', () => { const l=selectedLayer();if(!l)return;l.z=Math.max(1,...effectLayers.map(x=>x.z||1))+1;renderLayers();saveLayers(); });
+document.getElementById('layerBackBtn').addEventListener('click', () => { const l=selectedLayer();if(!l)return;l.z=Math.min(0,...effectLayers.map(x=>x.z||1))-1;renderLayers();saveLayers(); });
+document.getElementById('layerDeleteBtn').addEventListener('click', () => { if(!selectedLayer())return;effectLayers=effectLayers.filter(x=>x.id!==selectedLayerId);selectedLayerId=effectLayers.length?effectLayers[effectLayers.length-1].id:null;renderLayers();saveLayers(); });
+try {
+  const saved = JSON.parse(localStorage.getItem('beatfx_v07_layers') || '[]');
+  if (Array.isArray(saved)) {
+    effectLayers = saved.filter(layer => layer && layerPresets[layer.type] && Number.isFinite(layer.x) && Number.isFinite(layer.y)).slice(0,30);
+    layerIdCounter = effectLayers.reduce((max,layer)=>Math.max(max,Number(layer.id)||0),0)+1;
+  }
+} catch (error) { console.warn('BEATFX local layer restore:', error); }
+renderLayers();
 
 document.getElementById('imageFile').addEventListener('change', event => {
   const file = event.target.files && event.target.files[0];
