@@ -14,6 +14,22 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick button{min-height:82px;text-align:left;padding:13px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1a1530,#100f1b);color:#fff}.quick b{display:block;font-size:13px;margin-top:7px}.quick i{font-style:normal;font-size:21px;color:#c69bff}
 .templates{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.template{border:1px solid var(--line);border-radius:17px;background:#12101f;padding:10px;text-align:left;color:#fff;min-width:0}.template.active{border-color:var(--blue);box-shadow:0 0 0 1px #19c8ff55,0 0 22px #19c8ff22}.art{height:115px;border-radius:12px;display:grid;place-items:center;overflow:hidden;position:relative;background:radial-gradient(circle at center,#372064,#090914 70%)}.art.glass{background:linear-gradient(135deg,#5b5a67,#15131d 55%,#2b1c42)}.art.reflection{background:linear-gradient(#100b1c,#25132b 65%,#8c4a27)}.art.neon{background:radial-gradient(circle,#00536a,#10102d 65%)}.music-card{width:78%;height:68px;border:1px solid #ffffff80;border-radius:12px;background:#ffffff18;backdrop-filter:blur(8px);padding:10px;box-shadow:0 0 22px #8e50ff55}.bars{height:23px;display:flex;align-items:center;gap:3px;justify-content:center}.bars i{width:3px;border-radius:5px;background:linear-gradient(#29d9ff,#ba5cff);height:var(--h)}.art-label{font-size:10px;color:#fff;margin-top:5px}.template strong{display:block;font-size:13px;margin:9px 2px 2px}.template small{color:var(--muted);font-size:11px;margin-left:2px}
 .workspace{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.preview,.controls{background:#11101d;border:1px solid var(--line);border-radius:18px;padding:14px}.preview-screen{aspect-ratio:16/9;min-height:190px;border-radius:13px;background:radial-gradient(circle at 50% 55%,#28125b,#080711 68%);display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #3d2c63}.preview-screen canvas{position:absolute;inset:0;width:100%;height:100%}.preview-info{position:relative;z-index:1;text-align:center;text-shadow:0 2px 10px #000}.preview-info b{display:block;font-size:clamp(14px,2vw,22px)}.preview-info small{color:#c6b8e8}.control-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #51436f;background:#1a1630;padding:10px 13px;border-radius:11px;font-size:12px;font-weight:700}.file-label input{display:none}.track{margin-top:12px;color:var(--muted);font-size:12px}.track audio{width:100%;height:35px;margin-top:6px}.controls label{display:block;color:#c8c0d8;font-size:12px;margin:13px 0 6px}.controls input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#090812;color:white}.controls input[type=color]{width:100%;height:38px;background:#090812;border:1px solid var(--line);border-radius:9px}.hint{font-size:11px;color:var(--muted);line-height:1.5}.effect-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#11101d}.effect-controls label{display:flex;align-items:center;gap:8px;margin:0;color:#d8d1e8;font-size:12px}.effect-controls input[type=range]{width:120px;accent-color:var(--purple)}.effect-status{font-size:11px;color:var(--muted)}.effect-active{border-color:var(--purple)!important;box-shadow:0 0 18px #9b55ff33}.visualizer-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.visualizer-picker button{border:1px solid var(--line);border-radius:11px;background:#171329;color:#dcd4ee;padding:10px 6px;font-size:12px;font-weight:700;min-height:42px}.visualizer-picker button.active{border-color:var(--blue);color:#fff;background:linear-gradient(120deg,#34205a,#11243b);box-shadow:0 0 14px #19c8ff22}.footer{text-align:center;color:#77718a;font-size:11px;margin-top:28px}
+.viz-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+.viz-template{padding:9px;text-align:left;color:#f8f6ff;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#171329,#0e0d18);min-width:0;transition:border-color .18s,box-shadow .18s,transform .18s}
+.viz-template:active{transform:scale(.985)}
+.viz-template.active{border-color:var(--blue);box-shadow:0 0 0 1px #19c8ff44,0 0 20px #19c8ff22}
+.viz-thumb{height:104px;border-radius:10px;position:relative;overflow:hidden;display:grid;place-items:center;background:radial-gradient(circle at 50% 50%,#272052,#090812 72%);border:1px solid #ffffff12}
+.viz-thumb .mini-ring{width:54px;height:54px;border:3px solid #b477ff;border-radius:50%;box-shadow:0 0 12px #9b55ff, inset 0 0 12px #9b55ff66}
+.viz-thumb .mini-bars{height:55px;display:flex;align-items:center;gap:4px}
+.viz-thumb .mini-bars i{display:block;width:5px;border-radius:5px;background:linear-gradient(#25d8ff,#a34dff 65%,#ff42c8);height:var(--bar);box-shadow:0 0 7px #9b55ff}
+.viz-thumb .mini-wave{width:90%;height:42px;border-top:3px solid #9b55ff;border-bottom:2px solid #19c8ff;border-radius:50%;transform:skewY(-8deg);filter:drop-shadow(0 0 6px #9b55ff)}
+.viz-thumb .mini-hex{width:58px;height:58px;border:3px solid #28d8ff;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%);background:#19c8ff18;box-shadow:0 0 13px #19c8ff}
+.viz-thumb .mini-frame{position:absolute;inset:12px;border:2px solid #19c8ff;border-radius:8px;box-shadow:0 0 12px #19c8ff,inset 0 0 12px #19c8ff44}
+.viz-thumb .mini-tunnel{position:absolute;inset:0;background:repeating-radial-gradient(ellipse at center,#19c8ff00 0 10px,#19c8ff99 11px 12px,#9b55ff00 13px 21px);transform:perspective(110px) rotateX(48deg) scale(1.35);filter:drop-shadow(0 0 6px #19c8ff)}
+.viz-template strong{display:block;font-size:12px;margin:8px 2px 3px}
+.viz-template small{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin:0 2px 2px}
+.viz-gallery-status{font-size:11px;color:var(--muted);margin-top:9px}
+@media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
 @media(max-width:650px){.visualizer-picker{grid-template-columns:repeat(2,1fr)}.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
 </style>
 </head>
@@ -54,6 +70,40 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
     <button class="template" data-template="Reflection Music"><div class="art reflection"><div class="music-card" style="border-color:#e6b56d;background:#180e1dcc;box-shadow:0 10px 25px #ff9e3b55"><div style="font-size:10px;text-align:center">REFLECTION</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>Reflection Music</strong><small>Efek pantulan cahaya</small></button>
     <button class="template" data-template="DJ Neon Card"><div class="art neon"><div class="music-card" style="border-color:#31eaff;box-shadow:0 0 25px #00cfff88"><div style="font-size:10px;color:#9ff5ff;text-align:center">DJ NEON</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>DJ Neon Card</strong><small>Neon biru dan cyan</small></button>
   </div>
+</section>
+
+<section class="section" id="visualizer-templates">
+  <div class="section-head">
+    <h3>Bass Visualizer Templates</h3>
+    <span>6 gaya visual</span>
+  </div>
+  <div class="viz-gallery" id="visualizerTemplateGallery">
+    <button class="viz-template active" type="button" data-viz-template="neon-circle" data-viz-shape="circle">
+      <div class="viz-thumb"><span class="mini-ring"></span></div>
+      <strong>Neon Bass Circle</strong><small>Lingkaran neon untuk bass dan kick</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="3d-tunnel" data-viz-shape="spectrum">
+      <div class="viz-thumb"><span class="mini-tunnel"></span><span class="mini-ring" style="width:29px;height:29px;border-color:#31dfff"></span></div>
+      <strong>3D Tunnel</strong><small>Terowongan perspektif dengan spektrum</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="neon-equalizer" data-viz-shape="bars">
+      <div class="viz-thumb"><span class="mini-bars"><i style="--bar:20px"></i><i style="--bar:45px"></i><i style="--bar:31px"></i><i style="--bar:55px"></i><i style="--bar:27px"></i><i style="--bar:42px"></i><i style="--bar:18px"></i></span></div>
+      <strong>Neon Equalizer</strong><small>Batang frekuensi berwarna neon</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="energy-wave" data-viz-shape="wave">
+      <div class="viz-thumb"><span class="mini-wave"></span></div>
+      <strong>Energy Wave</strong><small>Gelombang audio horizontal bercahaya</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="hexagon-pulse" data-viz-shape="hexagon">
+      <div class="viz-thumb"><span class="mini-hex"></span></div>
+      <strong>Hexagon Pulse</strong><small>Geometri enam sisi dengan pulse</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="dj-neon-frame" data-viz-shape="bars">
+      <div class="viz-thumb"><span class="mini-frame"></span><span class="mini-bars" style="transform:scale(.65)"><i style="--bar:18px"></i><i style="--bar:42px"></i><i style="--bar:25px"></i><i style="--bar:50px"></i><i style="--bar:20px"></i></span></div>
+      <strong>DJ Neon Frame</strong><small>Bingkai neon dengan equalizer di tengah</small>
+    </button>
+  </div>
+  <div class="viz-gallery-status" id="visualizerTemplateStatus">Template aktif: Neon Bass Circle</div>
 </section>
 
 <section class="section" id="workspace">
@@ -112,6 +162,7 @@ let frequencyData = null;
 let currentUrl = null;
 let accent = '#9b55ff';
 let visualizerType = 'circle';
+let visualizerTemplate = 'neon-circle';
 
 let particlesEnabled = false;
 let particleIntensity = 55;
@@ -262,6 +313,61 @@ function readAudioBands() {
   return { bass: bassEnergy, mid, treble, beat, strength };
 }
 
+function drawTunnelBackdrop(width, height, now, bass, pulse) {
+  const cx = width / 2;
+  const cy = height / 2;
+  const movement = (now * 0.00011) % 1;
+  ctx.save();
+  ctx.lineWidth = 1.2;
+  ctx.strokeStyle = accent;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 10 + bass * 16 + pulse * 10;
+  for (let i = 0; i < 8; i++) {
+    const progress = ((i / 8) + movement) % 1;
+    const scale = 0.12 + progress * 1.18;
+    const rw = width * 0.12 * scale;
+    const rh = height * 0.11 * scale;
+    ctx.globalAlpha = 0.12 + (1 - progress) * 0.42;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, rw + pulse * 5, rh + pulse * 3, 0, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 0.2;
+  for (let i = 0; i < 16; i++) {
+    const angle = (i / 16) * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(angle) * width, cy + Math.sin(angle) * height);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawDjNeonFrame(width, height, bass, pulse) {
+  const inset = 15 + pulse * 4;
+  const radius = 13;
+  ctx.save();
+  ctx.strokeStyle = accent;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = 12 + bass * 22 + pulse * 15;
+  ctx.lineWidth = 2 + pulse * 1.2;
+  ctx.globalAlpha = 0.75 + bass * 0.2;
+  ctx.beginPath();
+  ctx.roundRect(inset, inset, width - inset * 2, height - inset * 2, radius);
+  ctx.stroke();
+  // Bright corner accents give this preset its DJ-stage frame identity.
+  const corner = 26 + pulse * 7;
+  ctx.lineWidth = 3;
+  [[inset,inset,1,1],[width-inset,inset,-1,1],[inset,height-inset,1,-1],[width-inset,height-inset,-1,-1]].forEach(([x,y,sx,sy]) => {
+    ctx.beginPath();
+    ctx.moveTo(x + sx * corner, y);
+    ctx.lineTo(x, y);
+    ctx.lineTo(x, y + sy * corner);
+    ctx.stroke();
+  });
+  ctx.restore();
+}
+
 function draw() {
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
@@ -272,6 +378,9 @@ function draw() {
   ctx.clearRect(0, 0, width, height);
 
   const bands = readAudioBands();
+  if (visualizerTemplate === '3d-tunnel') {
+    drawTunnelBackdrop(width, height, now, bands.bass, beatPulse);
+  }
   const values = frequencyData || new Uint8Array(128);
   const centerX = width / 2;
   const centerY = height / 2 + 15;
@@ -410,6 +519,10 @@ function draw() {
     ctx.shadowBlur = 0;
   }
 
+  if (visualizerTemplate === 'dj-neon-frame') {
+    drawDjNeonFrame(width, height, bands.bass, beatPulse);
+  }
+
   requestAnimationFrame(draw);
 }
 requestAnimationFrame(draw);
@@ -520,8 +633,42 @@ const visualizerNames = {
 document.querySelectorAll('[data-visualizer]').forEach(button => {
   button.addEventListener('click', () => {
     visualizerType = button.dataset.visualizer;
+    visualizerTemplate = 'custom';
     document.querySelectorAll('[data-visualizer]').forEach(item => item.classList.toggle('active', item === button));
+    document.querySelectorAll('[data-viz-template]').forEach(item => item.classList.remove('active'));
+    document.getElementById('visualizerTemplateStatus').textContent = 'Template aktif: Custom ' + visualizerType;
+    document.getElementById('selectedTemplate').textContent = 'Custom ' + visualizerType;
     document.getElementById('visualizerHint').textContent = visualizerNames[visualizerType];
+  });
+});
+
+const visualizerTemplateNames = {
+  'neon-circle': 'Neon Bass Circle',
+  '3d-tunnel': '3D Tunnel',
+  'neon-equalizer': 'Neon Equalizer',
+  'energy-wave': 'Energy Wave',
+  'hexagon-pulse': 'Hexagon Pulse',
+  'dj-neon-frame': 'DJ Neon Frame'
+};
+
+document.querySelectorAll('[data-viz-template]').forEach(button => {
+  button.addEventListener('click', () => {
+    visualizerTemplate = button.dataset.vizTemplate;
+    visualizerType = button.dataset.vizShape;
+
+    document.querySelectorAll('[data-viz-template]').forEach(item => {
+      item.classList.toggle('active', item === button);
+    });
+
+    document.querySelectorAll('[data-visualizer]').forEach(item => {
+      item.classList.toggle('active', item.dataset.visualizer === visualizerType);
+    });
+
+    const templateName = visualizerTemplateNames[visualizerTemplate];
+    document.getElementById('visualizerTemplateStatus').textContent = 'Template aktif: ' + templateName;
+    document.getElementById('visualizerHint').textContent =
+      templateName + ': ' + visualizerNames[visualizerType];
+    document.getElementById('selectedTemplate').textContent = templateName;
   });
 });
 
