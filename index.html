@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v0.7 — Multi-Band Effects Studio</title>
+<title>BEATFX DJ v0.8 — Effects Fix & Audio Response</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -56,17 +56,21 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .effect-layer{position:absolute;left:50%;top:50%;width:35%;height:35%;transform:translate(-50%,-50%);pointer-events:auto;touch-action:none;cursor:grab;display:grid;place-items:center;user-select:none;outline:1px dashed transparent;border-radius:10px}
 .effect-layer:active{cursor:grabbing}
 .effect-layer.selected{outline:1px dashed #ffffffbb;filter:drop-shadow(0 0 5px #19c8ff)}
-.layer-halo{border:3px solid #22d8ff;border-radius:50%;box-shadow:0 0 12px #22d8ff,0 0 28px #ff42c8,inset 0 0 14px #22d8ff66}
-.layer-orbit{border:2px dashed #ff5bd5;border-radius:50%;box-shadow:0 0 16px #ff42c8}
-.layer-spark{color:#f8e8ff;font-size:clamp(22px,6vw,54px);text-shadow:0 0 8px #19c8ff,0 0 18px #ff42c8;letter-spacing:.12em}
-.layer-laser{height:9%!important;background:linear-gradient(90deg,transparent,#19c8ff 25%,#fff 50%,#ff42c8 75%,transparent);box-shadow:0 0 12px #19c8ff,0 0 25px #ff42c8;border-radius:99px}
-.layer-frame{border:3px solid #b879ff;border-radius:12px;box-shadow:0 0 12px #b879ff,inset 0 0 14px #b879ff66}
+.layer-halo{border:2px solid #35eaff;border-radius:50%;box-shadow:0 0 8px #35eaff,0 0 20px #35eaff88,inset 0 0 18px #35eaff44;background:radial-gradient(circle,transparent 58%,#35eaff12 72%,transparent 74%)}
+.layer-orbit{border:2px solid transparent;border-top-color:#ff55d7;border-bottom-color:#28eaff;border-radius:50%;box-shadow:0 0 13px #ff42c8;outline:1px solid #ffffff55;outline-offset:5px}
+.layer-spark{color:#fff;font-size:clamp(24px,7vw,58px);text-shadow:0 0 5px #fff,0 0 13px #19c8ff,0 0 25px #ff42c8;letter-spacing:.18em;background:radial-gradient(ellipse, #b879ff22,transparent 68%);}
+.layer-laser{height:7%!important;background:linear-gradient(90deg,transparent,#19c8ff 18%,#fff 48%,#ff42c8 82%,transparent);box-shadow:0 0 7px #19c8ff,0 0 18px #ff42c8;border-radius:99px}
+.layer-frame{border:2px solid #b879ff;border-radius:16px;box-shadow:0 0 8px #b879ff,0 0 20px #19c8ff66,inset 0 0 16px #b879ff33;background:linear-gradient(135deg,#19c8ff12,transparent 45%,#ff42c812)}
 .layer-presets{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding-top:11px}
 .layer-preset{border:1px solid var(--line);border-radius:10px;padding:10px;background:#171329;color:#eee;font-size:12px;font-weight:700;text-align:left}
 .layer-preset span{display:block;color:var(--muted);font-size:10px;font-weight:400;margin-top:3px}
 .layer-list{display:flex;flex-direction:column;gap:6px;padding-top:10px}
-.layer-list-item{display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--line);background:#151226;color:#eee;border-radius:9px;padding:8px 10px;font-size:11px}
+.layer-list-item{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#151226;color:#eee;border-radius:9px;padding:7px 8px;font-size:11px}
 .layer-list-item.active{border-color:var(--blue);background:#122438}
+.layer-select-btn{flex:1;min-width:0;text-align:left;border:0;background:transparent;color:inherit;padding:4px;font-size:11px}
+.layer-delete-mini{border:1px solid #a33b69;background:#321629;color:#ffc1d9;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:700}
+.layer-selected-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:9px}
+.layer-selected-actions .danger{background:#321629;border-color:#a33b69;color:#ffc1d9}
 .layer-controls{padding-top:10px}
 .layer-action-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 .layer-action-row button{border:1px solid var(--line);border-radius:9px;background:#1a1630;color:#eee;padding:8px 10px;font-size:11px}
@@ -244,7 +248,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
     <span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
     <span class="effect-status" id="bandStatus">Audio bands: menunggu musik</span>
   </div>
-  <details class="editor-panel" id="addLayerPanel" open>
+  <details class="editor-panel" id="addLayerPanel">
     <summary>✦ Tambah Efek yang Bisa Digeser</summary>
     <div class="editor-panel-body">
       <div class="layer-presets">
@@ -272,7 +276,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
       <div class="layer-action-row">
         <button type="button" id="layerFrontBtn" disabled>Ke depan</button>
         <button type="button" id="layerBackBtn" disabled>Ke belakang</button>
-        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus</button>
+        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus layer terpilih</button>
       </div>
       <p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
     </div>
@@ -282,7 +286,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • Build 0.7 • Multi-Band Effects Studio</div>
+<div class="footer">BEATFX DJ • Build 0.8 • Effects Fix & Audio Response</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -456,12 +460,12 @@ function readAudioBands() {
   const midRise = midEnergy - previousMidEnergy;
   const trebleRise = trebleEnergy - previousTrebleEnergy;
   const bassThreshold = Math.max(0.028, bassAverage * (1.34 - sensitivity * 0.32));
-  const midThreshold = Math.max(0.032, midAverage * 1.42);
-  const trebleThreshold = Math.max(0.026, trebleAverage * 1.48);
+  const midThreshold = Math.max(0.018, midAverage * 1.12);
+  const trebleThreshold = Math.max(0.014, trebleAverage * 1.16);
 
   const bassHit = bassEffectEnabled && bassEnergy > bassThreshold && bassRise > (0.010 - sensitivity * 0.003) && now - lastBeatAt > 185;
-  const midHit = midEffectEnabled && midEnergy > midThreshold && midRise > 0.012 && now - lastMidAt > 145;
-  const trebleHit = trebleEffectEnabled && trebleEnergy > trebleThreshold && trebleRise > 0.010 && now - lastTrebleAt > 105;
+  const midHit = midEffectEnabled && midEnergy > midThreshold && midRise > 0.0045 && now - lastMidAt > 125;
+  const trebleHit = trebleEffectEnabled && trebleEnergy > trebleThreshold && trebleRise > 0.0035 && now - lastTrebleAt > 85;
   let strength = 0, bassStrength = 0, midStrength = 0, trebleStrength = 0;
 
   if (bassHit) {
@@ -477,13 +481,13 @@ function readAudioBands() {
     }
   }
   if (midHit) {
-    midStrength = clamp(0.30 + (midEnergy - midThreshold) * 3.8 + midRise * 6, 0.30, 1.2);
+    midStrength = clamp(0.48 + (midEnergy - midThreshold) * 5.2 + midRise * 13, 0.42, 1.45);
     lastMidAt = now;
     midColorIndex = (midColorIndex + 1) % midPalette.length;
     currentMidColor = midPalette[midColorIndex];
   }
   if (trebleHit) {
-    trebleStrength = clamp(0.28 + (trebleEnergy - trebleThreshold) * 4.5 + trebleRise * 7, 0.28, 1.1);
+    trebleStrength = clamp(0.42 + (trebleEnergy - trebleThreshold) * 6.0 + trebleRise * 16, 0.38, 1.35);
     lastTrebleAt = now;
     trebleColorIndex = (trebleColorIndex + 1) % treblePalette.length;
     currentTrebleColor = treblePalette[trebleColorIndex];
@@ -588,18 +592,52 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
   const outerBase = radius * 0.98;
   const points = 180;
 
-  // Bass/kick is the wide, punchy outer wave. Photo dimensions stay fixed.
-  if (bassEffectEnabled) {
-    ctx.beginPath();
+  // Bass/kick: a filled, layered impact bloom. It stays hidden between kicks
+  // and expands outward from behind the fixed photo only when a kick is detected.
+  if (bassEffectEnabled && bassImpactPulse > 0.035) {
+    const hit = Math.min(1.35, bassImpactPulse);
+    const thickness = (7 + hit * 18) * impact;
+    const expansion = (8 + hit * 30) * impact;
+    const lobePower = 2.2;
+    const outer = [], inner = [];
     for (let i=0;i<=points;i++) {
       const angle = i / points * Math.PI * 2;
-      const lowShape = Math.pow(Math.max(0, Math.cos(angle * 4)), 2);
-      const lowDetail = sample(i, points);
-      const r = outerBase + lowDetail * 7 + bassImpactPulse * 27 * impact + lowShape * bands.bass * 22 * impact;
+      const lobes = Math.pow(Math.max(0, Math.cos(angle * 6)), lobePower);
+      const audioDetail = sample(i, points);
+      const edge = outerBase + expansion * (0.48 + lobes * 0.72) + audioDetail * hit * 5;
+      const x = Math.cos(angle), y = Math.sin(angle);
+      outer.push([x * edge, y * edge]);
+      inner.push([x * (edge - thickness), y * (edge - thickness)]);
+    }
+    ctx.beginPath();
+    outer.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
+    for (let i=inner.length-1;i>=0;i--) ctx.lineTo(inner[i][0], inner[i][1]);
+    ctx.closePath();
+    const bloom = ctx.createLinearGradient(-outerBase, -outerBase, outerBase, outerBase);
+    bloom.addColorStop(0, currentBassColor);
+    bloom.addColorStop(0.48, '#ffffff');
+    bloom.addColorStop(1, currentBassColor);
+    ctx.fillStyle = bloom;
+    ctx.shadowColor = currentBassColor;
+    ctx.shadowBlur = 12 + hit * 28;
+    ctx.globalAlpha = Math.min(0.96, 0.22 + hit * 0.58);
+    ctx.fill();
+
+    // A second translucent inner ribbon gives the impact a solid, full-bodied look.
+    ctx.beginPath();
+    for (let i=0;i<=points;i++) {
+      const angle=i/points*Math.PI*2;
+      const lobes=Math.pow(Math.max(0,Math.cos(angle*6)),2.2);
+      const r=outerBase-3 + hit*(5+lobes*12)*impact;
       const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
       if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
-    ctx.closePath();ctx.strokeStyle=currentBassColor;ctx.lineWidth=3.2+bassImpactPulse*3.5;ctx.shadowColor=currentBassColor;ctx.shadowBlur=10+bassImpactPulse*24;ctx.globalAlpha=.92;ctx.stroke();
+    ctx.closePath();
+    ctx.strokeStyle = currentBassColor;
+    ctx.lineWidth = 2 + hit * 4;
+    ctx.shadowBlur = 8 + hit * 20;
+    ctx.globalAlpha = Math.min(1, 0.35 + hit * 0.5);
+    ctx.stroke();
   }
 
   // Mid frequencies create a separate softer, continuously changing wave.
@@ -607,13 +645,13 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
     ctx.beginPath();
     for (let i=0;i<=points;i++) {
       const angle=i/points*Math.PI*2;
-      const midShape=Math.sin(angle*11 + now*0.0032) * (3 + bands.mid*9 + midWavePulse*15);
-      const harmonic=Math.sin(angle*5-now*0.0018)*(2+bands.mid*4);
+      const midShape=Math.sin(angle*9 + now*0.0038) * (5 + bands.mid*15 + midWavePulse*23);
+      const harmonic=Math.sin(angle*5-now*0.0022)*(3+bands.mid*7);
       const r=outerBase-8+midShape+harmonic;
       const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
       if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
-    ctx.closePath();ctx.strokeStyle=currentMidColor;ctx.lineWidth=2+midWavePulse*2.2;ctx.shadowColor=currentMidColor;ctx.shadowBlur=7+midWavePulse*16;ctx.globalAlpha=.86;ctx.stroke();
+    ctx.closePath();ctx.strokeStyle=currentMidColor;ctx.lineWidth=2.4+midWavePulse*3.2;ctx.shadowColor=currentMidColor;ctx.shadowBlur=7+midWavePulse*16;ctx.globalAlpha=.86;ctx.stroke();
   }
 
   // Treble creates small independent sparks rather than expanding the whole ring.
@@ -624,9 +662,9 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
       const angle=(i/sparkCount)*Math.PI*2 + Math.sin(now*.001+i)*.025;
       const energy=sample(i,sparkCount);
       const inner=outerBase+5+energy*4;
-      const length=3+energy*8+trebleSparkPulse*13;
+      const length=5+energy*12+trebleSparkPulse*20;
       const outer=inner+length;
-      ctx.beginPath();ctx.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);ctx.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);ctx.lineWidth=1+trebleSparkPulse*1.4;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);ctx.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);ctx.lineWidth=1.4+trebleSparkPulse*2.0;ctx.stroke();
       if (trebleSparkPulse>.16 && i%3===0){ctx.beginPath();ctx.arc(Math.cos(angle)*outer,Math.sin(angle)*outer,1+trebleSparkPulse*2,0,Math.PI*2);ctx.fill();}
     }
   }
@@ -1110,18 +1148,26 @@ function renderLayers() {
   });
 
   if (!effectLayers.length) {
-    layerList.innerHTML = '<div class="layer-empty">Belum ada layer tambahan.</div>';
+    layerList.innerHTML = '<div class="layer-empty">Belum ada layer tambahan. Pilih efek di atas untuk menambahkannya.</div>';
   } else {
     layerList.innerHTML = '';
     effectLayers.forEach(layer => {
       const preset = layerPresets[layer.type];
-      const item = document.createElement('button');
-      item.type = 'button';
+      const item = document.createElement('div');
       item.className = 'layer-list-item' + (layer.id === selectedLayerId ? ' active' : '');
-      const title = document.createElement('span'); title.textContent = preset.name;
-      const pos = document.createElement('small'); pos.textContent = Math.round(layer.x) + '%, ' + Math.round(layer.y) + '%';
-      item.append(title,pos);
-      item.addEventListener('click', () => selectLayer(layer.id));
+      const select = document.createElement('button');
+      select.type = 'button'; select.className = 'layer-select-btn';
+      select.textContent = preset.name + ' · ' + Math.round(layer.x) + '%, ' + Math.round(layer.y) + '%';
+      select.addEventListener('click', () => selectLayer(layer.id));
+      const remove = document.createElement('button');
+      remove.type = 'button'; remove.className = 'layer-delete-mini'; remove.textContent = 'Hapus';
+      remove.setAttribute('aria-label','Hapus ' + preset.name);
+      remove.addEventListener('click', () => {
+        effectLayers = effectLayers.filter(item => item.id !== layer.id);
+        if (selectedLayerId === layer.id) selectedLayerId = effectLayers.length ? effectLayers[effectLayers.length-1].id : null;
+        renderLayers(); saveLayers();
+      });
+      item.append(select,remove);
       layerList.appendChild(item);
     });
   }
@@ -1142,7 +1188,10 @@ document.querySelectorAll('[data-add-layer]').forEach(button => {
   button.addEventListener('click', () => {
     const type = button.dataset.addLayer, preset = layerPresets[type];
     if (!preset) return;
-    const layer = { id: layerIdCounter++, type, x:50, y:50, width:preset.width, height:preset.height, opacity:100, rotation:0, z:effectLayers.length+1 };
+    const slot = effectLayers.length;
+    const offsets = [[50,50],[27,28],[73,28],[27,72],[73,72],[50,22],[50,78]];
+    const [startX,startY] = offsets[slot % offsets.length];
+    const layer = { id: layerIdCounter++, type, x:startX, y:startY, width:preset.width, height:preset.height, opacity:100, rotation:0, z:effectLayers.length+1 };
     effectLayers.push(layer);
     selectedLayerId = layer.id;
     renderLayers(); saveLayers();
