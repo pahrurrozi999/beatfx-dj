@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ — Music Visualizer & DJ Video Maker</title>
+<title>BEATFX DJ v0.6 — Music Visualizer & DJ Video Maker</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -13,7 +13,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .section{margin-top:27px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:10px;margin-bottom:13px}.section h3{font-size:17px;margin:0}.section-head span{font-size:12px;color:var(--muted)}
 .quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.quick button{min-height:82px;text-align:left;padding:13px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#1a1530,#100f1b);color:#fff}.quick b{display:block;font-size:13px;margin-top:7px}.quick i{font-style:normal;font-size:21px;color:#c69bff}
 .templates{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.template{border:1px solid var(--line);border-radius:17px;background:#12101f;padding:10px;text-align:left;color:#fff;min-width:0}.template.active{border-color:var(--blue);box-shadow:0 0 0 1px #19c8ff55,0 0 22px #19c8ff22}.art{height:115px;border-radius:12px;display:grid;place-items:center;overflow:hidden;position:relative;background:radial-gradient(circle at center,#372064,#090914 70%)}.art.glass{background:linear-gradient(135deg,#5b5a67,#15131d 55%,#2b1c42)}.art.reflection{background:linear-gradient(#100b1c,#25132b 65%,#8c4a27)}.art.neon{background:radial-gradient(circle,#00536a,#10102d 65%)}.music-card{width:78%;height:68px;border:1px solid #ffffff80;border-radius:12px;background:#ffffff18;backdrop-filter:blur(8px);padding:10px;box-shadow:0 0 22px #8e50ff55}.bars{height:23px;display:flex;align-items:center;gap:3px;justify-content:center}.bars i{width:3px;border-radius:5px;background:linear-gradient(#29d9ff,#ba5cff);height:var(--h)}.art-label{font-size:10px;color:#fff;margin-top:5px}.template strong{display:block;font-size:13px;margin:9px 2px 2px}.template small{color:var(--muted);font-size:11px;margin-left:2px}
-.workspace{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.preview,.controls{background:#11101d;border:1px solid var(--line);border-radius:18px;padding:14px}.preview-screen{aspect-ratio:16/9;min-height:190px;border-radius:13px;background:radial-gradient(circle at 50% 55%,#28125b,#080711 68%);display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #3d2c63}.preview-screen canvas{position:absolute;inset:0;width:100%;height:100%}.preview-info{position:relative;z-index:1;text-align:center;text-shadow:0 2px 10px #000}.preview-info b{display:block;font-size:clamp(14px,2vw,22px)}.preview-info small{color:#c6b8e8}.control-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #51436f;background:#1a1630;padding:10px 13px;border-radius:11px;font-size:12px;font-weight:700}.file-label input{display:none}.track{margin-top:12px;color:var(--muted);font-size:12px}.track audio{width:100%;height:35px;margin-top:6px}.controls label{display:block;color:#c8c0d8;font-size:12px;margin:13px 0 6px}.controls input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#090812;color:white}.controls input[type=color]{width:100%;height:38px;background:#090812;border:1px solid var(--line);border-radius:9px}.hint{font-size:11px;color:var(--muted);line-height:1.5}.effect-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#11101d}.effect-controls label{display:flex;align-items:center;gap:8px;margin:0;color:#d8d1e8;font-size:12px}.effect-controls input[type=range]{width:120px;accent-color:var(--purple)}.effect-status{font-size:11px;color:var(--muted)}.effect-active{border-color:var(--purple)!important;box-shadow:0 0 18px #9b55ff33}.visualizer-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}.visualizer-picker button{border:1px solid var(--line);border-radius:11px;background:#171329;color:#dcd4ee;padding:10px 6px;font-size:12px;font-weight:700;min-height:42px}.visualizer-picker button.active{border-color:var(--blue);color:#fff;background:linear-gradient(120deg,#34205a,#11243b);box-shadow:0 0 14px #19c8ff22}.footer{text-align:center;color:#77718a;font-size:11px;margin-top:28px}
+.workspace{display:grid;grid-template-columns:1.4fr 1fr;gap:14px}.preview,.controls{background:#11101d;border:1px solid var(--line);border-radius:18px;padding:14px}.preview-screen{aspect-ratio:16/9;min-height:190px;border-radius:13px;background:radial-gradient(circle at 50% 55%,#28125b,#080711 68%);display:grid;place-items:center;position:relative;overflow:hidden;border:1px solid #3d2c63}.preview-screen canvas{position:absolute;inset:0;width:100%;height:100%}.preview-info{position:relative;z-index:1;text-align:center;text-shadow:0 2px 10px #000}.preview-info b{display:block;font-size:clamp(14px,2vw,22px)}.preview-info small{color:#c6b8e8}.control-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.file-label{display:inline-flex;align-items:center;justify-content:center;border:1px solid #51436f;background:#1a1630;padding:10px 13px;border-radius:11px;font-size:12px;font-weight:700}.file-label input{display:none}.track{margin-top:12px;color:var(--muted);font-size:12px}.track audio{width:100%;height:35px;margin-top:6px}.controls label{display:block;color:#c8c0d8;font-size:12px;margin:13px 0 6px}.controls input[type=text]{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#090812;color:white}.controls input[type=color]{width:100%;height:38px;background:#090812;border:1px solid var(--line);border-radius:9px}.hint{font-size:11px;color:var(--muted);line-height:1.5}.effect-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:14px;background:#11101d}.effect-controls label{display:flex;align-items:center;gap:8px;margin:0;color:#d8d1e8;font-size:12px}.effect-controls input[type=range]{width:120px;accent-color:var(--purple)}.effect-status{font-size:11px;color:var(--muted)}.effect-active{border-color:var(--purple)!important;box-shadow:0 0 18px #9b55ff33}.footer{text-align:center;color:#77718a;font-size:11px;margin-top:28px}
 .viz-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
 .viz-template{padding:9px;text-align:left;color:#f8f6ff;border:1px solid var(--line);border-radius:15px;background:linear-gradient(145deg,#171329,#0e0d18);min-width:0;transition:border-color .18s,box-shadow .18s,transform .18s}
 .viz-template:active{transform:scale(.985)}
@@ -29,8 +29,11 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .viz-template strong{display:block;font-size:12px;margin:8px 2px 3px}
 .viz-template small{display:block;color:var(--muted);font-size:10px;line-height:1.35;margin:0 2px 2px}
 .viz-gallery-status{font-size:11px;color:var(--muted);margin-top:9px}
+.photo-settings{margin-top:14px;padding:12px;border:1px solid #30264c;border-radius:12px;background:#0d0b18}
+.photo-settings input[type=range]{width:100%;accent-color:var(--purple)}
+.photo-settings label{margin-top:8px}
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
-@media(max-width:650px){.visualizer-picker{grid-template-columns:repeat(2,1fr)}.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
+@media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
 </style>
 </head>
 <body>
@@ -75,7 +78,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 <section class="section" id="visualizer-templates">
   <div class="section-head">
     <h3>Bass Visualizer Templates</h3>
-    <span>6 gaya visual</span>
+    <span>10 gaya visual</span>
   </div>
   <div class="viz-gallery" id="visualizerTemplateGallery">
     <button class="viz-template active" type="button" data-viz-template="neon-circle" data-viz-shape="circle">
@@ -102,28 +105,53 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
       <div class="viz-thumb"><span class="mini-frame"></span><span class="mini-bars" style="transform:scale(.65)"><i style="--bar:18px"></i><i style="--bar:42px"></i><i style="--bar:25px"></i><i style="--bar:50px"></i><i style="--bar:20px"></i></span></div>
       <strong>DJ Neon Frame</strong><small>Bingkai neon dengan equalizer di tengah</small>
     </button>
+    <button class="viz-template" type="button" data-viz-template="photo-bass-circle" data-viz-shape="circle">
+      <div class="viz-thumb"><span class="mini-ring" style="width:66px;height:66px;border-color:#19c8ff;box-shadow:0 0 10px #19c8ff,0 0 22px #ff42c8"></span><span style="position:absolute;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7a5b9c,#1b8caa);border:2px solid #fff9"></span></div>
+      <strong>Photo Bass Circle</strong><small>Foto di tengah dengan gelombang bass neon</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="triangle-pulse" data-viz-shape="triangle">
+      <div class="viz-thumb"><span class="mini-hex" style="clip-path:polygon(50% 0,100% 100%,0 100%);border-color:#b879ff"></span></div>
+      <strong>Triangle Pulse</strong><small>Bentuk segitiga yang berdenyut</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="star-pulse" data-viz-shape="star">
+      <div class="viz-thumb"><span style="width:62px;height:62px;background:#b879ff;clip-path:polygon(50% 0,62% 35%,98% 35%,69% 57%,80% 94%,50% 72%,20% 94%,31% 57%,2% 35%,38% 35%);filter:drop-shadow(0 0 10px #b879ff)"></span></div>
+      <strong>Star Pulse</strong><small>Bintang neon mengikuti musik</small>
+    </button>
+    <button class="viz-template" type="button" data-viz-template="heart-pulse" data-viz-shape="heart">
+      <div class="viz-thumb"><span style="font-size:62px;line-height:1;color:#ff42c8;text-shadow:0 0 14px #ff42c8">♥</span></div>
+      <strong>Heart Pulse</strong><small>Bentuk hati yang berdenyut</small>
+    </button>
   </div>
   <div class="viz-gallery-status" id="visualizerTemplateStatus">Template aktif: Neon Bass Circle</div>
 </section>
 
 <section class="section" id="workspace">
-  <div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Glass Music</span></div>
+  <div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Neon Bass Circle</span></div>
   <div class="workspace">
     <div class="preview">
       <div class="preview-screen"><canvas id="visualizer"></canvas><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
       <div class="control-row">
         <label class="file-label">♫ Upload Musik <input id="audioFile" type="file" accept="audio/*"></label>
         <label class="file-label">▧ Foto Background <input id="imageFile" type="file" accept="image/*"></label>
+        <label class="file-label">◉ Foto Tengah <input id="centerPhotoFile" type="file" accept="image/*"></label>
         <button class="secondary" id="playBtn">▶ Play</button>
       </div>
       <div class="track"><div id="fileName">Belum ada musik dipilih</div><audio id="audio" controls></audio></div>
     </div>
     <div class="controls">
-      <h3 style="margin:2px 0 8px;font-size:15px">Pengaturan Music Card</h3>
+      <h3 style="margin:2px 0 8px;font-size:15px">Pengaturan Music Card & Visualizer</h3>
       <label for="titleInput">Judul lagu</label><input id="titleInput" type="text" value="BEATFX DJ" placeholder="Judul lagu">
       <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
       <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
-      <label>Bentuk Visualizer</label><div class="visualizer-picker" id="visualizerPicker"><button class="active" data-visualizer="circle">◉ Circular</button><button data-visualizer="bars">▥ Equalizer</button><button data-visualizer="wave">〰 Waveform</button><button data-visualizer="spectrum">▤ 3D Spectrum</button><button data-visualizer="hexagon">⬡ Hexagon</button><button data-visualizer="triangle">△ Triangle</button><button data-visualizer="star">☆ Star</button><button data-visualizer="heart">♡ Heart</button></div><p class="hint" id="visualizerHint">Circular: lingkaran audio bereaksi terhadap bass dan frekuensi musik.</p><p class="hint">Visualizer membaca frekuensi audio secara real-time. Pilih bentuk yang ingin digunakan; penguatan respons bass akan kita sempurnakan pada tahap perbaikan berikutnya.</p>
+      <p class="hint" id="visualizerHint">Neon Bass Circle: lingkaran neon bereaksi terhadap bass dan frekuensi musik. Pilih gaya visualizer melalui satu galeri di atas.</p>
+      <div class="photo-settings" id="photoSettings">
+        <label for="photoSizeInput">Ukuran foto tengah</label>
+        <input id="photoSizeInput" type="range" min="50" max="100" value="72">
+        <p class="hint"><span id="photoSizeValue">72%</span> · Atur besar foto di dalam lingkaran.</p>
+        <label for="bassImpactInput">Kekuatan hentakan foto & gelombang bass</label>
+        <input id="bassImpactInput" type="range" min="0" max="150" value="90">
+        <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur seberapa kuat foto dan gelombang mengembang saat bass terdeteksi.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -147,7 +175,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • Build 0.1 • Made for music creators</div>
+<div class="footer">BEATFX DJ • Build 0.6 • Photo Bass Circle</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -163,6 +191,10 @@ let currentUrl = null;
 let accent = '#9b55ff';
 let visualizerType = 'circle';
 let visualizerTemplate = 'neon-circle';
+let centerPhoto = null;
+let centerPhotoUrl = null;
+let photoSize = 72;
+let bassImpact = 90;
 
 let particlesEnabled = false;
 let particleIntensity = 55;
@@ -368,6 +400,71 @@ function drawDjNeonFrame(width, height, bass, pulse) {
   ctx.restore();
 }
 
+function drawPhotoBassCircle(radius, bands, beatPulse, sample) {
+  const impact = bassImpact / 100;
+  const pulse = clamp((bands.bass * 0.55 + beatPulse * 0.85) * impact, 0, 1.6);
+  const outerBase = radius * 0.98;
+  const points = 160;
+
+  // Three soft, colored waveform layers form the reactive photo ring.
+  const layers = [
+    { color: '#19c8ff', width: 5.5, offset: -2.8, gain: 1.0 },
+    { color: '#ff42c8', width: 3.8, offset: 2.8, gain: 0.82 },
+    { color: accent, width: 2.4, offset: 0, gain: 1.12 }
+  ];
+  layers.forEach(layer => {
+    ctx.beginPath();
+    for (let i = 0; i <= points; i++) {
+      const angle = (i / points) * Math.PI * 2;
+      const freq = sample(i, points);
+      const kickShape = Math.pow(Math.max(0, Math.cos(angle * 4)), 2) * bands.bass * 7 * impact;
+      const r = outerBase + layer.offset + freq * 10 * layer.gain + pulse * 18 * layer.gain + kickShape;
+      const x = Math.cos(angle) * r;
+      const y = Math.sin(angle) * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = layer.color;
+    ctx.lineWidth = layer.width + pulse * 1.4;
+    ctx.shadowColor = layer.color;
+    ctx.shadowBlur = 10 + pulse * 18;
+    ctx.globalAlpha = 0.82;
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+
+  // Photo grows on bass impacts but stays clipped to a clean circle.
+  const photoRadius = radius * 0.66 * (photoSize / 72) * (1 + pulse * 0.105);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(0, 0, photoRadius, 0, Math.PI * 2);
+  ctx.clip();
+  if (centerPhoto && centerPhoto.complete && centerPhoto.naturalWidth > 0) {
+    const scale = Math.max((photoRadius * 2) / centerPhoto.naturalWidth, (photoRadius * 2) / centerPhoto.naturalHeight);
+    const drawWidth = centerPhoto.naturalWidth * scale;
+    const drawHeight = centerPhoto.naturalHeight * scale;
+    ctx.drawImage(centerPhoto, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
+  } else {
+    const placeholder = ctx.createRadialGradient(-photoRadius * 0.3, -photoRadius * 0.35, 2, 0, 0, photoRadius);
+    placeholder.addColorStop(0, '#35245a');
+    placeholder.addColorStop(1, '#080711');
+    ctx.fillStyle = placeholder;
+    ctx.fillRect(-photoRadius, -photoRadius, photoRadius * 2, photoRadius * 2);
+  }
+  ctx.restore();
+
+  // Crisp photo outline and inner highlight.
+  ctx.beginPath();
+  ctx.arc(0, 0, photoRadius, 0, Math.PI * 2);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.shadowColor = '#19c8ff';
+  ctx.shadowBlur = 12 + pulse * 12;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+}
+
 function draw() {
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
@@ -414,7 +511,9 @@ function draw() {
   const sample = (i, total) => values[Math.min(values.length - 1, Math.floor((i / total) * values.length * 0.88))] / 255;
   const pulse = bands.bass * 16 + beatPulse * 31;
 
-  if (visualizerType === 'circle') {
+  if (visualizerTemplate === 'photo-bass-circle') {
+    drawPhotoBassCircle(radius, bands, beatPulse, sample);
+  } else if (visualizerType === 'circle') {
     ctx.beginPath();
     for (let i = 0; i < 112; i++) {
       const angle = (i / 112) * Math.PI * 2;
@@ -630,25 +729,17 @@ const visualizerNames = {
   star: 'Star: bentuk bintang yang mengembang dan menyusut mengikuti musik.',
   heart: 'Heart: bentuk hati neon yang berdenyut mengikuti audio.'
 };
-document.querySelectorAll('[data-visualizer]').forEach(button => {
-  button.addEventListener('click', () => {
-    visualizerType = button.dataset.visualizer;
-    visualizerTemplate = 'custom';
-    document.querySelectorAll('[data-visualizer]').forEach(item => item.classList.toggle('active', item === button));
-    document.querySelectorAll('[data-viz-template]').forEach(item => item.classList.remove('active'));
-    document.getElementById('visualizerTemplateStatus').textContent = 'Template aktif: Custom ' + visualizerType;
-    document.getElementById('selectedTemplate').textContent = 'Custom ' + visualizerType;
-    document.getElementById('visualizerHint').textContent = visualizerNames[visualizerType];
-  });
-});
-
 const visualizerTemplateNames = {
   'neon-circle': 'Neon Bass Circle',
   '3d-tunnel': '3D Tunnel',
   'neon-equalizer': 'Neon Equalizer',
   'energy-wave': 'Energy Wave',
   'hexagon-pulse': 'Hexagon Pulse',
-  'dj-neon-frame': 'DJ Neon Frame'
+  'dj-neon-frame': 'DJ Neon Frame',
+  'photo-bass-circle': 'Photo Bass Circle',
+  'triangle-pulse': 'Triangle Pulse',
+  'star-pulse': 'Star Pulse',
+  'heart-pulse': 'Heart Pulse'
 };
 
 document.querySelectorAll('[data-viz-template]').forEach(button => {
@@ -660,15 +751,12 @@ document.querySelectorAll('[data-viz-template]').forEach(button => {
       item.classList.toggle('active', item === button);
     });
 
-    document.querySelectorAll('[data-visualizer]').forEach(item => {
-      item.classList.toggle('active', item.dataset.visualizer === visualizerType);
-    });
-
     const templateName = visualizerTemplateNames[visualizerTemplate];
     document.getElementById('visualizerTemplateStatus').textContent = 'Template aktif: ' + templateName;
     document.getElementById('visualizerHint').textContent =
       templateName + ': ' + visualizerNames[visualizerType];
     document.getElementById('selectedTemplate').textContent = templateName;
+    document.querySelector('.preview-info').style.display = visualizerTemplate === 'photo-bass-circle' ? 'none' : 'block';
   });
 });
 
@@ -696,6 +784,40 @@ particleSlider.addEventListener('input', event => {
 sensitivitySlider.addEventListener('input', event => {
   beatSensitivity = Number(event.target.value);
   document.getElementById('beatSensitivityValue').textContent = beatSensitivity + '%';
+});
+
+
+const centerPhotoInput = document.getElementById('centerPhotoFile');
+centerPhotoInput.addEventListener('change', event => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  if (centerPhotoUrl) URL.revokeObjectURL(centerPhotoUrl);
+  centerPhotoUrl = URL.createObjectURL(file);
+  const image = new Image();
+  image.onload = () => {
+    centerPhoto = image;
+    const photoTemplate = document.querySelector('[data-viz-template="photo-bass-circle"]');
+    if (photoTemplate) photoTemplate.click();
+    document.getElementById('visualizerTemplateStatus').textContent = 'Template aktif: Photo Bass Circle · Foto siap';
+  };
+  image.onerror = () => {
+    if (centerPhotoUrl) URL.revokeObjectURL(centerPhotoUrl);
+    centerPhotoUrl = null;
+    alert('Foto tengah tidak dapat dibuka. Coba pilih gambar lain.');
+  };
+  image.src = centerPhotoUrl;
+});
+
+const photoSizeInput = document.getElementById('photoSizeInput');
+photoSizeInput.addEventListener('input', event => {
+  photoSize = Number(event.target.value);
+  document.getElementById('photoSizeValue').textContent = photoSize + '%';
+});
+
+const bassImpactInput = document.getElementById('bassImpactInput');
+bassImpactInput.addEventListener('input', event => {
+  bassImpact = Number(event.target.value);
+  document.getElementById('bassImpactValue').textContent = bassImpact + '%';
 });
 
 document.getElementById('imageFile').addEventListener('change', event => {
