@@ -640,32 +640,53 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
     ctx.stroke();
   }
 
-  // Mid frequencies create a separate softer, continuously changing wave.
-  if (midEffectEnabled) {
+  // Mid: filled pulse ribbon, visible only on a detected mid hit.
+  if (midEffectEnabled && midWavePulse > 0.045) {
+    const hit = Math.min(1.25, midWavePulse);
+    const inner = outerBase + 2;
+    const thickness = 7 + hit * 13;
     ctx.beginPath();
     for (let i=0;i<=points;i++) {
       const angle=i/points*Math.PI*2;
-      const midShape=Math.sin(angle*9 + now*0.0038) * (5 + bands.mid*15 + midWavePulse*23);
-      const harmonic=Math.sin(angle*5-now*0.0022)*(3+bands.mid*7);
-      const r=outerBase-8+midShape+harmonic;
+      const lobes=0.5+0.5*Math.cos(angle*8);
+      const wave=Math.sin(angle*8 + now*0.0018) * (3 + hit*7);
+      const r=inner + lobes*(5+hit*13) + wave;
       const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
       if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
-    ctx.closePath();ctx.strokeStyle=currentMidColor;ctx.lineWidth=2.4+midWavePulse*3.2;ctx.shadowColor=currentMidColor;ctx.shadowBlur=7+midWavePulse*16;ctx.globalAlpha=.86;ctx.stroke();
+    for (let i=points;i>=0;i--) {
+      const angle=i/points*Math.PI*2;
+      const lobes=0.5+0.5*Math.cos(angle*8);
+      const wave=Math.sin(angle*8 + now*0.0018) * (3 + hit*7);
+      const r=inner + lobes*(5+hit*13) + wave - thickness;
+      ctx.lineTo(Math.cos(angle)*r,Math.sin(angle)*r);
+    }
+    ctx.closePath();
+    const midGrad=ctx.createLinearGradient(-outerBase,-outerBase,outerBase,outerBase);
+    midGrad.addColorStop(0,currentMidColor);midGrad.addColorStop(.5,'#ffffff');midGrad.addColorStop(1,currentMidColor);
+    ctx.fillStyle=midGrad;ctx.shadowColor=currentMidColor;ctx.shadowBlur=10+hit*24;
+    ctx.globalAlpha=Math.min(.9,.28+hit*.48);ctx.fill();
   }
 
-  // Treble creates small independent sparks rather than expanding the whole ring.
-  if (trebleEffectEnabled) {
-    const sparkCount=34;
-    ctx.strokeStyle=currentTrebleColor;ctx.fillStyle=currentTrebleColor;ctx.shadowColor=currentTrebleColor;ctx.shadowBlur=5+trebleSparkPulse*15;ctx.globalAlpha=.45+trebleSparkPulse*.5;
+  // Treble: short outward spark bursts, completely hidden between detected hits.
+  if (trebleEffectEnabled && trebleSparkPulse > 0.10) {
+    const hit=Math.min(1.25,trebleSparkPulse);
+    const sparkCount=28;
+    ctx.strokeStyle=currentTrebleColor;ctx.fillStyle=currentTrebleColor;
+    ctx.shadowColor=currentTrebleColor;ctx.shadowBlur=8+hit*20;
+    ctx.globalAlpha=Math.min(.95,.25+hit*.62);
     for(let i=0;i<sparkCount;i++){
-      const angle=(i/sparkCount)*Math.PI*2 + Math.sin(now*.001+i)*.025;
+      const angle=(i/sparkCount)*Math.PI*2;
       const energy=sample(i,sparkCount);
-      const inner=outerBase+5+energy*4;
-      const length=5+energy*12+trebleSparkPulse*20;
-      const outer=inner+length;
-      ctx.beginPath();ctx.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);ctx.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);ctx.lineWidth=1.4+trebleSparkPulse*2.0;ctx.stroke();
-      if (trebleSparkPulse>.16 && i%3===0){ctx.beginPath();ctx.arc(Math.cos(angle)*outer,Math.sin(angle)*outer,1+trebleSparkPulse*2,0,Math.PI*2);ctx.fill();}
+      const inner=outerBase+3+energy*3;
+      const outer=inner+4+hit*22+energy*8;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle)*inner,Math.sin(angle)*inner);
+      ctx.lineTo(Math.cos(angle)*outer,Math.sin(angle)*outer);
+      ctx.lineWidth=2+hit*2.5;ctx.stroke();
+      if(i%2===0){
+        ctx.beginPath();ctx.arc(Math.cos(angle)*outer,Math.sin(angle)*outer,1.4+hit*2,0,Math.PI*2);ctx.fill();
+      }
     }
   }
   ctx.globalAlpha=1;ctx.shadowBlur=0;
