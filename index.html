@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v1.8 — Five Impact Styles & Color Picker</title>
+<title>BEATFX DJ v2.0 — Premium 3D Visualizer</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -80,12 +80,25 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .impact-style-btn{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px;border:1px solid var(--line);border-radius:12px;background:#151226;color:#f8f6ff;text-align:left}
 .impact-style-btn.active{border-color:#19dfff;background:#10243a;box-shadow:0 0 0 1px #19dfff55,0 0 17px #19dfff22}
 .impact-style-btn b{font-size:12px}.impact-style-btn small{font-size:10px;color:var(--muted)}
-.impact-style-art{width:100%;height:70px;display:block;border-radius:8px;overflow:hidden;background-color:#090914;position:relative;border:1px solid #ffffff12}
-.petals-art{background:radial-gradient(ellipse at 50% 12%,#ff35c7 0 10%,transparent 12%),radial-gradient(ellipse at 82% 30%,#16dcff 0 10%,transparent 12%),radial-gradient(ellipse at 88% 68%,#a76aff 0 10%,transparent 12%),radial-gradient(ellipse at 50% 88%,#ff8c26 0 10%,transparent 12%),radial-gradient(ellipse at 12% 68%,#16dcff 0 10%,transparent 12%),radial-gradient(ellipse at 18% 30%,#ff35c7 0 10%,transparent 12%),radial-gradient(circle at center,#24104a 0 24%,transparent 26%)}
-.double-art{background:radial-gradient(circle at center,transparent 23%,#ff38c6 25% 32%,transparent 34% 40%,#18deff 42% 51%,transparent 53%),radial-gradient(circle at center,#252052,#090914 70%)}
-.burst-art{background:repeating-conic-gradient(from 0deg at 50% 50%,#18deff 0deg 5deg,#ff39c7 5deg 9deg,transparent 9deg 15deg),radial-gradient(circle at center,#ffffff 0 7%,#2b1450 9% 25%,transparent 27%);mask-image:radial-gradient(circle,#000 0 67%,transparent 70%)}
-.liquid-art{background:repeating-radial-gradient(ellipse at center,#18deff 0 4px,#ff36c8 5px 8px,#9e62ff 9px 12px,transparent 13px 18px),radial-gradient(circle,#25104a,#090914 70%)}
-.equalizer-art{background:repeating-conic-gradient(from 0deg at 50% 50%,#18deff 0deg 4deg,transparent 4deg 9deg,#ff36c8 9deg 12deg,transparent 12deg 18deg),radial-gradient(circle at center,#24104a 0 22%,transparent 24%);mask-image:radial-gradient(circle,#000 0 72%,transparent 74%)}
+
+.impact-style-art{width:100%;height:76px;display:block;border-radius:9px;overflow:hidden;background-color:#070912;position:relative;border:1px solid #ffffff18;isolation:isolate;box-shadow:inset 0 8px 18px #000a,inset 0 -5px 12px #ffffff08}
+.impact-style-art:before,.impact-style-art:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+.petals-art{background:radial-gradient(ellipse at 50% 48%,#111b32 0 24%,#060914 25% 100%)}
+.petals-art:before{width:57px;height:57px;border:7px solid #123d59;border-radius:50%;box-shadow:0 0 0 2px #ff42c8,0 0 15px #19dfff,inset 0 0 12px #19dfff;transform:translate(-50%,-50%) rotateX(58deg);background:conic-gradient(#19dfff,#a45aff,#ff42c8,#19dfff)}
+.petals-art:after{width:40px;height:40px;border-radius:50%;border:4px solid #efffff;box-shadow:0 0 12px #19dfff,inset 0 0 10px #19dfff;transform:translate(-50%,-50%) rotateX(58deg)}
+.double-art{background:radial-gradient(ellipse at 50% 50%,#13233d,#070914 70%)}
+.double-art:before{width:65px;height:47px;border:6px solid #073e75;border-top-color:#75f8ff;border-right-color:#178dff;border-bottom-color:#1944a1;border-radius:50%;box-shadow:0 0 0 2px #168dff,0 0 15px #18dfff;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(-18deg)}
+.double-art:after{width:45px;height:29px;border:3px solid #ff42c8;border-radius:50%;box-shadow:0 0 14px #ff42c8;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(18deg)}
+.burst-art{background:radial-gradient(circle,#4a170d 0 12%,#11101d 36%,#070914 75%)}
+.burst-art:before{width:70px;height:70px;background:repeating-conic-gradient(from 7deg,#ffef8a 0deg 4deg,#ff741f 5deg 10deg,#8f1c48 11deg 14deg,transparent 15deg 22deg);clip-path:polygon(50% 0,61% 34%,100% 15%,70% 50%,100% 84%,59% 68%,50% 100%,39% 68%,0 84%,30% 50%,0 15%,41% 34%);filter:drop-shadow(0 0 8px #ff6a24);transform:translate(-50%,-50%) rotateX(52deg)}
+.burst-art:after{width:24px;height:24px;border-radius:50%;background:radial-gradient(circle,#fffbd0,#ff8e25 45%,#9d1d3d);box-shadow:0 0 16px #ff6a24}
+.liquid-art{background:radial-gradient(ellipse,#132b48,#070914 74%)}
+.liquid-art:before{width:70px;height:47px;border:9px solid #103f65;border-top-color:#d7ffff;border-left-color:#19dfff;border-right-color:#ba63ff;border-bottom-color:#ff42c8;border-radius:48%;box-shadow:0 0 0 2px #1a9fca,0 0 16px #19dfff;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(-12deg)}
+.liquid-art:after{width:49px;height:29px;border:3px solid #ffffff;border-radius:50%;box-shadow:0 0 10px #ff42c8;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(10deg)}
+.equalizer-art{background:radial-gradient(circle,#0e2c42 0 22%,#070914 72%)}
+.equalizer-art:before{width:68px;height:68px;border-radius:50%;background:repeating-conic-gradient(from 0deg,#19dfff 0deg 4deg,transparent 4deg 7deg,#ff42c8 7deg 10deg,transparent 10deg 14deg);mask:radial-gradient(circle,transparent 0 35%,#000 38% 70%,transparent 73%);filter:drop-shadow(0 0 7px #19dfff);transform:translate(-50%,-50%) rotateX(58deg)}
+.equalizer-art:after{width:25px;height:25px;border-radius:50%;border:3px solid #eaffff;box-shadow:0 0 12px #19dfff,inset 0 0 8px #19dfff}
+
 .impact-color-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#121020}
 .impact-color-controls label{display:block;margin:0;color:#d8d1e8;font-size:11px}
 .impact-color-controls select,.impact-color-controls input[type=color]{width:100%;height:38px;margin-top:6px;padding:6px;background:#090812;color:#fff;border:1px solid var(--line);border-radius:9px}
@@ -248,19 +261,19 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
         <div class="editor-panel-body">
           <div class="impact-style-grid" id="impactStylePicker">
             <button class="impact-style-btn active" type="button" data-impact-style="neon-petals" aria-pressed="true">
-              <span class="impact-style-art petals-art"></span><b>Neon Petals</b><small>Kelopak neon tebal</small>
+              <span class="impact-style-art petals-art"></span><b>3D Petal Crown</b><small>Kelopak 3D berlapis metalik</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="double-pulse" aria-pressed="false">
-              <span class="impact-style-art double-art"></span><b>Thunder Pulse</b><small>Kilatan petir bercabang</small>
+              <span class="impact-style-art double-art"></span><b>3D Thunder Orbit</b><small>Petir 3D dengan cabang energi</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="energy-burst" aria-pressed="false">
-              <span class="impact-style-art burst-art"></span><b>Fire Burst</b><small>Lidah api menyembur keluar</small>
+              <span class="impact-style-art burst-art"></span><b>3D Reactor Burst</b><small>Sirip energi 3D menyebar</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="liquid-wave" aria-pressed="false">
-              <span class="impact-style-art liquid-art"></span><b>Liquid Wave</b><small>Gelombang cair berisi</small>
+              <span class="impact-style-art liquid-art"></span><b>3D Liquid Chrome</b><small>Pita cair metalik berlapis</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="equalizer-orbit" aria-pressed="false">
-              <span class="impact-style-art equalizer-art"></span><b>Equalizer Orbit</b><small>Batang audio melingkar</small>
+              <span class="impact-style-art equalizer-art"></span><b>3D Equalizer Rings</b><small>Batang audio 3D melingkar</small>
             </button>
           </div>
           <div class="impact-color-controls">
@@ -278,8 +291,8 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <input id="customEffectColor" type="color" value="#18dfff" disabled>
             </label>
           </div>
-          <p class="hint" id="impactStyleStatus">Model Neon Petals aktif. Pilih kartu lain untuk mengganti seluruh bentuk visualizer.</p>
-          <p class="hint">Warna dibuat pekat dan terang. Model visualizer mengganti bentuk utama; efek audio tambahan diatur pada panel terpisah, sedangkan deteksi dan kekuatan dasar Bass Impact v0.9 tetap dipertahankan.</p>
+          <p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih kartu lain untuk mengganti seluruh bentuk visualizer.</p>
+          <p class="hint">Model 3D premium menyatu dekat tepi foto. Pilihan model mengganti bentuk visualizer utama; efek tambahan tetap terpisah. Deteksi dan kekuatan Bass Impact tidak diubah.</p>
         </div>
       </details>
     </div>
@@ -339,7 +352,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • v1.8 • Five Impact Styles & Bright Color Studio</div>
+<div class="footer">BEATFX DJ • v2.0 • Premium 3D Visualizer Studio</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -658,149 +671,231 @@ function getPhotoBox(shape, base) {
 
 
 
-function drawSelectedImpactStyle(style, outerBase, sample, hit, now) {
-  // Renderer visual only. The bass detector, hit strength, sensitivity and pulse
-  // envelope are intentionally left untouched.
+
+function drawSelectedImpactStyle(style, innerBase, sample, hit, now) {
+  // Premium 3D-style canvas renderer. Audio detection and pulse timing are untouched.
   if (hit <= 0.035) return;
-  const safeHit = Math.min(1.35, hit);
+  const power = (bassImpact / 100) * Math.min(1.35, hit);
+  const TAU = Math.PI * 2;
   const colorCount = effectColorMode === 'custom' ? 1 :
     (effectColorMode === 'rainbow' ? bassPalette.length :
     (effectColorPalettes[effectColorMode] || bassPalette).length);
   const colorAt = i => getEffectColor(i % Math.max(1, colorCount), 'bass');
-  const pulse = (bassImpact / 100) * safeHit;
-  const TAU = Math.PI * 2;
+
+  const rgb = hex => {
+    const clean = String(hex).replace('#','');
+    const full = clean.length === 3 ? clean.split('').map(c=>c+c).join('') : clean;
+    const n = parseInt(full,16);
+    return {r:(n>>16)&255,g:(n>>8)&255,b:n&255};
+  };
+  const shade = (hex, amount) => {
+    const c=rgb(hex);
+    const f=v=>Math.max(0,Math.min(255,Math.round(v*amount)));
+    return `rgb(${f(c.r)},${f(c.g)},${f(c.b)})`;
+  };
+  const glossyGradient = (x1,y1,x2,y2,color) => {
+    const g=ctx.createLinearGradient(x1,y1,x2,y2);
+    g.addColorStop(0,'#ffffff');
+    g.addColorStop(.16,shade(color,1.75));
+    g.addColorStop(.42,color);
+    g.addColorStop(.78,shade(color,.58));
+    g.addColorStop(1,shade(color,.22));
+    return g;
+  };
+  const drawBevelRing = (r, color, width=5) => {
+    ctx.save();
+    ctx.beginPath();ctx.arc(0,0,r,0,TAU);
+    ctx.strokeStyle=shade(color,.22);ctx.lineWidth=width+5;
+    ctx.shadowColor=color;ctx.shadowBlur=11+power*12;ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,r-1.4,0,TAU);
+    ctx.strokeStyle=glossyGradient(-r,-r,r,r,color);
+    ctx.lineWidth=width;ctx.stroke();
+    ctx.beginPath();ctx.arc(0,0,r-3,Math.PI*1.04,Math.PI*1.88);
+    ctx.strokeStyle='#ffffff';ctx.globalAlpha=.82;ctx.lineWidth=1.25;ctx.stroke();
+    ctx.restore();
+  };
 
   ctx.save();
-  ctx.globalAlpha = 1;
-  ctx.lineJoin = 'round';
-  ctx.lineCap = 'round';
+  ctx.globalAlpha=1;
+  ctx.lineJoin='round';
+  ctx.lineCap='round';
 
   if (style === 'neon-petals') {
-    // FLOWER: one continuous scalloped body plus broad, overlapping petals.
-    const lobes = 10;
-    const inner = outerBase + 3 + pulse * 7;
-    const amplitude = 10 + pulse * 17;
-    ctx.beginPath();
-    for (let i = 0; i <= 300; i++) {
-      const a = i / 300 * TAU;
-      const r = inner + amplitude * (0.5 + 0.5 * Math.cos(a * lobes));
-      const x = Math.cos(a) * r, y = Math.sin(a) * r;
-      if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    // 3D PETAL CROWN: individual beveled petals overlap the photo rim.
+    const petals=12;
+    const length=18+power*10;
+    const width=5.8+power*2.8;
+    drawBevelRing(innerBase+2,colorAt(0),4.5+power*1.1);
+    for(let i=0;i<petals;i++){
+      const angle=i/petals*TAU+now*.000035;
+      const color=colorAt(i);
+      const distance=innerBase+length*.48-1;
+      ctx.save();
+      ctx.translate(Math.cos(angle)*distance,Math.sin(angle)*distance);
+      ctx.rotate(angle);
+      // Dark extrusion underneath, then a bright beveled front face.
+      ctx.fillStyle=shade(color,.24);
+      ctx.beginPath();ctx.ellipse(2,4,length*.53,width*1.08,0,0,TAU);ctx.fill();
+      ctx.fillStyle=glossyGradient(0,-width,0,width,color);
+      ctx.shadowColor=color;ctx.shadowBlur=12+power*17;
+      ctx.beginPath();ctx.ellipse(0,0,length*.52,width,0,0,TAU);ctx.fill();
+      // Specular ridge and lower rim create a raised, machined surface.
+      ctx.beginPath();ctx.ellipse(-1,-1,length*.34,width*.38,-.06,Math.PI*1.08,Math.PI*1.92);
+      ctx.strokeStyle='#ffffff';ctx.lineWidth=1.25;ctx.globalAlpha=.88;ctx.stroke();
+      ctx.globalAlpha=1;
+      ctx.beginPath();ctx.ellipse(0,1,length*.48,width*.84,0,.12,Math.PI-.12);
+      ctx.strokeStyle=shade(color,.42);ctx.lineWidth=1.4;ctx.stroke();
+      ctx.restore();
     }
-    ctx.closePath();
-    ctx.fillStyle = colorAt(0); ctx.shadowColor = colorAt(0);
-    ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
-
-    for (let i = 0; i < lobes; i++) {
-      const a = i / lobes * TAU;
-      const r = outerBase + 7 + pulse * 11;
-      ctx.save(); ctx.translate(Math.cos(a) * r, Math.sin(a) * r); ctx.rotate(a);
-      ctx.fillStyle = colorAt(i + 1); ctx.shadowColor = colorAt(i + 1);
-      ctx.shadowBlur = 10 + pulse * 18;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, 7 + pulse * 5, 17 + pulse * 12, 0, 0, TAU);
-      ctx.fill(); ctx.restore();
+    // Small metallic connectors join petals into a single premium crown.
+    for(let i=0;i<petals;i++){
+      const a=i/petals*TAU;
+      ctx.save();ctx.rotate(a);
+      ctx.fillStyle=glossyGradient(0,-3,0,3,colorAt(i+2));
+      ctx.shadowColor=colorAt(i+2);ctx.shadowBlur=8;
+      ctx.beginPath();ctx.roundRect(innerBase-1,-2.1,8+power*3,4.2,2);ctx.fill();
+      ctx.restore();
     }
-    // Bright inner edge makes the filled petals read as a solid layered model.
-    ctx.beginPath();
-    for (let i = 0; i <= 240; i++) {
-      const a = i / 240 * TAU;
-      const r = outerBase - 1 + pulse * 8 + Math.cos(a * lobes) * (3 + pulse * 3);
-      if (!i) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
-      else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
-    }
-    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 + pulse * 1.2;
-    ctx.shadowColor = colorAt(1); ctx.shadowBlur = 13; ctx.stroke();
 
   } else if (style === 'double-pulse') {
-    // THUNDER: angular lightning bolts with filled, branching silhouettes.
-    const bolts = 8;
-    for (let i = 0; i < bolts; i++) {
-      const a = i / bolts * TAU + now * 0.000025;
-      const reach = 18 + pulse * 42 + sample(i, bolts) * pulse * 16;
-      const c = colorAt(i);
-      const p = [
-        [outerBase - 2, -4],
-        [outerBase + reach * .34, -10],
-        [outerBase + reach * .22, -2],
-        [outerBase + reach * .72, 1],
-        [outerBase + reach * .49, 8],
-        [outerBase + reach, 12],
-        [outerBase + reach * .42, 13],
-        [outerBase + reach * .52, 5],
-        [outerBase + reach * .12, 3],
-        [outerBase + reach * .24, -3]
+    // 3D THUNDER ORBIT: angular electrical blades with extruded sides and bright cores.
+    const bolts=10;
+    for(let i=0;i<bolts;i++){
+      const angle=i/bolts*TAU+now*.000045;
+      const color=colorAt(i);
+      const reach=20+power*(25+sample(i,bolts)*15);
+      const w=4.5+power*1.3;
+      const points=[
+        [innerBase-2,-w*.45],
+        [innerBase+reach*.30,-w*1.2],
+        [innerBase+reach*.21,-w*.12],
+        [innerBase+reach*.62,w*.12],
+        [innerBase+reach*.46,w*1.2],
+        [innerBase+reach,w*1.55],
+        [innerBase+reach*.42,w*1.35],
+        [innerBase+reach*.52,w*.35],
+        [innerBase+reach*.08,w*.12],
+        [innerBase+reach*.20,-w*.35]
       ];
-      ctx.save(); ctx.rotate(a);
-      ctx.beginPath();
-      p.forEach((q, k) => k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]));
-      ctx.closePath(); ctx.fillStyle = c; ctx.shadowColor = c;
-      ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
-      // Secondary fork.
-      ctx.beginPath(); ctx.moveTo(outerBase + reach * .42, 7);
-      ctx.lineTo(outerBase + reach * .66, 20 + pulse * 9);
-      ctx.lineTo(outerBase + reach * .86, 24 + pulse * 11);
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.4 + pulse * 1.2;
-      ctx.shadowColor = c; ctx.shadowBlur = 10; ctx.stroke();
+      ctx.save();ctx.rotate(angle);
+      const polygon=(dx,dy,fill)=>{
+        ctx.beginPath();
+        points.forEach((p,k)=>k?ctx.lineTo(p[0]+dx,p[1]+dy):ctx.moveTo(p[0]+dx,p[1]+dy));
+        ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+      };
+      polygon(3,5,shade(color,.22));
+      polygon(0,0,glossyGradient(innerBase,-w,innerBase+reach,w,color));
+      ctx.shadowColor=color;ctx.shadowBlur=14+power*16;
+      ctx.strokeStyle='#ffffff';ctx.lineWidth=1.35;ctx.stroke();
+      // Forked lightning branch, bevelled with a dark offset.
+      ctx.beginPath();ctx.moveTo(innerBase+reach*.48,w*.45);
+      ctx.lineTo(innerBase+reach*.70,w*2.8+power*4);
+      ctx.lineTo(innerBase+reach*.93,w*3.2+power*5);
+      ctx.strokeStyle=shade(color,.25);ctx.lineWidth=4+power;ctx.stroke();
+      ctx.beginPath();ctx.moveTo(innerBase+reach*.48,w*.2);
+      ctx.lineTo(innerBase+reach*.70,w*2.8+power*4);
+      ctx.lineTo(innerBase+reach*.93,w*3.2+power*5);
+      ctx.strokeStyle='#eafcff';ctx.lineWidth=1.5+power*.25;ctx.shadowColor=color;ctx.shadowBlur=12;ctx.stroke();
       ctx.restore();
     }
 
   } else if (style === 'energy-burst') {
-    // FIRE: separate tapered flame tongues, not a ring or radial equalizer.
-    const flames = 16;
-    for (let i = 0; i < flames; i++) {
-      const a = i / flames * TAU + Math.sin(now * .001 + i) * .025;
-      const len = 15 + pulse * (30 + sample(i, flames) * 24);
-      const half = .10 + pulse * .025;
-      const r = outerBase + 1;
-      const c = colorAt(i);
-      ctx.save(); ctx.rotate(a);
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(-half) * r, Math.sin(-half) * r);
-      ctx.bezierCurveTo(r + len * .12, -len * .24, r + len * .55, -len * .58,
-                        r + len, -len * .10);
-      ctx.bezierCurveTo(r + len * .72, len * .12, r + len * .32, len * .36,
-                        Math.cos(half) * r, Math.sin(half) * r);
-      ctx.closePath(); ctx.fillStyle = c; ctx.shadowColor = c;
-      ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
+    // 3D REACTOR BURST: solid metallic fins flare outward from a hot inner core.
+    const fins=24;
+    for(let i=0;i<fins;i++){
+      const angle=i/fins*TAU;
+      const color=colorAt(i);
+      const local=sample(i,fins);
+      const length=13+power*(19+local*17);
+      const half=2.4+power*1.1;
+      const points=[
+        [innerBase-1,-half],
+        [innerBase+length*.26,-half*1.45],
+        [innerBase+length*.72,-half*.65],
+        [innerBase+length,0],
+        [innerBase+length*.66,half*.72],
+        [innerBase+length*.22,half*1.5],
+        [innerBase-1,half]
+      ];
+      ctx.save();ctx.rotate(angle);
+      const path=(dx,dy)=>{ctx.beginPath();points.forEach((p,k)=>k?ctx.lineTo(p[0]+dx,p[1]+dy):ctx.moveTo(p[0]+dx,p[1]+dy));ctx.closePath();};
+      path(2.8,4);ctx.fillStyle=shade(color,.20);ctx.fill();
+      path(0,0);ctx.fillStyle=glossyGradient(innerBase,-half,innerBase+length,half,color);
+      ctx.shadowColor=color;ctx.shadowBlur=10+power*17;ctx.fill();
+      ctx.strokeStyle='#fff3d7';ctx.lineWidth=1.1;ctx.globalAlpha=.88;ctx.stroke();
+      ctx.globalAlpha=1;
+      // Bright hot edge at the fin tip.
+      ctx.beginPath();ctx.moveTo(innerBase+length*.68,0);ctx.lineTo(innerBase+length,0);
+      ctx.strokeStyle='#fff8d8';ctx.lineWidth=1.8;ctx.stroke();
       ctx.restore();
     }
+    const core=ctx.createRadialGradient(0,0,innerBase*.1,0,0,innerBase+5);
+    core.addColorStop(0,'#fff7d4');core.addColorStop(.48,colorAt(1));core.addColorStop(1,shade(colorAt(2),.2));
+    ctx.beginPath();ctx.arc(0,0,innerBase+3,0,TAU);ctx.strokeStyle=core;ctx.lineWidth=3+power*2;
+    ctx.shadowColor=colorAt(0);ctx.shadowBlur=18;ctx.stroke();
 
   } else if (style === 'liquid-wave') {
-    // LIQUID: broad filled ribbon with flowing multi-frequency contours.
-    const count = 260, outer = [], inner = [];
-    for (let i = 0; i <= count; i++) {
-      const a = i / count * TAU;
-      const flow = Math.sin(a * 5 + now * .0011) * (4 + pulse * 7) +
-                   Math.cos(a * 9 - now * .0014) * (3 + pulse * 5);
-      const audio = sample(i, count) * pulse * 9;
-      const r = outerBase + 5 + pulse * 15 + flow + audio;
-      const thick = 9 + pulse * 9;
-      outer.push([Math.cos(a) * r, Math.sin(a) * r]);
-      inner.push([Math.cos(a) * (r - thick), Math.sin(a) * (r - thick)]);
+    // 3D LIQUID CHROME: thick, flowing torus with dark extrusion and specular rails.
+    const count=300,front=[],back=[];
+    const outerRadius=innerBase+13+power*7;
+    const thickness=11+power*5;
+    for(let i=0;i<=count;i++){
+      const a=i/count*TAU;
+      const ripple=Math.sin(a*5+now*.0010)*(3+power*3.5)+
+                   Math.cos(a*8-now*.00125)*(2+power*2.8)+sample(i,count)*power*4;
+      const r=outerRadius+ripple;
+      front.push([Math.cos(a)*r,Math.sin(a)*r]);
+      back.push([Math.cos(a)*(r-thickness),Math.sin(a)*(r-thickness)]);
     }
-    ctx.beginPath();
-    outer.forEach((q, i) => i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]));
-    for (let i = inner.length - 1; i >= 0; i--) ctx.lineTo(inner[i][0], inner[i][1]);
-    ctx.closePath();
-    const grad = ctx.createLinearGradient(-outerBase, -outerBase, outerBase, outerBase);
-    grad.addColorStop(0, colorAt(0)); grad.addColorStop(.5, colorAt(1)); grad.addColorStop(1, colorAt(2));
-    ctx.fillStyle = grad; ctx.shadowColor = colorAt(0);
-    ctx.shadowBlur = 14 + pulse * 22; ctx.fill();
+    const makeRibbon=(dx,dy)=>{
+      ctx.beginPath();
+      front.forEach((p,i)=>i?ctx.lineTo(p[0]+dx,p[1]+dy):ctx.moveTo(p[0]+dx,p[1]+dy));
+      for(let i=back.length-1;i>=0;i--)ctx.lineTo(back[i][0]+dx,back[i][1]+dy);
+      ctx.closePath();
+    };
+    makeRibbon(2,5);ctx.fillStyle=shade(colorAt(0),.22);ctx.shadowColor=colorAt(0);ctx.shadowBlur=13;ctx.fill();
+    makeRibbon(0,0);
+    const metal=ctx.createLinearGradient(-outerRadius,-outerRadius,outerRadius,outerRadius);
+    metal.addColorStop(0,'#f7ffff');metal.addColorStop(.12,colorAt(0));metal.addColorStop(.30,shade(colorAt(1),.5));
+    metal.addColorStop(.48,'#ffffff');metal.addColorStop(.62,colorAt(2));metal.addColorStop(.82,shade(colorAt(0),.42));metal.addColorStop(1,'#e7fbff');
+    ctx.fillStyle=metal;ctx.shadowColor=colorAt(0);ctx.shadowBlur=15+power*17;ctx.fill();
+    // Inner and outer specular rails sell the 3D chrome surface.
+    ctx.beginPath();front.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+    ctx.strokeStyle='#ffffff';ctx.lineWidth=1.5;ctx.globalAlpha=.9;ctx.stroke();
+    ctx.beginPath();back.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+    ctx.strokeStyle=colorAt(1);ctx.lineWidth=2.2;ctx.globalAlpha=.95;ctx.stroke();
+    ctx.globalAlpha=1;
 
   } else if (style === 'equalizer-orbit') {
-    // EQUALIZER: distinct radial bars with audio-driven individual lengths.
-    const bars = 64;
-    for (let i = 0; i < bars; i++) {
-      const a = i / bars * TAU;
-      const local = sample(i, bars);
-      const inner = outerBase + 2;
-      const len = 7 + pulse * (13 + local * 35);
-      const w = 3 + pulse * 1.2;
-      const c = colorAt(i);
-      ctx.save(); ctx.rotate(a);
-      ctx.fillStyle = c; ctx.shadowColor = c; ctx.shadowBlur = 9 + pulse * 16;
-      ctx.beginPath(); ctx.roundRect(-w / 2, inner, w, len, w / 2); ctx.fill();
+    // 3D EQUALIZER RINGS: beveled cuboid bars respond individually to local spectrum.
+    const bars=56;
+    const inner=innerBase+1;
+    for(let i=0;i<bars;i++){
+      const angle=i/bars*TAU;
+      const level=sample(i,bars);
+      const length=8+power*(12+level*31);
+      const width=3.0+power*.65;
+      const depth=3.3;
+      const color=colorAt(i);
+      ctx.save();ctx.rotate(angle);
+      // Right-side extrusion / side wall.
+      ctx.beginPath();
+      ctx.moveTo(-width/2,inner);ctx.lineTo(-width/2+depth,inner-depth*.45);
+      ctx.lineTo(-width/2+depth,inner+length-depth*.45);
+      ctx.lineTo(-width/2,inner+length);ctx.closePath();
+      ctx.fillStyle=shade(color,.22);ctx.fill();
+      // Front face with a metallic vertical gradient.
+      const face=ctx.createLinearGradient(-width/2,inner,width/2,inner+length);
+      face.addColorStop(0,'#ffffff');face.addColorStop(.16,shade(color,1.6));
+      face.addColorStop(.54,color);face.addColorStop(1,shade(color,.38));
+      ctx.beginPath();ctx.roundRect(-width/2,inner,width,length,width*.42);
+      ctx.fillStyle=face;ctx.shadowColor=color;ctx.shadowBlur=9+power*12;ctx.fill();
+      // Top cap and narrow specular front edge.
+      ctx.beginPath();ctx.moveTo(-width/2,inner);ctx.lineTo(-width/2+depth,inner-depth*.45);
+      ctx.lineTo(width/2+depth,inner-depth*.45);ctx.lineTo(width/2,inner);ctx.closePath();
+      ctx.fillStyle='#f1fdff';ctx.globalAlpha=.88;ctx.fill();ctx.globalAlpha=1;
+      ctx.beginPath();ctx.moveTo(-width*.18,inner+2);ctx.lineTo(-width*.18,inner+length-2);
+      ctx.strokeStyle='#ffffff';ctx.lineWidth=.65;ctx.globalAlpha=.65;ctx.stroke();ctx.globalAlpha=1;
       ctx.restore();
     }
   }
@@ -811,7 +906,7 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
   const impact = bassImpact / 100;
   const base = radius * 0.66 * (photoSize / 72);
   const box = getPhotoBox(photoShape, base);
-  const outerBase = radius * 0.98;
+  const outerBase = Math.max(box.width, box.height) * 0.5 + 1.2;
   const points = 180;
 
   // Selected bass style is the complete impact silhouette. Detection, pulse strength,
@@ -1200,11 +1295,11 @@ function updateBandEffectState() {
 });
 
 const impactStyleNames = {
-  'neon-petals':'Neon Petals',
-  'double-pulse':'Thunder Pulse',
-  'energy-burst':'Fire Burst',
-  'liquid-wave':'Liquid Wave',
-  'equalizer-orbit':'Equalizer Orbit'
+  'neon-petals':'3D Petal Crown',
+  'double-pulse':'3D Thunder Orbit',
+  'energy-burst':'3D Reactor Burst',
+  'liquid-wave':'3D Liquid Chrome',
+  'equalizer-orbit':'3D Equalizer Rings'
 };
 const colorModeNames = {
   rainbow:'Neon Mix',
