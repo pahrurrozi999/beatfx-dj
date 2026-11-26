@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v1.5 — Five Impact Styles & Color Picker</title>
+<title>BEATFX DJ v1.8 — Five Impact Styles & Color Picker</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -233,7 +233,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
         </div>
       </details>
       <details class="editor-panel" id="bandEffectPanel">
-        <summary>♫ Efek Audio Terpisah</summary>
+        <summary>♫ Efek Tambahan (Opsional)</summary>
         <div class="editor-panel-body">
           <div class="band-options">
             <label class="band-option"><input id="bassEffectToggle" type="checkbox" checked> <span><b>Bass / Kick Impact</b><br><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
@@ -244,7 +244,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
         </div>
       </details>
       <details class="editor-panel" id="impactStylePanel" open>
-        <summary>✦ Pilih Gaya Hentakan</summary>
+        <summary>✦ Pilih Model Visualizer</summary>
         <div class="editor-panel-body">
           <div class="impact-style-grid" id="impactStylePicker">
             <button class="impact-style-btn active" type="button" data-impact-style="neon-petals" aria-pressed="true">
@@ -278,8 +278,8 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <input id="customEffectColor" type="color" value="#18dfff" disabled>
             </label>
           </div>
-          <p class="hint" id="impactStyleStatus">Flower Pulse aktif · kelopak tebal berlapis, muncul hanya saat hentakan bass terdeteksi.</p>
-          <p class="hint">Warna dibuat pekat dan terang. Gaya tambahan mengikuti hentakan bass, sedangkan deteksi dan kekuatan dasar Bass Impact v0.9 tetap dipertahankan.</p>
+          <p class="hint" id="impactStyleStatus">Model Neon Petals aktif. Pilih kartu lain untuk mengganti seluruh bentuk visualizer.</p>
+          <p class="hint">Warna dibuat pekat dan terang. Model visualizer mengganti bentuk utama; efek audio tambahan diatur pada panel terpisah, sedangkan deteksi dan kekuatan dasar Bass Impact v0.9 tetap dipertahankan.</p>
         </div>
       </details>
     </div>
@@ -339,7 +339,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • v1.5 • Five Impact Styles & Bright Color Studio</div>
+<div class="footer">BEATFX DJ • v1.8 • Five Impact Styles & Bright Color Studio</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -657,119 +657,151 @@ function getPhotoBox(shape, base) {
 }
 
 
+
 function drawSelectedImpactStyle(style, outerBase, sample, hit, now) {
+  // Renderer visual only. The bass detector, hit strength, sensitivity and pulse
+  // envelope are intentionally left untouched.
   if (hit <= 0.035) return;
   const safeHit = Math.min(1.35, hit);
-  const paletteColor = index => getEffectColor(index, 'bass');
-  const colorCount = effectColorMode === 'custom' ? 1 : (effectColorMode === 'rainbow' ? bassPalette.length : (effectColorPalettes[effectColorMode] || bassPalette).length);
+  const colorCount = effectColorMode === 'custom' ? 1 :
+    (effectColorMode === 'rainbow' ? bassPalette.length :
+    (effectColorPalettes[effectColorMode] || bassPalette).length);
+  const colorAt = i => getEffectColor(i % Math.max(1, colorCount), 'bass');
   const pulse = (bassImpact / 100) * safeHit;
+  const TAU = Math.PI * 2;
+
   ctx.save();
   ctx.globalAlpha = 1;
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
-  ctx.shadowBlur = 10 + safeHit * 22;
 
-  // Each selection is a complete, different bass-impact silhouette (not an overlay).
   if (style === 'neon-petals') {
-    // Reference-matched thick flower pulse: three opaque scalloped bands
-    // expand only while the original v0.9 bassImpactPulse is active.
-    const lobes = 8;
-    const layers = [
-      { offset: 0, radius: 1, thickness: 1, color: 0 },
-      { offset: 2.5, radius: -5, thickness: 0.92, color: 1 },
-      { offset: 5, radius: -10, thickness: 0.82, color: 2 }
-    ];
-    for (const layer of layers) {
-      const outer = [], inner = [];
-      const base = outerBase + 7 + pulse * 17 + layer.radius;
-      const swell = 5 + pulse * 13;
-      const thick = (13 + pulse * 10) * layer.thickness;
-      const phase = now * 0.00012 + layer.offset * 0.025;
-      const steps = 240;
-      for (let i = 0; i <= steps; i++) {
-        const a = (i / steps) * Math.PI * 2;
-        const petal = Math.pow((0.5 + 0.5 * Math.cos(a * lobes + phase)), 1.35);
-        const r = base + petal * swell;
-        outer.push([Math.cos(a) * r, Math.sin(a) * r]);
-        inner.push([Math.cos(a) * (r - thick), Math.sin(a) * (r - thick)]);
-      }
-      ctx.beginPath();
-      outer.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
-      for (let i = inner.length - 1; i >= 0; i--) ctx.lineTo(inner[i][0], inner[i][1]);
-      ctx.closePath();
-      const color = paletteColor(layer.color % colorCount);
-      ctx.fillStyle = color;
-      ctx.shadowColor = color;
-      ctx.shadowBlur = 9 + safeHit * 13;
-      ctx.globalAlpha = 1;
-      ctx.fill();
+    // FLOWER: one continuous scalloped body plus broad, overlapping petals.
+    const lobes = 10;
+    const inner = outerBase + 3 + pulse * 7;
+    const amplitude = 10 + pulse * 17;
+    ctx.beginPath();
+    for (let i = 0; i <= 300; i++) {
+      const a = i / 300 * TAU;
+      const r = inner + amplitude * (0.5 + 0.5 * Math.cos(a * lobes));
+      const x = Math.cos(a) * r, y = Math.sin(a) * r;
+      if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
     }
-  } else if (style === 'double-pulse') {
-    // Thunder: jagged branching lightning bolts, not circular rings.
-    const bolts=9;
-    for(let i=0;i<bolts;i++){
-      const a=i/bolts*Math.PI*2 + now*0.00006;
-      const c=paletteColor(i%colorCount);
-      const inner=outerBase+2;
-      const reach=12+pulse*42+sample(i,bolts)*pulse*13;
-      const bend=(i%2?1:-1);
-      const x0=Math.cos(a)*inner,y0=Math.sin(a)*inner;
-      const x1=Math.cos(a+0.10*bend)*(inner+reach*.36),y1=Math.sin(a+0.10*bend)*(inner+reach*.36);
-      const x2=Math.cos(a-0.07*bend)*(inner+reach*.68),y2=Math.sin(a-0.07*bend)*(inner+reach*.68);
-      const x3=Math.cos(a+0.035*bend)*(inner+reach),y3=Math.sin(a+0.035*bend)*(inner+reach);
-      ctx.strokeStyle=c;ctx.shadowColor=c;ctx.lineWidth=3.2+pulse*3.5;
-      ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineTo(x3,y3);ctx.stroke();
-      // Short fork gives the bolt a recognizable branching silhouette.
-      const fx=Math.cos(a-0.07*bend)*(inner+reach*.68),fy=Math.sin(a-0.07*bend)*(inner+reach*.68);
-      const fa=a-0.07*bend + bend*.42;
-      ctx.lineWidth=1.8+pulse*2.0;ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(Math.cos(fa)*(inner+reach*.92),Math.sin(fa)*(inner+reach*.92));ctx.stroke();
-    }
-  } else if (style === 'energy-burst') {
-    // Fire: chunky flame tongues with rounded bases and pointed tips.
-    const flames=18;
-    for(let i=0;i<flames;i++){
-      const a=i/flames*Math.PI*2;
-      const c=paletteColor(i%colorCount);
-      const r=outerBase+3;
-      const len=8+pulse*(25+sample(i,flames)*20);
-      const half=.055 + pulse*.018;
-      ctx.fillStyle=c;ctx.shadowColor=c;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a-half)*r,Math.sin(a-half)*r);
-      ctx.quadraticCurveTo(Math.cos(a-half*.7)*(r+len*.65),Math.sin(a-half*.7)*(r+len*.65),Math.cos(a)*(r+len),Math.sin(a)*(r+len));
-      ctx.quadraticCurveTo(Math.cos(a+half*.7)*(r+len*.65),Math.sin(a+half*.7)*(r+len*.65),Math.cos(a+half)*r,Math.sin(a+half)*r);
-      ctx.closePath();ctx.fill();
-    }
-  } else if (style === 'liquid-wave') {
-    // Liquid: one thick, continuous, multi-lobed filled ribbon.
-    const pts=240, outer=[], inner=[];
-    for(let i=0;i<=pts;i++){
-      const a=i/pts*Math.PI*2;
-      const wave=Math.sin(a*7+now*.0015)*pulse*9 + Math.cos(a*11-now*.0011)*pulse*5;
-      const audio=sample(i,pts)*pulse*8;
-      const r=outerBase+9+pulse*17+wave+audio;
-      const thick=8+pulse*12;
-      outer.push([Math.cos(a)*r,Math.sin(a)*r]);
-      inner.push([Math.cos(a)*(r-thick),Math.sin(a)*(r-thick)]);
-    }
-    ctx.beginPath();outer.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));
-    for(let i=inner.length-1;i>=0;i--)ctx.lineTo(inner[i][0],inner[i][1]);
     ctx.closePath();
-    const grad=ctx.createLinearGradient(-outerBase,-outerBase,outerBase,outerBase);
-    grad.addColorStop(0,paletteColor(0));grad.addColorStop(.5,paletteColor(1%colorCount));grad.addColorStop(1,paletteColor(2%colorCount));
-    ctx.fillStyle=grad;ctx.shadowColor=paletteColor(0);ctx.fill();
+    ctx.fillStyle = colorAt(0); ctx.shadowColor = colorAt(0);
+    ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
+
+    for (let i = 0; i < lobes; i++) {
+      const a = i / lobes * TAU;
+      const r = outerBase + 7 + pulse * 11;
+      ctx.save(); ctx.translate(Math.cos(a) * r, Math.sin(a) * r); ctx.rotate(a);
+      ctx.fillStyle = colorAt(i + 1); ctx.shadowColor = colorAt(i + 1);
+      ctx.shadowBlur = 10 + pulse * 18;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 7 + pulse * 5, 17 + pulse * 12, 0, 0, TAU);
+      ctx.fill(); ctx.restore();
+    }
+    // Bright inner edge makes the filled petals read as a solid layered model.
+    ctx.beginPath();
+    for (let i = 0; i <= 240; i++) {
+      const a = i / 240 * TAU;
+      const r = outerBase - 1 + pulse * 8 + Math.cos(a * lobes) * (3 + pulse * 3);
+      if (!i) ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r);
+      else ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+    }
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2 + pulse * 1.2;
+    ctx.shadowColor = colorAt(1); ctx.shadowBlur = 13; ctx.stroke();
+
+  } else if (style === 'double-pulse') {
+    // THUNDER: angular lightning bolts with filled, branching silhouettes.
+    const bolts = 8;
+    for (let i = 0; i < bolts; i++) {
+      const a = i / bolts * TAU + now * 0.000025;
+      const reach = 18 + pulse * 42 + sample(i, bolts) * pulse * 16;
+      const c = colorAt(i);
+      const p = [
+        [outerBase - 2, -4],
+        [outerBase + reach * .34, -10],
+        [outerBase + reach * .22, -2],
+        [outerBase + reach * .72, 1],
+        [outerBase + reach * .49, 8],
+        [outerBase + reach, 12],
+        [outerBase + reach * .42, 13],
+        [outerBase + reach * .52, 5],
+        [outerBase + reach * .12, 3],
+        [outerBase + reach * .24, -3]
+      ];
+      ctx.save(); ctx.rotate(a);
+      ctx.beginPath();
+      p.forEach((q, k) => k ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]));
+      ctx.closePath(); ctx.fillStyle = c; ctx.shadowColor = c;
+      ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
+      // Secondary fork.
+      ctx.beginPath(); ctx.moveTo(outerBase + reach * .42, 7);
+      ctx.lineTo(outerBase + reach * .66, 20 + pulse * 9);
+      ctx.lineTo(outerBase + reach * .86, 24 + pulse * 11);
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2.4 + pulse * 1.2;
+      ctx.shadowColor = c; ctx.shadowBlur = 10; ctx.stroke();
+      ctx.restore();
+    }
+
+  } else if (style === 'energy-burst') {
+    // FIRE: separate tapered flame tongues, not a ring or radial equalizer.
+    const flames = 16;
+    for (let i = 0; i < flames; i++) {
+      const a = i / flames * TAU + Math.sin(now * .001 + i) * .025;
+      const len = 15 + pulse * (30 + sample(i, flames) * 24);
+      const half = .10 + pulse * .025;
+      const r = outerBase + 1;
+      const c = colorAt(i);
+      ctx.save(); ctx.rotate(a);
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(-half) * r, Math.sin(-half) * r);
+      ctx.bezierCurveTo(r + len * .12, -len * .24, r + len * .55, -len * .58,
+                        r + len, -len * .10);
+      ctx.bezierCurveTo(r + len * .72, len * .12, r + len * .32, len * .36,
+                        Math.cos(half) * r, Math.sin(half) * r);
+      ctx.closePath(); ctx.fillStyle = c; ctx.shadowColor = c;
+      ctx.shadowBlur = 12 + pulse * 20; ctx.fill();
+      ctx.restore();
+    }
+
+  } else if (style === 'liquid-wave') {
+    // LIQUID: broad filled ribbon with flowing multi-frequency contours.
+    const count = 260, outer = [], inner = [];
+    for (let i = 0; i <= count; i++) {
+      const a = i / count * TAU;
+      const flow = Math.sin(a * 5 + now * .0011) * (4 + pulse * 7) +
+                   Math.cos(a * 9 - now * .0014) * (3 + pulse * 5);
+      const audio = sample(i, count) * pulse * 9;
+      const r = outerBase + 5 + pulse * 15 + flow + audio;
+      const thick = 9 + pulse * 9;
+      outer.push([Math.cos(a) * r, Math.sin(a) * r]);
+      inner.push([Math.cos(a) * (r - thick), Math.sin(a) * (r - thick)]);
+    }
+    ctx.beginPath();
+    outer.forEach((q, i) => i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]));
+    for (let i = inner.length - 1; i >= 0; i--) ctx.lineTo(inner[i][0], inner[i][1]);
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(-outerBase, -outerBase, outerBase, outerBase);
+    grad.addColorStop(0, colorAt(0)); grad.addColorStop(.5, colorAt(1)); grad.addColorStop(1, colorAt(2));
+    ctx.fillStyle = grad; ctx.shadowColor = colorAt(0);
+    ctx.shadowBlur = 14 + pulse * 22; ctx.fill();
+
   } else if (style === 'equalizer-orbit') {
-    // Equalizer: independent radial bars jump according to local bass spectrum.
-    const count=56;
-    for(let i=0;i<count;i++){
-      const a=i/count*Math.PI*2;
-      const audio=sample(i,count);
-      const inner=outerBase+3;
-      const len=5+pulse*(9+audio*34);
-      const width=2.2+pulse*1.8;
-      const c=paletteColor(i%colorCount);
-      ctx.save();ctx.rotate(a);ctx.fillStyle=c;ctx.shadowColor=c;
-      ctx.beginPath();ctx.roundRect(-width/2,inner,width,len,width/2);ctx.fill();ctx.restore();
+    // EQUALIZER: distinct radial bars with audio-driven individual lengths.
+    const bars = 64;
+    for (let i = 0; i < bars; i++) {
+      const a = i / bars * TAU;
+      const local = sample(i, bars);
+      const inner = outerBase + 2;
+      const len = 7 + pulse * (13 + local * 35);
+      const w = 3 + pulse * 1.2;
+      const c = colorAt(i);
+      ctx.save(); ctx.rotate(a);
+      ctx.fillStyle = c; ctx.shadowColor = c; ctx.shadowBlur = 9 + pulse * 16;
+      ctx.beginPath(); ctx.roundRect(-w / 2, inner, w, len, w / 2); ctx.fill();
+      ctx.restore();
     }
   }
   ctx.restore();
@@ -1221,7 +1253,7 @@ function refreshEffectColors() {
   currentMidColor = getEffectColor(midColorIndex, 'mid');
   currentTrebleColor = getEffectColor(trebleColorIndex, 'treble');
   document.getElementById('customEffectColor').disabled = effectColorMode !== 'custom';
-  document.getElementById('impactStyleStatus').textContent = impactStyleNames[impactStyle] + ' aktif · warna ' + colorModeNames[effectColorMode] + '. Efek hanya muncul saat hentakan bass terdeteksi.';
+  document.getElementById('impactStyleStatus').textContent = 'Model utama: ' + impactStyleNames[impactStyle] + ' · warna ' + colorModeNames[effectColorMode] + '. Hanya model terpilih yang dirender saat bass menghentak.';
 }
 document.querySelectorAll('[data-impact-style]').forEach(button => {
   button.addEventListener('click', () => {
