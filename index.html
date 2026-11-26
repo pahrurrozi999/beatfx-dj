@@ -251,10 +251,10 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <span class="impact-style-art petals-art"></span><b>Neon Petals</b><small>Kelopak neon tebal</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="double-pulse" aria-pressed="false">
-              <span class="impact-style-art double-art"></span><b>Double Pulse</b><small>Dua gelombang penuh</small>
+              <span class="impact-style-art double-art"></span><b>Thunder Pulse</b><small>Kilatan petir bercabang</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="energy-burst" aria-pressed="false">
-              <span class="impact-style-art burst-art"></span><b>Energy Burst</b><small>Semburan energi radial</small>
+              <span class="impact-style-art burst-art"></span><b>Fire Burst</b><small>Lidah api menyembur keluar</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="liquid-wave" aria-pressed="false">
               <span class="impact-style-art liquid-art"></span><b>Liquid Wave</b><small>Gelombang cair berisi</small>
@@ -662,90 +662,101 @@ function drawSelectedImpactStyle(style, outerBase, sample, hit, now) {
   const safeHit = Math.min(1.35, hit);
   const paletteColor = index => getEffectColor(index, 'bass');
   const colorCount = effectColorMode === 'custom' ? 1 : (effectColorMode === 'rainbow' ? bassPalette.length : (effectColorPalettes[effectColorMode] || bassPalette).length);
+  const pulse = (bassImpact / 100) * safeHit;
   ctx.save();
   ctx.globalAlpha = 1;
-  ctx.shadowBlur = 12 + safeHit * 24;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+  ctx.shadowBlur = 10 + safeHit * 22;
 
+  // Each selection is a complete, different bass-impact silhouette (not an overlay).
   if (style === 'neon-petals') {
-    const count = 12;
-    for (let i=0;i<count;i++) {
-      const angle = i / count * Math.PI * 2 + now * 0.00012;
-      const radius = outerBase + 5 + safeHit * 13;
-      const color = paletteColor(i % colorCount);
-      ctx.save();
-      ctx.translate(Math.cos(angle)*radius, Math.sin(angle)*radius);
-      ctx.rotate(angle);
-      ctx.fillStyle = color; ctx.shadowColor = color;
-      ctx.beginPath(); ctx.ellipse(0,0,7+safeHit*5,12+safeHit*15,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 5 + safeHit * 10;
-      ctx.beginPath(); ctx.ellipse(0,0,2.2+safeHit*1.5,6+safeHit*7,0,0,Math.PI*2); ctx.fill();
+    // Flower: solid scalloped ring made from overlapping rounded petals.
+    const petals = 12;
+    for (let i=0;i<petals;i++) {
+      const a=i/petals*Math.PI*2 + now*0.00010;
+      const c=paletteColor(i%colorCount);
+      const r=outerBase + 7 + pulse*18;
+      ctx.save();ctx.translate(Math.cos(a)*r,Math.sin(a)*r);ctx.rotate(a);
+      ctx.fillStyle=c;ctx.shadowColor=c;
+      ctx.beginPath();ctx.ellipse(0,0,8+pulse*5,13+pulse*13,0,0,Math.PI*2);ctx.fill();
       ctx.restore();
     }
+    // Filled scalloped band connects the petals into one flower-like impact.
+    ctx.beginPath();
+    for(let i=0;i<=240;i++){
+      const a=i/240*Math.PI*2;
+      const r=outerBase+9+pulse*15 + (0.5+0.5*Math.cos(a*12))*pulse*10;
+      const x=Math.cos(a)*r,y=Math.sin(a)*r;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.closePath();ctx.fillStyle=paletteColor(0);ctx.shadowColor=paletteColor(0);ctx.fill();
   } else if (style === 'double-pulse') {
-    const drawRing = (radius, thickness, phase, colorA, colorB) => {
-      const pts=180, outer=[], inner=[];
-      for(let i=0;i<=pts;i++){
-        const a=i/pts*Math.PI*2;
-        const wobble=Math.sin(a*10+phase)*safeHit*3 + sample(i,pts)*safeHit*3;
-        const r=radius+wobble;
-        outer.push([Math.cos(a)*r,Math.sin(a)*r]);
-        inner.push([Math.cos(a)*(r-thickness),Math.sin(a)*(r-thickness)]);
-      }
-      ctx.beginPath();outer.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
-      for(let i=inner.length-1;i>=0;i--)ctx.lineTo(inner[i][0],inner[i][1]);
-      ctx.closePath();
-      const grad=ctx.createLinearGradient(-radius,-radius,radius,radius);
-      grad.addColorStop(0,colorA);grad.addColorStop(.5,'#ffffff');grad.addColorStop(1,colorB);
-      ctx.fillStyle=grad;ctx.shadowColor=colorA;ctx.fill();
-    };
-    drawRing(outerBase+10+safeHit*12,7+safeHit*7,now*.001,paletteColor(0),paletteColor(1%colorCount));
-    drawRing(outerBase+25+safeHit*24,5+safeHit*5,now*.0015,paletteColor(2%colorCount),paletteColor(3%colorCount));
-  } else if (style === 'energy-burst') {
-    const count=30;
-    for(let i=0;i<count;i++){
-      const angle=i/count*Math.PI*2;
-      const e=sample(i,count);
-      const inner=outerBase+2+e*3;
-      const outer=outerBase+10+safeHit*(20+e*14);
-      const half=.022+safeHit*.009;
+    // Thunder: jagged branching lightning bolts, not circular rings.
+    const bolts=9;
+    for(let i=0;i<bolts;i++){
+      const a=i/bolts*Math.PI*2 + now*0.00006;
       const c=paletteColor(i%colorCount);
+      const inner=outerBase+2;
+      const reach=12+pulse*42+sample(i,bolts)*pulse*13;
+      const bend=(i%2?1:-1);
+      const x0=Math.cos(a)*inner,y0=Math.sin(a)*inner;
+      const x1=Math.cos(a+0.10*bend)*(inner+reach*.36),y1=Math.sin(a+0.10*bend)*(inner+reach*.36);
+      const x2=Math.cos(a-0.07*bend)*(inner+reach*.68),y2=Math.sin(a-0.07*bend)*(inner+reach*.68);
+      const x3=Math.cos(a+0.035*bend)*(inner+reach),y3=Math.sin(a+0.035*bend)*(inner+reach);
+      ctx.strokeStyle=c;ctx.shadowColor=c;ctx.lineWidth=3.2+pulse*3.5;
+      ctx.beginPath();ctx.moveTo(x0,y0);ctx.lineTo(x1,y1);ctx.lineTo(x2,y2);ctx.lineTo(x3,y3);ctx.stroke();
+      // Short fork gives the bolt a recognizable branching silhouette.
+      const fx=Math.cos(a-0.07*bend)*(inner+reach*.68),fy=Math.sin(a-0.07*bend)*(inner+reach*.68);
+      const fa=a-0.07*bend + bend*.42;
+      ctx.lineWidth=1.8+pulse*2.0;ctx.beginPath();ctx.moveTo(fx,fy);ctx.lineTo(Math.cos(fa)*(inner+reach*.92),Math.sin(fa)*(inner+reach*.92));ctx.stroke();
+    }
+  } else if (style === 'energy-burst') {
+    // Fire: chunky flame tongues with rounded bases and pointed tips.
+    const flames=18;
+    for(let i=0;i<flames;i++){
+      const a=i/flames*Math.PI*2;
+      const c=paletteColor(i%colorCount);
+      const r=outerBase+3;
+      const len=8+pulse*(25+sample(i,flames)*20);
+      const half=.055 + pulse*.018;
       ctx.fillStyle=c;ctx.shadowColor=c;
       ctx.beginPath();
-      ctx.moveTo(Math.cos(angle-half)*inner,Math.sin(angle-half)*inner);
-      ctx.lineTo(Math.cos(angle-half*.35)*outer,Math.sin(angle-half*.35)*outer);
-      ctx.lineTo(Math.cos(angle+half*.35)*outer,Math.sin(angle+half*.35)*outer);
-      ctx.lineTo(Math.cos(angle+half)*inner,Math.sin(angle+half)*inner);
+      ctx.moveTo(Math.cos(a-half)*r,Math.sin(a-half)*r);
+      ctx.quadraticCurveTo(Math.cos(a-half*.7)*(r+len*.65),Math.sin(a-half*.7)*(r+len*.65),Math.cos(a)*(r+len),Math.sin(a)*(r+len));
+      ctx.quadraticCurveTo(Math.cos(a+half*.7)*(r+len*.65),Math.sin(a+half*.7)*(r+len*.65),Math.cos(a+half)*r,Math.sin(a+half)*r);
       ctx.closePath();ctx.fill();
     }
   } else if (style === 'liquid-wave') {
-    const points=200, outer=[], inner=[];
-    for(let i=0;i<=points;i++){
-      const a=i/points*Math.PI*2;
-      const wave=Math.sin(a*7+now*.0018)*safeHit*5 + Math.cos(a*13-now*.0012)*safeHit*2.5;
-      const audio=sample(i,points)*safeHit*5;
-      const r=outerBase+8+safeHit*12+wave+audio;
+    // Liquid: one thick, continuous, multi-lobed filled ribbon.
+    const pts=240, outer=[], inner=[];
+    for(let i=0;i<=pts;i++){
+      const a=i/pts*Math.PI*2;
+      const wave=Math.sin(a*7+now*.0015)*pulse*9 + Math.cos(a*11-now*.0011)*pulse*5;
+      const audio=sample(i,pts)*pulse*8;
+      const r=outerBase+9+pulse*17+wave+audio;
+      const thick=8+pulse*12;
       outer.push([Math.cos(a)*r,Math.sin(a)*r]);
-      inner.push([Math.cos(a)*(r-(7+safeHit*9)),Math.sin(a)*(r-(7+safeHit*9))]);
+      inner.push([Math.cos(a)*(r-thick),Math.sin(a)*(r-thick)]);
     }
-    ctx.beginPath();outer.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+    ctx.beginPath();outer.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));
     for(let i=inner.length-1;i>=0;i--)ctx.lineTo(inner[i][0],inner[i][1]);
     ctx.closePath();
-    const radius=outerBase+25;
-    const grad=ctx.createLinearGradient(-radius,-radius,radius,radius);
-    grad.addColorStop(0,paletteColor(0));grad.addColorStop(.5,paletteColor(2%colorCount));grad.addColorStop(1,paletteColor(4%colorCount));
+    const grad=ctx.createLinearGradient(-outerBase,-outerBase,outerBase,outerBase);
+    grad.addColorStop(0,paletteColor(0));grad.addColorStop(.5,paletteColor(1%colorCount));grad.addColorStop(1,paletteColor(2%colorCount));
     ctx.fillStyle=grad;ctx.shadowColor=paletteColor(0);ctx.fill();
   } else if (style === 'equalizer-orbit') {
-    const count=48;
+    // Equalizer: independent radial bars jump according to local bass spectrum.
+    const count=56;
     for(let i=0;i<count;i++){
-      const angle=i/count*Math.PI*2;
+      const a=i/count*Math.PI*2;
       const audio=sample(i,count);
-      const inner=outerBase+3+safeHit*4;
-      const length=5+safeHit*(10+audio*23);
-      const width=2.5+safeHit*1.4;
+      const inner=outerBase+3;
+      const len=5+pulse*(9+audio*34);
+      const width=2.2+pulse*1.8;
       const c=paletteColor(i%colorCount);
-      ctx.save();ctx.rotate(angle);ctx.fillStyle=c;ctx.shadowColor=c;
-      ctx.beginPath();ctx.roundRect(-width/2,inner,width,length,width/2);ctx.fill();
-      ctx.restore();
+      ctx.save();ctx.rotate(a);ctx.fillStyle=c;ctx.shadowColor=c;
+      ctx.beginPath();ctx.roundRect(-width/2,inner,width,len,width/2);ctx.fill();ctx.restore();
     }
   }
   ctx.restore();
@@ -758,55 +769,10 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
   const outerBase = radius * 0.98;
   const points = 180;
 
-  // Bass/kick: a filled, layered impact bloom. It stays hidden between kicks
-  // and expands outward from behind the fixed photo only when a kick is detected.
-  if (bassEffectEnabled && bassImpactPulse > 0.035) {
-    const hit = Math.min(1.35, bassImpactPulse);
-    const thickness = (7 + hit * 18) * impact;
-    const expansion = (8 + hit * 30) * impact;
-    const lobePower = 2.2;
-    const outer = [], inner = [];
-    for (let i=0;i<=points;i++) {
-      const angle = i / points * Math.PI * 2;
-      const lobes = Math.pow(Math.max(0, Math.cos(angle * 6)), lobePower);
-      const audioDetail = sample(i, points);
-      const edge = outerBase + expansion * (0.48 + lobes * 0.72) + audioDetail * hit * 5;
-      const x = Math.cos(angle), y = Math.sin(angle);
-      outer.push([x * edge, y * edge]);
-      inner.push([x * (edge - thickness), y * (edge - thickness)]);
-    }
-    ctx.beginPath();
-    outer.forEach((pt, i) => i ? ctx.lineTo(pt[0], pt[1]) : ctx.moveTo(pt[0], pt[1]));
-    for (let i=inner.length-1;i>=0;i--) ctx.lineTo(inner[i][0], inner[i][1]);
-    ctx.closePath();
-    const bloom = ctx.createLinearGradient(-outerBase, -outerBase, outerBase, outerBase);
-    bloom.addColorStop(0, currentBassColor);
-    bloom.addColorStop(0.48, '#ffffff');
-    bloom.addColorStop(1, currentBassColor);
-    ctx.fillStyle = bloom;
-    ctx.shadowColor = currentBassColor;
-    ctx.shadowBlur = 12 + hit * 28;
-    ctx.globalAlpha = Math.min(0.96, 0.22 + hit * 0.58);
-    ctx.fill();
+  // Selected bass style is the complete impact silhouette. Detection, pulse strength,
+  // sensitivity and bassImpact control remain the same as the v0.9 baseline.
 
-    // A second translucent inner ribbon gives the impact a solid, full-bodied look.
-    ctx.beginPath();
-    for (let i=0;i<=points;i++) {
-      const angle=i/points*Math.PI*2;
-      const lobes=Math.pow(Math.max(0,Math.cos(angle*6)),2.2);
-      const r=outerBase-3 + hit*(5+lobes*12)*impact;
-      const x=Math.cos(angle)*r, y=Math.sin(angle)*r;
-      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-    }
-    ctx.closePath();
-    ctx.strokeStyle = currentBassColor;
-    ctx.lineWidth = 2 + hit * 4;
-    ctx.shadowBlur = 8 + hit * 20;
-    ctx.globalAlpha = Math.min(1, 0.35 + hit * 0.5);
-    ctx.stroke();
-  }
-
-  // Optional style accent follows the same detected bass pulse. The v0.9 base bloom above is unchanged.
+  // Render exactly one selected bass-impact model; no generic ring is layered underneath.
   if (bassEffectEnabled && bassImpactPulse > 0.035) {
     drawSelectedImpactStyle(impactStyle, outerBase, sample, bassImpactPulse, now);
   }
@@ -1224,8 +1190,8 @@ function updateBandEffectState() {
 
 const impactStyleNames = {
   'neon-petals':'Neon Petals',
-  'double-pulse':'Double Pulse',
-  'energy-burst':'Energy Burst',
+  'double-pulse':'Thunder Pulse',
+  'energy-burst':'Fire Burst',
   'liquid-wave':'Liquid Wave',
   'equalizer-orbit':'Equalizer Orbit'
 };
