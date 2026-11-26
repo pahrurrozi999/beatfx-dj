@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v2.0 — Premium 3D Visualizer</title>
+<title>BEATFX DJ v2.1 — Preset Visualizer Studio</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -76,10 +76,11 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .layer-action-row button{border:1px solid var(--line);border-radius:9px;background:#1a1630;color:#eee;padding:8px 10px;font-size:11px}
 .layer-action-row button.danger{border-color:#8c385f;color:#ffb6d7}
 .layer-empty{padding:11px 0;color:var(--muted);font-size:11px}
-.impact-style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding-top:11px}
+.impact-style-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;padding-top:11px}
 .impact-style-btn{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px;border:1px solid var(--line);border-radius:12px;background:#151226;color:#f8f6ff;text-align:left}
 .impact-style-btn.active{border-color:#19dfff;background:#10243a;box-shadow:0 0 0 1px #19dfff55,0 0 17px #19dfff22}
 .impact-style-btn b{font-size:12px}.impact-style-btn small{font-size:10px;color:var(--muted)}
+.premium-visual-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:11px;background:#0d0b18}.premium-visual-controls label{display:block!important;margin:0!important;color:#d8d1e8!important;font-size:11px!important}.premium-visual-controls input[type=range]{display:block;width:100%;margin-top:8px;accent-color:var(--blue)}.premium-visual-controls output{color:#fff;font-weight:800;float:right}
 
 .impact-style-art{width:100%;height:76px;display:block;border-radius:9px;overflow:hidden;background-color:#070912;position:relative;border:1px solid #ffffff18;isolation:isolate;box-shadow:inset 0 8px 18px #000a,inset 0 -5px 12px #ffffff08}
 .impact-style-art:before,.impact-style-art:after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
@@ -99,11 +100,25 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .equalizer-art:before{width:68px;height:68px;border-radius:50%;background:repeating-conic-gradient(from 0deg,#19dfff 0deg 4deg,transparent 4deg 7deg,#ff42c8 7deg 10deg,transparent 10deg 14deg);mask:radial-gradient(circle,transparent 0 35%,#000 38% 70%,transparent 73%);filter:drop-shadow(0 0 7px #19dfff);transform:translate(-50%,-50%) rotateX(58deg)}
 .equalizer-art:after{width:25px;height:25px;border-radius:50%;border:3px solid #eaffff;box-shadow:0 0 12px #19dfff,inset 0 0 8px #19dfff}
 
+.prism-art{background:radial-gradient(ellipse at 50% 55%,#163451,#070914 72%)}
+.prism-art:before{width:72px;height:53px;border:7px solid #105078;border-top-color:#e8ffff;border-right-color:#28dfff;border-bottom-color:#6745ca;border-radius:15%;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(22deg);box-shadow:0 0 0 3px #174a8a,0 0 18px #19dfff}
+.prism-art:after{width:49px;height:34px;border:4px solid #dfffff;border-radius:14%;transform:translate(-50%,-50%) rotateX(62deg) rotateZ(22deg);box-shadow:0 0 12px #19dfff}
+.helix-art{background:radial-gradient(ellipse,#17274b,#070914 72%)}
+.helix-art:before{width:69px;height:43px;border:8px solid #153f77;border-left-color:#ff42c8;border-right-color:#1bdfff;border-radius:50%;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(38deg);box-shadow:0 0 16px #19dfff}
+.helix-art:after{width:69px;height:43px;border:7px solid #14345f;border-left-color:#19dfff;border-right-color:#bc63ff;border-radius:50%;transform:translate(-50%,-50%) rotateX(66deg) rotateZ(-38deg);box-shadow:0 0 14px #ff42c8}
+.crystal-art{background:radial-gradient(circle,#39254f,#080914 72%)}
+.crystal-art:before{width:72px;height:64px;background:conic-gradient(from 20deg,#fff,#ffb54e,#a13bff,#19dfff,#fff);clip-path:polygon(50% 0,64% 33%,100% 18%,73% 53%,94% 91%,52% 72%,15% 100%,29% 58%,0 27%,39% 35%);transform:translate(-50%,-50%) rotateX(48deg);filter:drop-shadow(0 0 9px #a75bff)}
+.crystal-art:after{width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 0 18px #fff,0 0 30px #19dfff}
+.vortex-art{background:radial-gradient(ellipse,#172c4b,#070914 72%)}
+.vortex-art:before{width:68px;height:60px;border:8px solid transparent;border-top-color:#19dfff;border-right-color:#a65cff;border-bottom-color:#ff42c8;border-left-color:#fff;border-radius:50%;transform:translate(-50%,-50%) rotateX(58deg) rotateZ(35deg);box-shadow:0 0 16px #19dfff}
+.vortex-art:after{width:45px;height:37px;border:5px solid transparent;border-top-color:#fff;border-right-color:#19dfff;border-bottom-color:#ff42c8;border-radius:50%;transform:translate(-50%,-50%) rotateX(58deg) rotateZ(-25deg)}
+
+
 .impact-color-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#121020}
 .impact-color-controls label{display:block;margin:0;color:#d8d1e8;font-size:11px}
 .impact-color-controls select,.impact-color-controls input[type=color]{width:100%;height:38px;margin-top:6px;padding:6px;background:#090812;color:#fff;border:1px solid var(--line);border-radius:9px}
 .impact-color-controls input:disabled{opacity:.42}
-@media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-color-controls{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-color-controls{grid-template-columns:1fr 1fr}.premium-visual-controls{grid-template-columns:1fr 1fr}}
 
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
 @media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
@@ -257,7 +272,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
         </div>
       </details>
       <details class="editor-panel" id="impactStylePanel" open>
-        <summary>✦ Pilih Model Visualizer</summary>
+        <summary>✦ Preset Visualizer Studio</summary>
         <div class="editor-panel-body">
           <div class="impact-style-grid" id="impactStylePicker">
             <button class="impact-style-btn active" type="button" data-impact-style="neon-petals" aria-pressed="true">
@@ -275,6 +290,18 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
             <button class="impact-style-btn" type="button" data-impact-style="equalizer-orbit" aria-pressed="false">
               <span class="impact-style-art equalizer-art"></span><b>3D Equalizer Rings</b><small>Batang audio 3D melingkar</small>
             </button>
+            <button class="impact-style-btn" type="button" data-impact-style="prism-tunnel" aria-pressed="false">
+              <span class="impact-style-art prism-art"></span><b>3D Prism Tunnel</b><small>Terowongan prisma berlapis</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="helix-orbit" aria-pressed="false">
+              <span class="impact-style-art helix-art"></span><b>3D Helix Orbit</b><small>Dua pita energi saling melilit</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="crystal-shards" aria-pressed="false">
+              <span class="impact-style-art crystal-art"></span><b>3D Crystal Shards</b><small>Kristal tajam dengan bidang metalik</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="plasma-vortex" aria-pressed="false">
+              <span class="impact-style-art vortex-art"></span><b>3D Plasma Vortex</b><small>Pita spiral berputar mengitari foto</small>
+            </button>
           </div>
           <div class="impact-color-controls">
             <label for="effectColorPalette">Warna efek
@@ -291,8 +318,16 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <input id="customEffectColor" type="color" value="#18dfff" disabled>
             </label>
           </div>
-          <p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih kartu lain untuk mengganti seluruh bentuk visualizer.</p>
-          <p class="hint">Model 3D premium menyatu dekat tepi foto. Pilihan model mengganti bentuk visualizer utama; efek tambahan tetap terpisah. Deteksi dan kekuatan Bass Impact tidak diubah.</p>
+          <div class="premium-visual-controls">
+            <label for="visualDepthInput">Kedalaman 3D <output id="visualDepthValue">70%</output>
+              <input id="visualDepthInput" type="range" min="20" max="100" value="70">
+            </label>
+            <label for="visualRotationInput">Kecepatan putar <output id="visualRotationValue">55%</output>
+              <input id="visualRotationInput" type="range" min="0" max="100" value="55">
+            </label>
+          </div>
+          <p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih preset lain untuk mengganti bentuk utama.</p>
+          <p class="hint">Preset visualizer orisinal dengan kedalaman 3D, rotasi, warna, foto, dan layer yang dapat disesuaikan. Pilihan preset mengganti bentuk utama; efek tambahan tetap terpisah. Mesin deteksi bass dipertahankan.</p>
         </div>
       </details>
     </div>
@@ -352,7 +387,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • v2.0 • Premium 3D Visualizer Studio</div>
+<div class="footer">BEATFX DJ • v2.1 • Preset Visualizer Studio</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -391,6 +426,8 @@ const bassPalette = ['#19c8ff','#388bff','#9b55ff','#ff42c8','#38e6c2','#f5a623'
 const midPalette = ['#ff42c8','#bd68ff','#ff8d5b','#e75cff'];
 const treblePalette = ['#c7ff50','#fff06a','#5dffd1','#8eeaff'];
 let impactStyle = 'neon-petals';
+let visualDepth = 70;
+let visualRotation = 55;
 let effectColorMode = 'rainbow';
 let customEffectColor = '#18dfff';
 const effectColorPalettes = {
@@ -676,6 +713,8 @@ function drawSelectedImpactStyle(style, innerBase, sample, hit, now) {
   // Premium 3D-style canvas renderer. Audio detection and pulse timing are untouched.
   if (hit <= 0.035) return;
   const power = (bassImpact / 100) * Math.min(1.35, hit);
+  const depthFactor = 0.4 + (visualDepth / 100) * 0.9;
+  const motionFactor = visualRotation / 55;
   const TAU = Math.PI * 2;
   const colorCount = effectColorMode === 'custom' ? 1 :
     (effectColorMode === 'rainbow' ? bassPalette.length :
@@ -898,10 +937,152 @@ function drawSelectedImpactStyle(style, innerBase, sample, hit, now) {
       ctx.strokeStyle='#ffffff';ctx.lineWidth=.65;ctx.globalAlpha=.65;ctx.stroke();ctx.globalAlpha=1;
       ctx.restore();
     }
+  } else if (style === 'prism-tunnel') {
+    // PRISM TUNNEL: nested beveled octagonal frames recede in perspective.
+    const rings = 7;
+    const spin = now * 0.000018 * motionFactor;
+    for (let layer = rings - 1; layer >= 0; layer--) {
+      const t = layer / (rings - 1);
+      const r = innerBase + 4 + t * (16 + power * 28);
+      const ry = r * (0.62 + t * 0.05);
+      const ringPoints = [];
+      for (let k = 0; k < 8; k++) {
+        const a = k / 8 * TAU + spin + layer * 0.025;
+        ringPoints.push([Math.cos(a) * r, Math.sin(a) * ry]);
+      }
+      const color = colorAt(layer + 1);
+      const offset = 3 + depthFactor * 4;
+      ctx.beginPath();
+      ringPoints.forEach((p, k) => k ? ctx.lineTo(p[0] + offset, p[1] + offset) : ctx.moveTo(p[0] + offset, p[1] + offset));
+      ctx.closePath();
+      ctx.strokeStyle = shade(color, .22);
+      ctx.lineWidth = 8 + depthFactor * 2;
+      ctx.shadowColor = color; ctx.shadowBlur = 7 + power * 12; ctx.stroke();
+
+      ctx.beginPath();
+      ringPoints.forEach((p, k) => k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+      ctx.closePath();
+      ctx.strokeStyle = glossyGradient(-r, -ry, r, ry, color);
+      ctx.lineWidth = 4 + depthFactor * 1.7;
+      ctx.shadowColor = color; ctx.shadowBlur = 12 + power * 16; ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(ringPoints[0][0], ringPoints[0][1]);
+      ctx.lineTo(ringPoints[0][0] + offset, ringPoints[0][1] + offset);
+      ctx.strokeStyle = '#f4ffff'; ctx.lineWidth = 1.2; ctx.globalAlpha = .7; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+
+  } else if (style === 'helix-orbit') {
+    // HELIX ORBIT: two thick, interwoven metallic cables with raised highlight rails.
+    const turns = 2.15;
+    for (let strand = 0; strand < 2; strand++) {
+      const phase = strand * Math.PI;
+      const pts = [];
+      const steps = 260;
+      for (let i = 0; i <= steps; i++) {
+        const a = i / steps * TAU * turns;
+        const weave = Math.sin(a * 1.1 + phase + now * .0012 * motionFactor) * (5 + depthFactor * 4);
+        const r = innerBase + 8 + power * 5 + weave;
+        pts.push([Math.cos(a + phase * .22) * r, Math.sin(a + phase * .22) * r * .66]);
+      }
+      const color = colorAt(strand * 2 + 1);
+      ctx.beginPath();
+      pts.forEach((p, i) => i ? ctx.lineTo(p[0] + 2, p[1] + 5 + depthFactor * 2) : ctx.moveTo(p[0] + 2, p[1] + 5 + depthFactor * 2));
+      ctx.strokeStyle = shade(color, .2); ctx.lineWidth = 13 + depthFactor * 4;
+      ctx.lineJoin = 'round'; ctx.shadowColor = color; ctx.shadowBlur = 8; ctx.stroke();
+
+      ctx.beginPath();
+      pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+      ctx.strokeStyle = glossyGradient(-innerBase, -innerBase, innerBase, innerBase, color);
+      ctx.lineWidth = 8 + depthFactor * 3; ctx.shadowColor = color; ctx.shadowBlur = 13 + power * 14; ctx.stroke();
+
+      ctx.beginPath();
+      pts.forEach((p, i) => i ? ctx.lineTo(p[0] - 1, p[1] - 2) : ctx.moveTo(p[0] - 1, p[1] - 2));
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.globalAlpha = .78; ctx.stroke(); ctx.globalAlpha = 1;
+    }
+
+  } else if (style === 'crystal-shards') {
+    // CRYSTAL SHARDS: faceted 3D prisms flare outward like cut glass.
+    const shards = 18;
+    for (let i = 0; i < shards; i++) {
+      const angle = i / shards * TAU + now * .000012 * motionFactor;
+      const level = sample(i, shards);
+      const length = 17 + power * (22 + level * 19);
+      const half = 4 + depthFactor * 2;
+      const color = colorAt(i + 2);
+      const front = [
+        [innerBase - 1, 0],
+        [innerBase + length * .27, -half * 1.4],
+        [innerBase + length, -half * .22],
+        [innerBase + length * .68, half * 1.45],
+        [innerBase + 4, half * .75]
+      ];
+      ctx.save(); ctx.rotate(angle);
+      const drawFace = (dx, dy, fill) => {
+        ctx.beginPath();
+        front.forEach((p, k) => k ? ctx.lineTo(p[0] + dx, p[1] + dy) : ctx.moveTo(p[0] + dx, p[1] + dy));
+        ctx.closePath(); ctx.fillStyle = fill; ctx.fill();
+      };
+      drawFace(3 + depthFactor * 2, 5 + depthFactor * 2, shade(color, .2));
+      drawFace(0, 0, glossyGradient(innerBase, -half, innerBase + length, half, color));
+      ctx.shadowColor = color; ctx.shadowBlur = 13 + power * 15;
+      ctx.strokeStyle = '#f4ffff'; ctx.lineWidth = 1.05; ctx.stroke();
+      // Faceted triangular face.
+      ctx.beginPath();
+      ctx.moveTo(innerBase + length * .27, -half * 1.4);
+      ctx.lineTo(innerBase + length * .68, half * 1.45);
+      ctx.lineTo(innerBase + length, -half * .22);
+      ctx.closePath();
+      ctx.fillStyle = shade(color, 1.35); ctx.globalAlpha = .72; ctx.fill(); ctx.globalAlpha = 1;
+      ctx.beginPath();
+      ctx.moveTo(innerBase + length * .27, -half * 1.4);
+      ctx.lineTo(innerBase + length * .52, 0);
+      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.3; ctx.globalAlpha = .92; ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.restore();
+    }
+
+  } else if (style === 'plasma-vortex') {
+    // PLASMA VORTEX: a thick 3D spiral ribbon coils outward from the photo rim.
+    const turns = 2.35;
+    const steps = 340;
+    const front = [], back = [];
+    const maxT = TAU * turns;
+    const bandWidth = 8 + depthFactor * 4;
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps * maxT;
+      const progress = i / steps;
+      const r = innerBase + 2 + progress * (17 + power * 24) +
+        Math.sin(t * 2.3 + now * .0015 * motionFactor) * (2 + depthFactor * 2);
+      const a = t + now * .000018 * motionFactor;
+      const yScale = .66 + progress * .04;
+      front.push([Math.cos(a) * r, Math.sin(a) * r * yScale]);
+      back.push([Math.cos(a) * (r - bandWidth), Math.sin(a) * (r - bandWidth) * yScale]);
+    }
+    const ribbonPath = (dx, dy) => {
+      ctx.beginPath();
+      front.forEach((p, i) => i ? ctx.lineTo(p[0] + dx, p[1] + dy) : ctx.moveTo(p[0] + dx, p[1] + dy));
+      for (let i = back.length - 1; i >= 0; i--) ctx.lineTo(back[i][0] + dx, back[i][1] + dy);
+      ctx.closePath();
+    };
+    ribbonPath(3 + depthFactor * 2, 5 + depthFactor * 2);
+    ctx.fillStyle = shade(colorAt(0), .2); ctx.shadowColor = colorAt(0); ctx.shadowBlur = 12; ctx.fill();
+    ribbonPath(0, 0);
+    const plasma = ctx.createLinearGradient(-innerBase, -innerBase, innerBase, innerBase);
+    plasma.addColorStop(0, '#ffffff');
+    plasma.addColorStop(.17, colorAt(0));
+    plasma.addColorStop(.42, shade(colorAt(1), .55));
+    plasma.addColorStop(.68, colorAt(2));
+    plasma.addColorStop(1, '#eaffff');
+    ctx.fillStyle = plasma; ctx.shadowColor = colorAt(1); ctx.shadowBlur = 16 + power * 17; ctx.fill();
+    ctx.beginPath();
+    front.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5; ctx.globalAlpha = .9; ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.beginPath();
+    back.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    ctx.strokeStyle = colorAt(2); ctx.lineWidth = 2.3; ctx.stroke();
   }
   ctx.restore();
 }
-
 function drawPhotoBassCircle(radius, bands, sample, now) {
   const impact = bassImpact / 100;
   const base = radius * 0.66 * (photoSize / 72);
@@ -1299,7 +1480,11 @@ const impactStyleNames = {
   'double-pulse':'3D Thunder Orbit',
   'energy-burst':'3D Reactor Burst',
   'liquid-wave':'3D Liquid Chrome',
-  'equalizer-orbit':'3D Equalizer Rings'
+  'equalizer-orbit':'3D Equalizer Rings',
+  'prism-tunnel':'3D Prism Tunnel',
+  'helix-orbit':'3D Helix Orbit',
+  'crystal-shards':'3D Crystal Shards',
+  'plasma-vortex':'3D Plasma Vortex'
 };
 const colorModeNames = {
   rainbow:'Neon Mix',
@@ -1338,6 +1523,15 @@ document.getElementById('customEffectColor').addEventListener('input', event => 
   refreshEffectColors();
 });
 refreshEffectColors();
+
+document.getElementById('visualDepthInput').addEventListener('input', event => {
+  visualDepth = Number(event.target.value);
+  document.getElementById('visualDepthValue').textContent = visualDepth + '%';
+});
+document.getElementById('visualRotationInput').addEventListener('input', event => {
+  visualRotation = Number(event.target.value);
+  document.getElementById('visualRotationValue').textContent = visualRotation + '%';
+});
 
 const centerPhotoInput = document.getElementById('centerPhotoFile');
 centerPhotoInput.addEventListener('change', event => {
