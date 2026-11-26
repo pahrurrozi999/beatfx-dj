@@ -278,7 +278,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <input id="customEffectColor" type="color" value="#18dfff" disabled>
             </label>
           </div>
-          <p class="hint" id="impactStyleStatus">Neon Petals aktif · warna Neon Mix. Efek muncul hanya saat hentakan bass terdeteksi.</p>
+          <p class="hint" id="impactStyleStatus">Flower Pulse aktif · kelopak tebal berlapis, muncul hanya saat hentakan bass terdeteksi.</p>
           <p class="hint">Warna dibuat pekat dan terang. Gaya tambahan mengikuti hentakan bass, sedangkan deteksi dan kekuatan dasar Bass Impact v0.9 tetap dipertahankan.</p>
         </div>
       </details>
@@ -671,26 +671,39 @@ function drawSelectedImpactStyle(style, outerBase, sample, hit, now) {
 
   // Each selection is a complete, different bass-impact silhouette (not an overlay).
   if (style === 'neon-petals') {
-    // Flower: solid scalloped ring made from overlapping rounded petals.
-    const petals = 12;
-    for (let i=0;i<petals;i++) {
-      const a=i/petals*Math.PI*2 + now*0.00010;
-      const c=paletteColor(i%colorCount);
-      const r=outerBase + 7 + pulse*18;
-      ctx.save();ctx.translate(Math.cos(a)*r,Math.sin(a)*r);ctx.rotate(a);
-      ctx.fillStyle=c;ctx.shadowColor=c;
-      ctx.beginPath();ctx.ellipse(0,0,8+pulse*5,13+pulse*13,0,0,Math.PI*2);ctx.fill();
-      ctx.restore();
+    // Reference-matched thick flower pulse: three opaque scalloped bands
+    // expand only while the original v0.9 bassImpactPulse is active.
+    const lobes = 8;
+    const layers = [
+      { offset: 0, radius: 1, thickness: 1, color: 0 },
+      { offset: 2.5, radius: -5, thickness: 0.92, color: 1 },
+      { offset: 5, radius: -10, thickness: 0.82, color: 2 }
+    ];
+    for (const layer of layers) {
+      const outer = [], inner = [];
+      const base = outerBase + 7 + pulse * 17 + layer.radius;
+      const swell = 5 + pulse * 13;
+      const thick = (13 + pulse * 10) * layer.thickness;
+      const phase = now * 0.00012 + layer.offset * 0.025;
+      const steps = 240;
+      for (let i = 0; i <= steps; i++) {
+        const a = (i / steps) * Math.PI * 2;
+        const petal = Math.pow((0.5 + 0.5 * Math.cos(a * lobes + phase)), 1.35);
+        const r = base + petal * swell;
+        outer.push([Math.cos(a) * r, Math.sin(a) * r]);
+        inner.push([Math.cos(a) * (r - thick), Math.sin(a) * (r - thick)]);
+      }
+      ctx.beginPath();
+      outer.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+      for (let i = inner.length - 1; i >= 0; i--) ctx.lineTo(inner[i][0], inner[i][1]);
+      ctx.closePath();
+      const color = paletteColor(layer.color % colorCount);
+      ctx.fillStyle = color;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 9 + safeHit * 13;
+      ctx.globalAlpha = 1;
+      ctx.fill();
     }
-    // Filled scalloped band connects the petals into one flower-like impact.
-    ctx.beginPath();
-    for(let i=0;i<=240;i++){
-      const a=i/240*Math.PI*2;
-      const r=outerBase+9+pulse*15 + (0.5+0.5*Math.cos(a*12))*pulse*10;
-      const x=Math.cos(a)*r,y=Math.sin(a)*r;
-      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-    }
-    ctx.closePath();ctx.fillStyle=paletteColor(0);ctx.shadowColor=paletteColor(0);ctx.fill();
   } else if (style === 'double-pulse') {
     // Thunder: jagged branching lightning bolts, not circular rings.
     const bolts=9;
