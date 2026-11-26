@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v1.1 — Studio + Bass Impact v0.9</title>
+<title>BEATFX DJ v1.5 — Five Impact Styles & Color Picker</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -76,7 +76,21 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .layer-action-row button{border:1px solid var(--line);border-radius:9px;background:#1a1630;color:#eee;padding:8px 10px;font-size:11px}
 .layer-action-row button.danger{border-color:#8c385f;color:#ffb6d7}
 .layer-empty{padding:11px 0;color:var(--muted);font-size:11px}
-@media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.impact-style-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding-top:11px}
+.impact-style-btn{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:8px;border:1px solid var(--line);border-radius:12px;background:#151226;color:#f8f6ff;text-align:left}
+.impact-style-btn.active{border-color:#19dfff;background:#10243a;box-shadow:0 0 0 1px #19dfff55,0 0 17px #19dfff22}
+.impact-style-btn b{font-size:12px}.impact-style-btn small{font-size:10px;color:var(--muted)}
+.impact-style-art{width:100%;height:70px;display:block;border-radius:8px;overflow:hidden;background-color:#090914;position:relative;border:1px solid #ffffff12}
+.petals-art{background:radial-gradient(ellipse at 50% 12%,#ff35c7 0 10%,transparent 12%),radial-gradient(ellipse at 82% 30%,#16dcff 0 10%,transparent 12%),radial-gradient(ellipse at 88% 68%,#a76aff 0 10%,transparent 12%),radial-gradient(ellipse at 50% 88%,#ff8c26 0 10%,transparent 12%),radial-gradient(ellipse at 12% 68%,#16dcff 0 10%,transparent 12%),radial-gradient(ellipse at 18% 30%,#ff35c7 0 10%,transparent 12%),radial-gradient(circle at center,#24104a 0 24%,transparent 26%)}
+.double-art{background:radial-gradient(circle at center,transparent 23%,#ff38c6 25% 32%,transparent 34% 40%,#18deff 42% 51%,transparent 53%),radial-gradient(circle at center,#252052,#090914 70%)}
+.burst-art{background:repeating-conic-gradient(from 0deg at 50% 50%,#18deff 0deg 5deg,#ff39c7 5deg 9deg,transparent 9deg 15deg),radial-gradient(circle at center,#ffffff 0 7%,#2b1450 9% 25%,transparent 27%);mask-image:radial-gradient(circle,#000 0 67%,transparent 70%)}
+.liquid-art{background:repeating-radial-gradient(ellipse at center,#18deff 0 4px,#ff36c8 5px 8px,#9e62ff 9px 12px,transparent 13px 18px),radial-gradient(circle,#25104a,#090914 70%)}
+.equalizer-art{background:repeating-conic-gradient(from 0deg at 50% 50%,#18deff 0deg 4deg,transparent 4deg 9deg,#ff36c8 9deg 12deg,transparent 12deg 18deg),radial-gradient(circle at center,#24104a 0 22%,transparent 24%);mask-image:radial-gradient(circle,#000 0 72%,transparent 74%)}
+.impact-color-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;padding:10px;border:1px solid var(--line);border-radius:11px;background:#121020}
+.impact-color-controls label{display:block;margin:0;color:#d8d1e8;font-size:11px}
+.impact-color-controls select,.impact-color-controls input[type=color]{width:100%;height:38px;margin-top:6px;padding:6px;background:#090812;color:#fff;border:1px solid var(--line);border-radius:9px}
+.impact-color-controls input:disabled{opacity:.42}
+@media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-color-controls{grid-template-columns:1fr 1fr}}
 
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
 @media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
@@ -229,6 +243,45 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
           <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
         </div>
       </details>
+      <details class="editor-panel" id="impactStylePanel" open>
+        <summary>✦ Pilih Gaya Hentakan</summary>
+        <div class="editor-panel-body">
+          <div class="impact-style-grid" id="impactStylePicker">
+            <button class="impact-style-btn active" type="button" data-impact-style="neon-petals" aria-pressed="true">
+              <span class="impact-style-art petals-art"></span><b>Neon Petals</b><small>Kelopak neon tebal</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="double-pulse" aria-pressed="false">
+              <span class="impact-style-art double-art"></span><b>Double Pulse</b><small>Dua gelombang penuh</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="energy-burst" aria-pressed="false">
+              <span class="impact-style-art burst-art"></span><b>Energy Burst</b><small>Semburan energi radial</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="liquid-wave" aria-pressed="false">
+              <span class="impact-style-art liquid-art"></span><b>Liquid Wave</b><small>Gelombang cair berisi</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="equalizer-orbit" aria-pressed="false">
+              <span class="impact-style-art equalizer-art"></span><b>Equalizer Orbit</b><small>Batang audio melingkar</small>
+            </button>
+          </div>
+          <div class="impact-color-controls">
+            <label for="effectColorPalette">Warna efek
+              <select id="effectColorPalette">
+                <option value="rainbow">Neon Mix</option>
+                <option value="electric-blue">Electric Blue</option>
+                <option value="purple-pink">Purple Pink</option>
+                <option value="fire">Fire</option>
+                <option value="aqua-green">Aqua Green</option>
+                <option value="custom">Warna Sendiri</option>
+              </select>
+            </label>
+            <label for="customEffectColor">Pilih warna sendiri
+              <input id="customEffectColor" type="color" value="#18dfff" disabled>
+            </label>
+          </div>
+          <p class="hint" id="impactStyleStatus">Neon Petals aktif · warna Neon Mix. Efek muncul hanya saat hentakan bass terdeteksi.</p>
+          <p class="hint">Warna dibuat pekat dan terang. Gaya tambahan mengikuti hentakan bass, sedangkan deteksi dan kekuatan dasar Bass Impact v0.9 tetap dipertahankan.</p>
+        </div>
+      </details>
     </div>
   </div>
 </section>
@@ -286,7 +339,7 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • Build 0.8 • Effects Fix & Audio Response</div>
+<div class="footer">BEATFX DJ • v1.5 • Five Impact Styles & Bright Color Studio</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -324,6 +377,24 @@ let lastTrebleAt = 0;
 const bassPalette = ['#19c8ff','#388bff','#9b55ff','#ff42c8','#38e6c2','#f5a623'];
 const midPalette = ['#ff42c8','#bd68ff','#ff8d5b','#e75cff'];
 const treblePalette = ['#c7ff50','#fff06a','#5dffd1','#8eeaff'];
+let impactStyle = 'neon-petals';
+let effectColorMode = 'rainbow';
+let customEffectColor = '#18dfff';
+const effectColorPalettes = {
+  'electric-blue':['#00eaff','#168dff','#63f4ff','#2454ff','#b7fbff'],
+  'purple-pink':['#ff29c8','#c13cff','#8e5dff','#ff70e8','#f4b0ff'],
+  fire:['#ff3b24','#ff741f','#ffc22e','#ff286f','#fff05a'],
+  'aqua-green':['#00f5d4','#00c9ff','#72ff45','#00ff91','#a6fff0']
+};
+function getEffectColor(index, band='bass') {
+  if (effectColorMode === 'custom') return customEffectColor;
+  if (effectColorMode === 'rainbow') {
+    const source = band === 'mid' ? midPalette : (band === 'treble' ? treblePalette : bassPalette);
+    return source[index % source.length];
+  }
+  const palette = effectColorPalettes[effectColorMode] || bassPalette;
+  return palette[index % palette.length];
+}
 let bassColorIndex = 0;
 let midColorIndex = 0;
 let trebleColorIndex = 0;
@@ -474,7 +545,7 @@ function readAudioBands() {
     lastBeatAt = now;
     beatCount++;
     bassColorIndex = (bassColorIndex + 1) % bassPalette.length;
-    currentBassColor = bassPalette[bassColorIndex];
+    currentBassColor = getEffectColor(bassColorIndex, 'bass');
     if (now - lastBeatUiAt > 220) {
       document.getElementById('beatStatus').textContent = 'Bass impact: ' + beatCount;
       lastBeatUiAt = now;
@@ -484,13 +555,13 @@ function readAudioBands() {
     midStrength = clamp(0.48 + (midEnergy - midThreshold) * 5.2 + midRise * 13, 0.42, 1.45);
     lastMidAt = now;
     midColorIndex = (midColorIndex + 1) % midPalette.length;
-    currentMidColor = midPalette[midColorIndex];
+    currentMidColor = getEffectColor(midColorIndex, 'mid');
   }
   if (trebleHit) {
     trebleStrength = clamp(0.42 + (trebleEnergy - trebleThreshold) * 6.0 + trebleRise * 16, 0.38, 1.35);
     lastTrebleAt = now;
     trebleColorIndex = (trebleColorIndex + 1) % treblePalette.length;
-    currentTrebleColor = treblePalette[trebleColorIndex];
+    currentTrebleColor = getEffectColor(trebleColorIndex, 'treble');
   }
 
   previousBassEnergy = bassEnergy;
@@ -585,6 +656,101 @@ function getPhotoBox(shape, base) {
   return { width: base * 1.78, height: base * 1.78 };
 }
 
+
+function drawSelectedImpactStyle(style, outerBase, sample, hit, now) {
+  if (hit <= 0.035) return;
+  const safeHit = Math.min(1.35, hit);
+  const paletteColor = index => getEffectColor(index, 'bass');
+  const colorCount = effectColorMode === 'custom' ? 1 : (effectColorMode === 'rainbow' ? bassPalette.length : (effectColorPalettes[effectColorMode] || bassPalette).length);
+  ctx.save();
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 12 + safeHit * 24;
+
+  if (style === 'neon-petals') {
+    const count = 12;
+    for (let i=0;i<count;i++) {
+      const angle = i / count * Math.PI * 2 + now * 0.00012;
+      const radius = outerBase + 5 + safeHit * 13;
+      const color = paletteColor(i % colorCount);
+      ctx.save();
+      ctx.translate(Math.cos(angle)*radius, Math.sin(angle)*radius);
+      ctx.rotate(angle);
+      ctx.fillStyle = color; ctx.shadowColor = color;
+      ctx.beginPath(); ctx.ellipse(0,0,7+safeHit*5,12+safeHit*15,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffffff'; ctx.shadowBlur = 5 + safeHit * 10;
+      ctx.beginPath(); ctx.ellipse(0,0,2.2+safeHit*1.5,6+safeHit*7,0,0,Math.PI*2); ctx.fill();
+      ctx.restore();
+    }
+  } else if (style === 'double-pulse') {
+    const drawRing = (radius, thickness, phase, colorA, colorB) => {
+      const pts=180, outer=[], inner=[];
+      for(let i=0;i<=pts;i++){
+        const a=i/pts*Math.PI*2;
+        const wobble=Math.sin(a*10+phase)*safeHit*3 + sample(i,pts)*safeHit*3;
+        const r=radius+wobble;
+        outer.push([Math.cos(a)*r,Math.sin(a)*r]);
+        inner.push([Math.cos(a)*(r-thickness),Math.sin(a)*(r-thickness)]);
+      }
+      ctx.beginPath();outer.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+      for(let i=inner.length-1;i>=0;i--)ctx.lineTo(inner[i][0],inner[i][1]);
+      ctx.closePath();
+      const grad=ctx.createLinearGradient(-radius,-radius,radius,radius);
+      grad.addColorStop(0,colorA);grad.addColorStop(.5,'#ffffff');grad.addColorStop(1,colorB);
+      ctx.fillStyle=grad;ctx.shadowColor=colorA;ctx.fill();
+    };
+    drawRing(outerBase+10+safeHit*12,7+safeHit*7,now*.001,paletteColor(0),paletteColor(1%colorCount));
+    drawRing(outerBase+25+safeHit*24,5+safeHit*5,now*.0015,paletteColor(2%colorCount),paletteColor(3%colorCount));
+  } else if (style === 'energy-burst') {
+    const count=30;
+    for(let i=0;i<count;i++){
+      const angle=i/count*Math.PI*2;
+      const e=sample(i,count);
+      const inner=outerBase+2+e*3;
+      const outer=outerBase+10+safeHit*(20+e*14);
+      const half=.022+safeHit*.009;
+      const c=paletteColor(i%colorCount);
+      ctx.fillStyle=c;ctx.shadowColor=c;
+      ctx.beginPath();
+      ctx.moveTo(Math.cos(angle-half)*inner,Math.sin(angle-half)*inner);
+      ctx.lineTo(Math.cos(angle-half*.35)*outer,Math.sin(angle-half*.35)*outer);
+      ctx.lineTo(Math.cos(angle+half*.35)*outer,Math.sin(angle+half*.35)*outer);
+      ctx.lineTo(Math.cos(angle+half)*inner,Math.sin(angle+half)*inner);
+      ctx.closePath();ctx.fill();
+    }
+  } else if (style === 'liquid-wave') {
+    const points=200, outer=[], inner=[];
+    for(let i=0;i<=points;i++){
+      const a=i/points*Math.PI*2;
+      const wave=Math.sin(a*7+now*.0018)*safeHit*5 + Math.cos(a*13-now*.0012)*safeHit*2.5;
+      const audio=sample(i,points)*safeHit*5;
+      const r=outerBase+8+safeHit*12+wave+audio;
+      outer.push([Math.cos(a)*r,Math.sin(a)*r]);
+      inner.push([Math.cos(a)*(r-(7+safeHit*9)),Math.sin(a)*(r-(7+safeHit*9))]);
+    }
+    ctx.beginPath();outer.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
+    for(let i=inner.length-1;i>=0;i--)ctx.lineTo(inner[i][0],inner[i][1]);
+    ctx.closePath();
+    const radius=outerBase+25;
+    const grad=ctx.createLinearGradient(-radius,-radius,radius,radius);
+    grad.addColorStop(0,paletteColor(0));grad.addColorStop(.5,paletteColor(2%colorCount));grad.addColorStop(1,paletteColor(4%colorCount));
+    ctx.fillStyle=grad;ctx.shadowColor=paletteColor(0);ctx.fill();
+  } else if (style === 'equalizer-orbit') {
+    const count=48;
+    for(let i=0;i<count;i++){
+      const angle=i/count*Math.PI*2;
+      const audio=sample(i,count);
+      const inner=outerBase+3+safeHit*4;
+      const length=5+safeHit*(10+audio*23);
+      const width=2.5+safeHit*1.4;
+      const c=paletteColor(i%colorCount);
+      ctx.save();ctx.rotate(angle);ctx.fillStyle=c;ctx.shadowColor=c;
+      ctx.beginPath();ctx.roundRect(-width/2,inner,width,length,width/2);ctx.fill();
+      ctx.restore();
+    }
+  }
+  ctx.restore();
+}
+
 function drawPhotoBassCircle(radius, bands, sample, now) {
   const impact = bassImpact / 100;
   const base = radius * 0.66 * (photoSize / 72);
@@ -640,46 +806,50 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
     ctx.stroke();
   }
 
-  // Mid: rounded neon petals bloom outward only when a mid hit is detected.
+  // Optional style accent follows the same detected bass pulse. The v0.9 base bloom above is unchanged.
+  if (bassEffectEnabled && bassImpactPulse > 0.035) {
+    drawSelectedImpactStyle(impactStyle, outerBase, sample, bassImpactPulse, now);
+  }
+
+  // Mid: vivid, opaque layered petals; no faint/translucent idle decoration.
   if (midEffectEnabled && midWavePulse > 0.045) {
     const hit=Math.min(1.25,midWavePulse);
     const petals=10;
-    ctx.fillStyle=currentMidColor;ctx.shadowColor=currentMidColor;
-    ctx.shadowBlur=12+hit*25;ctx.globalAlpha=Math.min(.88,.25+hit*.5);
+    ctx.shadowColor=currentMidColor;
+    ctx.shadowBlur=7+hit*15;
     for(let i=0;i<petals;i++){
       const a=i/petals*Math.PI*2;
-      const r=outerBase+5+hit*10;
+      const r=outerBase+6+hit*12;
       const x=Math.cos(a)*r,y=Math.sin(a)*r;
       ctx.save();ctx.translate(x,y);ctx.rotate(a);
-      ctx.beginPath();
-      ctx.ellipse(0,0,5+hit*5,10+hit*14,0,0,Math.PI*2);
-      ctx.fill();
-      ctx.globalAlpha*=.55;
-      ctx.fillStyle='#ffffff';
-      ctx.beginPath();ctx.ellipse(0,0,2+hit*2,6+hit*8,0,0,Math.PI*2);ctx.fill();
-      ctx.restore();
+      ctx.globalAlpha=1;
       ctx.fillStyle=currentMidColor;
-      ctx.globalAlpha=Math.min(.88,.25+hit*.5);
+      ctx.beginPath();ctx.ellipse(0,0,7+hit*6,13+hit*16,0,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#ffffff';
+      ctx.beginPath();ctx.ellipse(0,0,2.8+hit*2,7+hit*8,0,0,Math.PI*2);ctx.fill();
+      ctx.restore();
     }
   }
 
-  // Treble: small star-like glints burst outward on treble transients only.
+  // Treble: bright, thicker spark bursts, visible only on treble transients.
   if (trebleEffectEnabled && trebleSparkPulse > 0.10) {
     const hit=Math.min(1.25,trebleSparkPulse);
     const count=22;
-    ctx.fillStyle=currentTrebleColor;ctx.strokeStyle=currentTrebleColor;
-    ctx.shadowColor=currentTrebleColor;ctx.shadowBlur=9+hit*22;
-    ctx.globalAlpha=Math.min(.95,.28+hit*.58);
+    ctx.strokeStyle=currentTrebleColor;ctx.fillStyle=currentTrebleColor;
+    ctx.shadowColor=currentTrebleColor;ctx.shadowBlur=5+hit*12;
+    ctx.globalAlpha=1;
     for(let i=0;i<count;i++){
       const a=i/count*Math.PI*2;
       const e=sample(i,count);
-      const r=outerBase+4+hit*17+e*7;
+      const r=outerBase+5+hit*19+e*8;
       const x=Math.cos(a)*r,y=Math.sin(a)*r;
-      const size=1.8+hit*2.4;
+      const size=2.5+hit*3;
       ctx.save();ctx.translate(x,y);ctx.rotate(a);
       ctx.beginPath();ctx.moveTo(-size,0);ctx.lineTo(size,0);
-      ctx.moveTo(0,-size*1.8);ctx.lineTo(0,size*1.8);
-      ctx.lineWidth=1.5+hit*1.4;ctx.stroke();ctx.restore();
+      ctx.moveTo(0,-size*2);ctx.lineTo(0,size*2);
+      ctx.lineWidth=2.4+hit*1.8;ctx.stroke();
+      ctx.beginPath();ctx.arc(0,0,1.8+hit*1.8,0,Math.PI*2);ctx.fill();
+      ctx.restore();
     }
   }
   ctx.globalAlpha=1;ctx.shadowBlur=0;
@@ -1051,6 +1221,49 @@ function updateBandEffectState() {
 ['bassEffectToggle','midEffectToggle','trebleEffectToggle'].forEach(id => {
   document.getElementById(id).addEventListener('change', updateBandEffectState);
 });
+
+const impactStyleNames = {
+  'neon-petals':'Neon Petals',
+  'double-pulse':'Double Pulse',
+  'energy-burst':'Energy Burst',
+  'liquid-wave':'Liquid Wave',
+  'equalizer-orbit':'Equalizer Orbit'
+};
+const colorModeNames = {
+  rainbow:'Neon Mix',
+  'electric-blue':'Electric Blue',
+  'purple-pink':'Purple Pink',
+  fire:'Fire',
+  'aqua-green':'Aqua Green',
+  custom:'Warna Sendiri'
+};
+function refreshEffectColors() {
+  currentBassColor = getEffectColor(bassColorIndex, 'bass');
+  currentMidColor = getEffectColor(midColorIndex, 'mid');
+  currentTrebleColor = getEffectColor(trebleColorIndex, 'treble');
+  document.getElementById('customEffectColor').disabled = effectColorMode !== 'custom';
+  document.getElementById('impactStyleStatus').textContent = impactStyleNames[impactStyle] + ' aktif · warna ' + colorModeNames[effectColorMode] + '. Efek hanya muncul saat hentakan bass terdeteksi.';
+}
+document.querySelectorAll('[data-impact-style]').forEach(button => {
+  button.addEventListener('click', () => {
+    impactStyle = button.dataset.impactStyle;
+    document.querySelectorAll('[data-impact-style]').forEach(item => {
+      const active = item === button;
+      item.classList.toggle('active', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
+    refreshEffectColors();
+  });
+});
+document.getElementById('effectColorPalette').addEventListener('change', event => {
+  effectColorMode = event.target.value;
+  refreshEffectColors();
+});
+document.getElementById('customEffectColor').addEventListener('input', event => {
+  customEffectColor = event.target.value;
+  refreshEffectColors();
+});
+refreshEffectColors();
 
 const centerPhotoInput = document.getElementById('centerPhotoFile');
 centerPhotoInput.addEventListener('change', event => {
