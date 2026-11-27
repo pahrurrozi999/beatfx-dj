@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="id">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#090812">
-<title>BEATFX DJ v2.2 — Wave Composer Editor</title>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#090812" name="theme-color"/>
+<title>BEATFX DJ v2.3 — Preview First / Avee Wave Test</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -164,330 +165,326 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
 @media(max-width:650px){.app{padding:13px 12px 30px}.quick{grid-template-columns:repeat(2,1fr)}.workspace{grid-template-columns:1fr}.hero{padding:21px 17px}.art{height:100px}.top{margin-bottom:17px}}
+
+/* v2.3: preview-first layout and two starter wave presets */
+.top{position:sticky;top:0;z-index:30;padding:8px 0;background:linear-gradient(180deg,#080711 78%,#080711dd);backdrop-filter:blur(12px)}
+#workspace{margin-top:16px}
+#impactStylePicker .impact-style-btn:nth-child(n+3){display:none}
+@media(max-width:700px){
+  .app{padding:10px 10px 28px}
+  .workspace{grid-template-columns:1fr}
+  .preview,.controls{padding:10px}
+  .preview-screen{aspect-ratio:9/16;min-height:360px;max-height:68vh}
+}
 </style>
 </head>
 <body>
 <div class="app">
 <header class="top">
-  <div class="brand">
-    <div class="logo" aria-label="BEATFX DJ logo">
-      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M9 34V28a23 23 0 0 1 46 0v6"/><path d="M9 31h7a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5h-2A5 5 0 0 1 9 48V31Zm46 0h-7a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h2a5 5 0 0 0 5-5V31Z"/><path d="M23 40h5l3-7 5 16 4-12 3 5h4"/></svg>
-    </div>
-    <div><h1>BEATFX DJ</h1><small>MUSIC VISUALIZER & DJ VIDEO MAKER</small></div>
-  </div>
-  <div class="top-actions">
-    <button class="editor-trigger" id="openEditorBtn" type="button" aria-haspopup="dialog" aria-controls="editorOverlay">✎ Editor</button>
-    <button class="pro" id="proBtn">✦ PRO</button>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="eyebrow">CREATE • FEEL • VISUALIZE</div>
-  <h2>Turn your music<br>into a visual experience.</h2>
-  <p>Buat visualizer musik, Music Card, dan efek DJ yang bergerak mengikuti irama lagu.</p>
-  <button class="primary" id="startBtn">＋ Buat Proyek Baru</button>
-</section>
-
-<section class="section">
-  <div class="section-head"><h3>Studio</h3><span>Pilih fitur untuk mulai</span></div>
-  <div class="quick">
-    <button data-jump="workspace"><i>◉</i><b>Music Visualizer</b></button>
-    <button data-jump="templates"><i>▣</i><b>Music Card</b></button>
-    <button data-jump="effects"><i>✧</i><b>Beat Effects</b></button>
-    <button data-jump="projects"><i>▤</i><b>Projects</b></button>
-  </div>
-</section>
-
-<section class="section" id="templates">
-  <div class="section-head"><h3>Music Card Templates</h3><span>4 gaya awal</span></div>
-  <div class="templates">
-    <button class="template active" data-template="Glass Music"><div class="art glass"><div class="music-card"><div style="font-size:10px">♫ &nbsp; YOUR MUSIC</div><div class="bars"><i style="--h:9px"></i><i style="--h:18px"></i><i style="--h:13px"></i><i style="--h:22px"></i><i style="--h:11px"></i><i style="--h:19px"></i><i style="--h:8px"></i></div></div></div><strong>Glass Music</strong><small>Transparan seperti kaca</small></button>
-    <button class="template" data-template="3D Music Card"><div class="art"><div class="music-card" style="transform:perspective(300px) rotateY(-9deg);box-shadow:0 12px 24px #000"><div style="font-size:10px">◉ &nbsp; 3D MUSIC</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>3D Music Card</strong><small>Kartu musik melayang</small></button>
-    <button class="template" data-template="Reflection Music"><div class="art reflection"><div class="music-card" style="border-color:#e6b56d;background:#180e1dcc;box-shadow:0 10px 25px #ff9e3b55"><div style="font-size:10px;text-align:center">REFLECTION</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>Reflection Music</strong><small>Efek pantulan cahaya</small></button>
-    <button class="template" data-template="DJ Neon Card"><div class="art neon"><div class="music-card" style="border-color:#31eaff;box-shadow:0 0 25px #00cfff88"><div style="font-size:10px;color:#9ff5ff;text-align:center">DJ NEON</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>DJ Neon Card</strong><small>Neon biru dan cyan</small></button>
-  </div>
-</section>
-
-<section class="section" id="visualizer-templates">
-  <div class="section-head">
-    <h3>Bass Visualizer Templates</h3>
-    <span>10 gaya visual</span>
-  </div>
-  <div class="viz-gallery" id="visualizerTemplateGallery">
-    <button class="viz-template active" type="button" data-viz-template="neon-circle" data-viz-shape="circle">
-      <div class="viz-thumb"><span class="mini-ring"></span></div>
-      <strong>Neon Bass Circle</strong><small>Lingkaran neon untuk bass dan kick</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="3d-tunnel" data-viz-shape="spectrum">
-      <div class="viz-thumb"><span class="mini-tunnel"></span><span class="mini-ring" style="width:29px;height:29px;border-color:#31dfff"></span></div>
-      <strong>3D Tunnel</strong><small>Terowongan perspektif dengan spektrum</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="neon-equalizer" data-viz-shape="bars">
-      <div class="viz-thumb"><span class="mini-bars"><i style="--bar:20px"></i><i style="--bar:45px"></i><i style="--bar:31px"></i><i style="--bar:55px"></i><i style="--bar:27px"></i><i style="--bar:42px"></i><i style="--bar:18px"></i></span></div>
-      <strong>Neon Equalizer</strong><small>Batang frekuensi berwarna neon</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="energy-wave" data-viz-shape="wave">
-      <div class="viz-thumb"><span class="mini-wave"></span></div>
-      <strong>Energy Wave</strong><small>Gelombang audio horizontal bercahaya</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="hexagon-pulse" data-viz-shape="hexagon">
-      <div class="viz-thumb"><span class="mini-hex"></span></div>
-      <strong>Hexagon Pulse</strong><small>Geometri enam sisi dengan pulse</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="dj-neon-frame" data-viz-shape="bars">
-      <div class="viz-thumb"><span class="mini-frame"></span><span class="mini-bars" style="transform:scale(.65)"><i style="--bar:18px"></i><i style="--bar:42px"></i><i style="--bar:25px"></i><i style="--bar:50px"></i><i style="--bar:20px"></i></span></div>
-      <strong>DJ Neon Frame</strong><small>Bingkai neon dengan equalizer di tengah</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="photo-bass-circle" data-viz-shape="circle">
-      <div class="viz-thumb"><span class="mini-ring" style="width:66px;height:66px;border-color:#19c8ff;box-shadow:0 0 10px #19c8ff,0 0 22px #ff42c8"></span><span style="position:absolute;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7a5b9c,#1b8caa);border:2px solid #fff9"></span></div>
-      <strong>Photo Bass Circle</strong><small>Foto di tengah dengan gelombang bass neon</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="triangle-pulse" data-viz-shape="triangle">
-      <div class="viz-thumb"><span class="mini-hex" style="clip-path:polygon(50% 0,100% 100%,0 100%);border-color:#b879ff"></span></div>
-      <strong>Triangle Pulse</strong><small>Bentuk segitiga yang berdenyut</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="star-pulse" data-viz-shape="star">
-      <div class="viz-thumb"><span style="width:62px;height:62px;background:#b879ff;clip-path:polygon(50% 0,62% 35%,98% 35%,69% 57%,80% 94%,50% 72%,20% 94%,31% 57%,2% 35%,38% 35%);filter:drop-shadow(0 0 10px #b879ff)"></span></div>
-      <strong>Star Pulse</strong><small>Bintang neon mengikuti musik</small>
-    </button>
-    <button class="viz-template" type="button" data-viz-template="heart-pulse" data-viz-shape="heart">
-      <div class="viz-thumb"><span style="font-size:62px;line-height:1;color:#ff42c8;text-shadow:0 0 14px #ff42c8">♥</span></div>
-      <strong>Heart Pulse</strong><small>Bentuk hati yang berdenyut</small>
-    </button>
-  </div>
-  <div class="viz-gallery-status" id="visualizerTemplateStatus">Template aktif: Neon Bass Circle</div>
-</section>
-
-<section class="section" id="workspace">
-  <div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Neon Bass Circle</span></div>
-  <div class="workspace">
-    <div class="preview">
-      <div class="preview-screen"><canvas id="visualizer"></canvas><div class="effect-layer-root" id="effectLayerRoot" aria-label="Movable effect layers"></div><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
-      <div class="control-row">
-        <label class="file-label">♫ Upload Musik <input id="audioFile" type="file" accept="audio/*"></label>
-        <label class="file-label">▧ Foto Background <input id="imageFile" type="file" accept="image/*"></label>
-        <label class="file-label">◉ Foto Tengah <input id="centerPhotoFile" type="file" accept="image/*"></label>
-        <button class="secondary" id="playBtn">▶ Play</button>
-      </div>
-      <div class="track"><div id="fileName">Belum ada musik dipilih</div><audio id="audio" controls></audio></div>
-    </div>
-    <div class="controls">
-      <h3 style="margin:2px 0 8px;font-size:15px">Pengaturan Music Card & Visualizer</h3>
-      <label for="titleInput">Judul lagu</label><input id="titleInput" type="text" value="BEATFX DJ" placeholder="Judul lagu">
-      <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
-      <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
-      <p class="hint" id="visualizerHint">Gunakan tombol Editor untuk memilih model gelombang, warna, foto, dan komposisi layer.</p>
-      
-      
-      
-      
-    </div>
-  </div>
-</section>
-
-
-<div class="editor-overlay" id="editorOverlay" aria-hidden="true">
-  <section class="editor-shell" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
-    <header class="editor-header">
-      <div>
-        <div class="editor-eyebrow">BEATFX DJ STUDIO</div>
-        <h2 id="editorTitle">Editor Komposisi</h2>
-        <p>Pilih preset, susun gelombang, lalu lihat hasilnya di preview.</p>
-      </div>
-      <button class="editor-close" id="closeEditorBtn" type="button" aria-label="Tutup editor">×</button>
-    </header>
-    <nav class="editor-tabs" aria-label="Kategori editor">
-      <button class="editor-tab active" type="button" data-editor-tab="presets">◉ Preset</button>
-      <button class="editor-tab" type="button" data-editor-tab="photo">▣ Foto</button>
-      <button class="editor-tab" type="button" data-editor-tab="layers">☷ Layer</button>
-      <button class="editor-tab" type="button" data-editor-tab="audio">♫ Audio</button>
-    </nav>
-    <div class="editor-content">
-      <div class="editor-page active" id="editorPagePresets">
-        <details class="editor-panel" id="impactStylePanel" open>
-        <summary>✦ Preset Visualizer Studio</summary>
-        <div class="editor-panel-body">
-          <div class="impact-style-grid" id="impactStylePicker">
-            <button class="impact-style-btn active" type="button" data-impact-style="layered-wave" aria-pressed="true">
-              <span class="impact-style-art layered-wave-art"></span><b>3D Organic Wave</b><small>Gelombang tebal berlapis mengikuti musik</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="neon-petals" aria-pressed="false">
-              <span class="impact-style-art petals-art"></span><b>3D Petal Crown</b><small>Kelopak 3D berlapis metalik</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="double-pulse" aria-pressed="false">
-              <span class="impact-style-art double-art"></span><b>3D Thunder Orbit</b><small>Petir 3D dengan cabang energi</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="energy-burst" aria-pressed="false">
-              <span class="impact-style-art burst-art"></span><b>3D Reactor Burst</b><small>Sirip energi 3D menyebar</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="liquid-wave" aria-pressed="false">
-              <span class="impact-style-art liquid-art"></span><b>3D Liquid Chrome</b><small>Pita cair metalik berlapis</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="equalizer-orbit" aria-pressed="false">
-              <span class="impact-style-art equalizer-art"></span><b>3D Equalizer Rings</b><small>Batang audio 3D melingkar</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="prism-tunnel" aria-pressed="false">
-              <span class="impact-style-art prism-art"></span><b>3D Prism Tunnel</b><small>Terowongan prisma berlapis</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="helix-orbit" aria-pressed="false">
-              <span class="impact-style-art helix-art"></span><b>3D Helix Orbit</b><small>Dua pita energi saling melilit</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="crystal-shards" aria-pressed="false">
-              <span class="impact-style-art crystal-art"></span><b>3D Crystal Shards</b><small>Kristal tajam dengan bidang metalik</small>
-            </button>
-            <button class="impact-style-btn" type="button" data-impact-style="plasma-vortex" aria-pressed="false">
-              <span class="impact-style-art vortex-art"></span><b>3D Plasma Vortex</b><small>Pita spiral berputar mengitari foto</small>
-            </button>
-          </div>
-          <div class="impact-color-controls">
-            <label for="effectColorPalette">Warna efek
-              <select id="effectColorPalette">
-                <option value="rainbow">Neon Mix</option>
-                <option value="electric-blue">Electric Blue</option>
-                <option value="purple-pink">Purple Pink</option>
-                <option value="fire">Fire</option>
-                <option value="aqua-green">Aqua Green</option>
-                <option value="custom">Warna Sendiri</option>
-              </select>
-            </label>
-            <label for="customEffectColor">Pilih warna sendiri
-              <input id="customEffectColor" type="color" value="#18dfff" disabled>
-            </label>
-          </div>
-          <div class="premium-visual-controls">
-            <label for="visualDepthInput">Kedalaman 3D <output id="visualDepthValue">70%</output>
-              <input id="visualDepthInput" type="range" min="20" max="100" value="70">
-            </label>
-            <label for="visualRotationInput">Kecepatan putar <output id="visualRotationValue">55%</output>
-              <input id="visualRotationInput" type="range" min="0" max="100" value="55">
-            </label>
-          </div>
-          <div class="wave-composer-controls">
-            <label for="waveAmplitudeInput">Amplitudo gelombang <output id="waveAmplitudeValue">100%</output>
-              <input id="waveAmplitudeInput" type="range" min="50" max="160" value="100">
-            </label>
-            <label for="waveLayerCountInput">Jumlah lapisan <output id="waveLayerCountValue">5</output>
-              <input id="waveLayerCountInput" type="range" min="2" max="7" value="5">
-            </label>
-            <label for="waveThicknessInput">Ketebalan gelombang <output id="waveThicknessValue">18</output>
-              <input id="waveThicknessInput" type="range" min="8" max="30" value="18">
-            </label>
-          </div>
-
-          <p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih preset lain untuk mengganti bentuk utama.</p>
-          <p class="hint">Gelombang organik berlapis menjadi preset awal. Setiap preset mengganti bentuk utama; foto tetap stabil dan efek tambahan diatur terpisah.</p>
-        </div>
-      </details>
-      </div>
-      <div class="editor-page" id="editorPagePhoto">
-        <details class="editor-panel" id="photoShapePanel" open>
-        <summary>▦ Bentuk Foto Tengah</summary>
-        <div class="editor-panel-body">
-          <div class="shape-grid" id="photoShapePicker">
-            <button class="shape-option active" type="button" data-photo-shape="circle"><span class="shape-icon shape-circle"></span>Lingkaran</button>
-            <button class="shape-option" type="button" data-photo-shape="square"><span class="shape-icon shape-square"></span>Kotak</button>
-            <button class="shape-option" type="button" data-photo-shape="rounded"><span class="shape-icon shape-rounded"></span>Kotak bulat</button>
-            <button class="shape-option" type="button" data-photo-shape="rectangle"><span class="shape-icon shape-rectangle"></span>Persegi panjang</button>
-            <button class="shape-option" type="button" data-photo-shape="diamond"><span class="shape-icon shape-diamond"></span>Diamond</button>
-            <button class="shape-option" type="button" data-photo-shape="hexagon"><span class="shape-icon shape-hex"></span>Heksagon</button>
-            <button class="shape-option" type="button" data-photo-shape="triangle"><span class="shape-icon shape-triangle"></span>Segitiga</button>
-            <button class="shape-option" type="button" data-photo-shape="star"><span class="shape-icon shape-star"></span>Bintang</button>
-            <button class="shape-option" type="button" data-photo-shape="heart"><span class="shape-icon shape-heart"></span>Hati</button>
-          </div>
-          <p class="hint">Bentuk foto bisa diganti tanpa mengubah efek gelombang audio.</p>
-        </div>
-      </details>
-        <details class="editor-panel" id="photoSettings">
-        <summary>⚙ Atur Foto & Intensitas Bass</summary>
-        <div class="editor-panel-body photo-settings">
-          <label for="photoSizeInput">Ukuran foto tengah</label>
-          <input id="photoSizeInput" type="range" min="50" max="100" value="72">
-          <p class="hint"><span id="photoSizeValue">72%</span> · Ukuran foto tetap saat musik menghentak.</p>
-          <label for="bassImpactInput">Kekuatan efek bass</label>
-          <input id="bassImpactInput" type="range" min="0" max="150" value="90">
-          <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur kekuatan gelombang, bukan ukuran foto.</p>
-        </div>
-      </details>
-      </div>
-      <div class="editor-page" id="editorPageLayers">
-        <details class="editor-panel" id="addLayerPanel">
-    <summary>✦ Tambah Efek yang Bisa Digeser</summary>
-    <div class="editor-panel-body">
-      <div class="layer-presets">
-        <button class="layer-preset" type="button" data-add-layer="halo">◎ Neon Halo<span>Cincin neon di preview</span></button>
-        <button class="layer-preset" type="button" data-add-layer="orbit">◌ Orbit Ring<span>Lingkaran putus-putus</span></button>
-        <button class="layer-preset" type="button" data-add-layer="spark">✦ Star Sparks<span>Hiasan kilau bintang</span></button>
-        <button class="layer-preset" type="button" data-add-layer="laser">━ Laser Beam<span>Garis laser bercahaya</span></button>
-        <button class="layer-preset" type="button" data-add-layer="frame">▢ Neon Frame<span>Bingkai neon</span></button>
-      </div>
-      <p class="hint">Pilih efek, lalu geser langsung di area Live Studio Preview untuk menentukan posisinya.</p>
-    </div>
-  </details>
-        <details class="editor-panel" id="layerManagerPanel">
-    <summary>☷ Atur Layer</summary>
-    <div class="editor-panel-body">
-      <div class="layer-list" id="layerList"><div class="layer-empty">Belum ada layer tambahan.</div></div>
-      <div class="layer-controls">
-        <label for="layerSizeInput">Ukuran layer <span id="layerSizeValue">35%</span></label>
-        <input id="layerSizeInput" type="range" min="8" max="100" value="35" disabled>
-        <label for="layerOpacityInput">Transparansi <span id="layerOpacityValue">100%</span></label>
-        <input id="layerOpacityInput" type="range" min="10" max="100" value="100" disabled>
-        <label for="layerRotationInput">Rotasi <span id="layerRotationValue">0°</span></label>
-        <input id="layerRotationInput" type="range" min="-180" max="180" value="0" disabled>
-      </div>
-      <div class="layer-action-row">
-        <button type="button" id="layerFrontBtn" disabled>Ke depan</button>
-        <button type="button" id="layerBackBtn" disabled>Ke belakang</button>
-        <button type="button" id="layerDuplicateBtn" disabled>Duplikat</button>
-        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus layer terpilih</button>
-      </div>
-      <p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
-    </div>
-  </details>
-      </div>
-      <div class="editor-page" id="editorPageAudio">
-        <details class="editor-panel" id="bandEffectPanel">
-        <summary>♫ Efek Tambahan (Opsional)</summary>
-        <div class="editor-panel-body">
-          <div class="band-options">
-            <label class="band-option"><input id="bassEffectToggle" type="checkbox" checked> <span><b>Bass / Kick Impact</b><br><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
-            <label class="band-option"><input id="midEffectToggle" type="checkbox" checked> <span><b>Mid Wave</b><br><small class="hint">Gelombang kedua bergoyang secara terpisah.</small></span></label>
-            <label class="band-option"><input id="trebleEffectToggle" type="checkbox" checked> <span><b>Treble Sparks</b><br><small class="hint">Percikan kecil muncul saat frekuensi tinggi terdengar.</small></span></label>
-          </div>
-          <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
-        </div>
-      </details>
-        <p class="hint">Pengaturan Bass, Mid, dan Treble tetap memakai analisis audio yang sama.</p>
-      </div>
-    </div>
-    <footer class="editor-footer">
-      <span id="editorSaveStatus">Perubahan terlihat langsung di preview.</span>
-      <button class="primary" id="doneEditorBtn" type="button">Selesai</button>
-    </footer>
-  </section>
+<div class="brand">
+<div aria-label="BEATFX DJ logo" class="logo">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" viewbox="0 0 64 64"><path d="M9 34V28a23 23 0 0 1 46 0v6"></path><path d="M9 31h7a5 5 0 0 1 5 5v12a5 5 0 0 1-5 5h-2A5 5 0 0 1 9 48V31Zm46 0h-7a5 5 0 0 0-5 5v12a5 5 0 0 0 5 5h2a5 5 0 0 0 5-5V31Z"></path><path d="M23 40h5l3-7 5 16 4-12 3 5h4"></path></svg>
 </div>
+<div><h1>BEATFX DJ</h1><small>MUSIC VISUALIZER &amp; DJ VIDEO MAKER</small></div>
+</div>
+<div class="top-actions">
+<button aria-controls="editorOverlay" aria-haspopup="dialog" class="editor-trigger" id="openEditorBtn" type="button">✎ Editor</button>
+<button class="pro" id="proBtn">✦ PRO</button>
+</div>
+</header>
+<section class="hero">
+<div class="eyebrow">CREATE • FEEL • VISUALIZE</div>
+<h2>Turn your music<br/>into a visual experience.</h2>
+<p>Buat visualizer musik, Music Card, dan efek DJ yang bergerak mengikuti irama lagu.</p>
+<button class="primary" id="startBtn">＋ Buat Proyek Baru</button>
+</section><section class="section" id="workspace">
+<div class="section-head"><h3>Live Studio Preview</h3><span id="selectedTemplate">Neon Bass Circle</span></div>
+<div class="workspace">
+<div class="preview">
+<div class="preview-screen"><canvas id="visualizer"></canvas><div aria-label="Movable effect layers" class="effect-layer-root" id="effectLayerRoot"></div><div class="preview-info"><b id="songTitle">BEATFX DJ</b><small id="songArtist">Upload musik untuk memulai</small></div></div>
+<div class="control-row">
+<label class="file-label">♫ Upload Musik <input accept="audio/*" id="audioFile" type="file"/></label>
+<label class="file-label">▧ Foto Background <input accept="image/*" id="imageFile" type="file"/></label>
+<label class="file-label">◉ Foto Tengah <input accept="image/*" id="centerPhotoFile" type="file"/></label>
+<button class="secondary" id="playBtn">▶ Play</button>
+</div>
+<div class="track"><div id="fileName">Belum ada musik dipilih</div><audio controls="" id="audio"></audio></div>
+</div>
+<div class="controls">
+<h3 style="margin:2px 0 8px;font-size:15px">Pengaturan Music Card &amp; Visualizer</h3>
+<label for="titleInput">Judul lagu</label><input id="titleInput" placeholder="Judul lagu" type="text" value="BEATFX DJ"/>
+<label for="artistInput">Nama penyanyi</label><input id="artistInput" placeholder="Nama penyanyi" type="text" value="Your Artist"/>
+<label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff"/>
+<p class="hint" id="visualizerHint">Gunakan tombol Editor untuk memilih model gelombang, warna, foto, dan komposisi layer.</p>
+</div>
+</div>
+</section>
+<section class="section">
+<div class="section-head"><h3>Studio</h3><span>Pilih fitur untuk mulai</span></div>
+<div class="quick">
+<button data-jump="workspace"><i>◉</i><b>Music Visualizer</b></button>
+<button data-jump="templates"><i>▣</i><b>Music Card</b></button>
+<button data-jump="effects"><i>✧</i><b>Beat Effects</b></button>
+<button data-jump="projects"><i>▤</i><b>Projects</b></button>
+</div>
+</section>
+<section class="section" id="templates">
+<div class="section-head"><h3>Music Card Templates</h3><span>4 gaya awal</span></div>
+<div class="templates">
+<button class="template active" data-template="Glass Music"><div class="art glass"><div class="music-card"><div style="font-size:10px">♫   YOUR MUSIC</div><div class="bars"><i style="--h:9px"></i><i style="--h:18px"></i><i style="--h:13px"></i><i style="--h:22px"></i><i style="--h:11px"></i><i style="--h:19px"></i><i style="--h:8px"></i></div></div></div><strong>Glass Music</strong><small>Transparan seperti kaca</small></button>
+<button class="template" data-template="3D Music Card"><div class="art"><div class="music-card" style="transform:perspective(300px) rotateY(-9deg);box-shadow:0 12px 24px #000"><div style="font-size:10px">◉   3D MUSIC</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>3D Music Card</strong><small>Kartu musik melayang</small></button>
+<button class="template" data-template="Reflection Music"><div class="art reflection"><div class="music-card" style="border-color:#e6b56d;background:#180e1dcc;box-shadow:0 10px 25px #ff9e3b55"><div style="font-size:10px;text-align:center">REFLECTION</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>Reflection Music</strong><small>Efek pantulan cahaya</small></button>
+<button class="template" data-template="DJ Neon Card"><div class="art neon"><div class="music-card" style="border-color:#31eaff;box-shadow:0 0 25px #00cfff88"><div style="font-size:10px;color:#9ff5ff;text-align:center">DJ NEON</div><div class="bars"><i style="--h:8px"></i><i style="--h:20px"></i><i style="--h:15px"></i><i style="--h:24px"></i><i style="--h:12px"></i><i style="--h:19px"></i></div></div></div><strong>DJ Neon Card</strong><small>Neon biru dan cyan</small></button>
+</div>
+</section>
+<section class="section" id="visualizer-templates">
+<div class="section-head">
+<h3>Bass Visualizer Templates</h3>
+<span>10 gaya visual</span>
+</div>
+<div class="viz-gallery" id="visualizerTemplateGallery">
+<button class="viz-template active" data-viz-shape="circle" data-viz-template="neon-circle" type="button">
+<div class="viz-thumb"><span class="mini-ring"></span></div>
+<strong>Neon Bass Circle</strong><small>Lingkaran neon untuk bass dan kick</small>
+</button>
+<button class="viz-template" data-viz-shape="spectrum" data-viz-template="3d-tunnel" type="button">
+<div class="viz-thumb"><span class="mini-tunnel"></span><span class="mini-ring" style="width:29px;height:29px;border-color:#31dfff"></span></div>
+<strong>3D Tunnel</strong><small>Terowongan perspektif dengan spektrum</small>
+</button>
+<button class="viz-template" data-viz-shape="bars" data-viz-template="neon-equalizer" type="button">
+<div class="viz-thumb"><span class="mini-bars"><i style="--bar:20px"></i><i style="--bar:45px"></i><i style="--bar:31px"></i><i style="--bar:55px"></i><i style="--bar:27px"></i><i style="--bar:42px"></i><i style="--bar:18px"></i></span></div>
+<strong>Neon Equalizer</strong><small>Batang frekuensi berwarna neon</small>
+</button>
+<button class="viz-template" data-viz-shape="wave" data-viz-template="energy-wave" type="button">
+<div class="viz-thumb"><span class="mini-wave"></span></div>
+<strong>Energy Wave</strong><small>Gelombang audio horizontal bercahaya</small>
+</button>
+<button class="viz-template" data-viz-shape="hexagon" data-viz-template="hexagon-pulse" type="button">
+<div class="viz-thumb"><span class="mini-hex"></span></div>
+<strong>Hexagon Pulse</strong><small>Geometri enam sisi dengan pulse</small>
+</button>
+<button class="viz-template" data-viz-shape="bars" data-viz-template="dj-neon-frame" type="button">
+<div class="viz-thumb"><span class="mini-frame"></span><span class="mini-bars" style="transform:scale(.65)"><i style="--bar:18px"></i><i style="--bar:42px"></i><i style="--bar:25px"></i><i style="--bar:50px"></i><i style="--bar:20px"></i></span></div>
+<strong>DJ Neon Frame</strong><small>Bingkai neon dengan equalizer di tengah</small>
+</button>
+<button class="viz-template" data-viz-shape="circle" data-viz-template="photo-bass-circle" type="button">
+<div class="viz-thumb"><span class="mini-ring" style="width:66px;height:66px;border-color:#19c8ff;box-shadow:0 0 10px #19c8ff,0 0 22px #ff42c8"></span><span style="position:absolute;width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7a5b9c,#1b8caa);border:2px solid #fff9"></span></div>
+<strong>Photo Bass Circle</strong><small>Foto di tengah dengan gelombang bass neon</small>
+</button>
+<button class="viz-template" data-viz-shape="triangle" data-viz-template="triangle-pulse" type="button">
+<div class="viz-thumb"><span class="mini-hex" style="clip-path:polygon(50% 0,100% 100%,0 100%);border-color:#b879ff"></span></div>
+<strong>Triangle Pulse</strong><small>Bentuk segitiga yang berdenyut</small>
+</button>
+<button class="viz-template" data-viz-shape="star" data-viz-template="star-pulse" type="button">
+<div class="viz-thumb"><span style="width:62px;height:62px;background:#b879ff;clip-path:polygon(50% 0,62% 35%,98% 35%,69% 57%,80% 94%,50% 72%,20% 94%,31% 57%,2% 35%,38% 35%);filter:drop-shadow(0 0 10px #b879ff)"></span></div>
+<strong>Star Pulse</strong><small>Bintang neon mengikuti musik</small>
+</button>
+<button class="viz-template" data-viz-shape="heart" data-viz-template="heart-pulse" type="button">
+<div class="viz-thumb"><span style="font-size:62px;line-height:1;color:#ff42c8;text-shadow:0 0 14px #ff42c8">♥</span></div>
+<strong>Heart Pulse</strong><small>Bentuk hati yang berdenyut</small>
+</button>
+</div>
+<div class="viz-gallery-status" id="visualizerTemplateStatus">Template aktif: Neon Bass Circle</div>
+</section>
 
+<div aria-hidden="true" class="editor-overlay" id="editorOverlay">
+<section aria-labelledby="editorTitle" aria-modal="true" class="editor-shell" role="dialog">
+<header class="editor-header">
+<div>
+<div class="editor-eyebrow">BEATFX DJ STUDIO</div>
+<h2 id="editorTitle">Editor Komposisi</h2>
+<p>Pilih preset, susun gelombang, lalu lihat hasilnya di preview.</p>
+</div>
+<button aria-label="Tutup editor" class="editor-close" id="closeEditorBtn" type="button">×</button>
+</header>
+<nav aria-label="Kategori editor" class="editor-tabs">
+<button class="editor-tab active" data-editor-tab="presets" type="button">◉ Preset</button>
+<button class="editor-tab" data-editor-tab="photo" type="button">▣ Foto</button>
+<button class="editor-tab" data-editor-tab="layers" type="button">☷ Layer</button>
+<button class="editor-tab" data-editor-tab="audio" type="button">♫ Audio</button>
+</nav>
+<div class="editor-content">
+<div class="editor-page active" id="editorPagePresets">
+<details class="editor-panel" id="impactStylePanel" open="">
+<summary>✦ Preset Visualizer Studio</summary>
+<div class="editor-panel-body">
+<div class="impact-style-grid" id="impactStylePicker">
+<button aria-pressed="true" class="impact-style-btn active" data-impact-style="layered-wave" type="button">
+<span class="impact-style-art layered-wave-art"></span><b>3D Organic Wave</b><small>Gelombang tebal berlapis mengikuti musik</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="neon-petals" type="button">
+<span class="impact-style-art petals-art"></span><b>3D Petal Crown</b><small>Kelopak 3D berlapis metalik</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="double-pulse" type="button">
+<span class="impact-style-art double-art"></span><b>3D Thunder Orbit</b><small>Petir 3D dengan cabang energi</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="energy-burst" type="button">
+<span class="impact-style-art burst-art"></span><b>3D Reactor Burst</b><small>Sirip energi 3D menyebar</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="liquid-wave" type="button">
+<span class="impact-style-art liquid-art"></span><b>3D Liquid Chrome</b><small>Pita cair metalik berlapis</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="equalizer-orbit" type="button">
+<span class="impact-style-art equalizer-art"></span><b>3D Equalizer Rings</b><small>Batang audio 3D melingkar</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="prism-tunnel" type="button">
+<span class="impact-style-art prism-art"></span><b>3D Prism Tunnel</b><small>Terowongan prisma berlapis</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="helix-orbit" type="button">
+<span class="impact-style-art helix-art"></span><b>3D Helix Orbit</b><small>Dua pita energi saling melilit</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="crystal-shards" type="button">
+<span class="impact-style-art crystal-art"></span><b>3D Crystal Shards</b><small>Kristal tajam dengan bidang metalik</small>
+</button>
+<button aria-pressed="false" class="impact-style-btn" data-impact-style="plasma-vortex" type="button">
+<span class="impact-style-art vortex-art"></span><b>3D Plasma Vortex</b><small>Pita spiral berputar mengitari foto</small>
+</button>
+</div>
+<div class="impact-color-controls">
+<label for="effectColorPalette">Warna efek
+              <select id="effectColorPalette">
+<option value="rainbow">Neon Mix</option>
+<option value="electric-blue">Electric Blue</option>
+<option value="purple-pink">Purple Pink</option>
+<option value="fire">Fire</option>
+<option value="aqua-green">Aqua Green</option>
+<option value="custom">Warna Sendiri</option>
+</select>
+</label>
+<label for="customEffectColor">Pilih warna sendiri
+              <input disabled="" id="customEffectColor" type="color" value="#18dfff"/>
+</label>
+</div>
+<div class="premium-visual-controls">
+<label for="visualDepthInput">Kedalaman 3D <output id="visualDepthValue">70%</output>
+<input id="visualDepthInput" max="100" min="20" type="range" value="70"/>
+</label>
+<label for="visualRotationInput">Kecepatan putar <output id="visualRotationValue">55%</output>
+<input id="visualRotationInput" max="100" min="0" type="range" value="55"/>
+</label>
+</div>
+<div class="wave-composer-controls">
+<label for="waveAmplitudeInput">Amplitudo gelombang <output id="waveAmplitudeValue">100%</output>
+<input id="waveAmplitudeInput" max="160" min="50" type="range" value="100"/>
+</label>
+<label for="waveLayerCountInput">Jumlah lapisan <output id="waveLayerCountValue">5</output>
+<input id="waveLayerCountInput" max="7" min="2" type="range" value="5"/>
+</label>
+<label for="waveThicknessInput">Ketebalan gelombang <output id="waveThicknessValue">18</output>
+<input id="waveThicknessInput" max="30" min="8" type="range" value="18"/>
+</label>
+</div>
+<p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih preset lain untuk mengganti bentuk utama.</p>
+<p class="hint">Gelombang organik berlapis menjadi preset awal. Setiap preset mengganti bentuk utama; foto tetap stabil dan efek tambahan diatur terpisah.</p>
+</div>
+</details>
+</div>
+<div class="editor-page" id="editorPagePhoto">
+<details class="editor-panel" id="photoShapePanel" open="">
+<summary>▦ Bentuk Foto Tengah</summary>
+<div class="editor-panel-body">
+<div class="shape-grid" id="photoShapePicker">
+<button class="shape-option active" data-photo-shape="circle" type="button"><span class="shape-icon shape-circle"></span>Lingkaran</button>
+<button class="shape-option" data-photo-shape="square" type="button"><span class="shape-icon shape-square"></span>Kotak</button>
+<button class="shape-option" data-photo-shape="rounded" type="button"><span class="shape-icon shape-rounded"></span>Kotak bulat</button>
+<button class="shape-option" data-photo-shape="rectangle" type="button"><span class="shape-icon shape-rectangle"></span>Persegi panjang</button>
+<button class="shape-option" data-photo-shape="diamond" type="button"><span class="shape-icon shape-diamond"></span>Diamond</button>
+<button class="shape-option" data-photo-shape="hexagon" type="button"><span class="shape-icon shape-hex"></span>Heksagon</button>
+<button class="shape-option" data-photo-shape="triangle" type="button"><span class="shape-icon shape-triangle"></span>Segitiga</button>
+<button class="shape-option" data-photo-shape="star" type="button"><span class="shape-icon shape-star"></span>Bintang</button>
+<button class="shape-option" data-photo-shape="heart" type="button"><span class="shape-icon shape-heart"></span>Hati</button>
+</div>
+<p class="hint">Bentuk foto bisa diganti tanpa mengubah efek gelombang audio.</p>
+</div>
+</details>
+<details class="editor-panel" id="photoSettings">
+<summary>⚙ Atur Foto &amp; Intensitas Bass</summary>
+<div class="editor-panel-body photo-settings">
+<label for="photoSizeInput">Ukuran foto tengah</label>
+<input id="photoSizeInput" max="100" min="50" type="range" value="72"/>
+<p class="hint"><span id="photoSizeValue">72%</span> · Ukuran foto tetap saat musik menghentak.</p>
+<label for="bassImpactInput">Kekuatan efek bass</label>
+<input id="bassImpactInput" max="150" min="0" type="range" value="90"/>
+<p class="hint"><span id="bassImpactValue">90%</span> · Mengatur kekuatan gelombang, bukan ukuran foto.</p>
+</div>
+</details>
+</div>
+<div class="editor-page" id="editorPageLayers">
+<details class="editor-panel" id="addLayerPanel">
+<summary>✦ Tambah Efek yang Bisa Digeser</summary>
+<div class="editor-panel-body">
+<div class="layer-presets">
+<button class="layer-preset" data-add-layer="halo" type="button">◎ Neon Halo<span>Cincin neon di preview</span></button>
+<button class="layer-preset" data-add-layer="orbit" type="button">◌ Orbit Ring<span>Lingkaran putus-putus</span></button>
+<button class="layer-preset" data-add-layer="spark" type="button">✦ Star Sparks<span>Hiasan kilau bintang</span></button>
+<button class="layer-preset" data-add-layer="laser" type="button">━ Laser Beam<span>Garis laser bercahaya</span></button>
+<button class="layer-preset" data-add-layer="frame" type="button">▢ Neon Frame<span>Bingkai neon</span></button>
+</div>
+<p class="hint">Pilih efek, lalu geser langsung di area Live Studio Preview untuk menentukan posisinya.</p>
+</div>
+</details>
+<details class="editor-panel" id="layerManagerPanel">
+<summary>☷ Atur Layer</summary>
+<div class="editor-panel-body">
+<div class="layer-list" id="layerList"><div class="layer-empty">Belum ada layer tambahan.</div></div>
+<div class="layer-controls">
+<label for="layerSizeInput">Ukuran layer <span id="layerSizeValue">35%</span></label>
+<input disabled="" id="layerSizeInput" max="100" min="8" type="range" value="35"/>
+<label for="layerOpacityInput">Transparansi <span id="layerOpacityValue">100%</span></label>
+<input disabled="" id="layerOpacityInput" max="100" min="10" type="range" value="100"/>
+<label for="layerRotationInput">Rotasi <span id="layerRotationValue">0°</span></label>
+<input disabled="" id="layerRotationInput" max="180" min="-180" type="range" value="0"/>
+</div>
+<div class="layer-action-row">
+<button disabled="" id="layerFrontBtn" type="button">Ke depan</button>
+<button disabled="" id="layerBackBtn" type="button">Ke belakang</button>
+<button disabled="" id="layerDuplicateBtn" type="button">Duplikat</button>
+<button class="danger" disabled="" id="layerDeleteBtn" type="button">Hapus layer terpilih</button>
+</div>
+<p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
+</div>
+</details>
+</div>
+<div class="editor-page" id="editorPageAudio">
+<details class="editor-panel" id="bandEffectPanel">
+<summary>♫ Efek Tambahan (Opsional)</summary>
+<div class="editor-panel-body">
+<div class="band-options">
+<label class="band-option"><input checked="" id="bassEffectToggle" type="checkbox"/> <span><b>Bass / Kick Impact</b><br/><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
+<label class="band-option"><input checked="" id="midEffectToggle" type="checkbox"/> <span><b>Mid Wave</b><br/><small class="hint">Gelombang kedua bergoyang secara terpisah.</small></span></label>
+<label class="band-option"><input checked="" id="trebleEffectToggle" type="checkbox"/> <span><b>Treble Sparks</b><br/><small class="hint">Percikan kecil muncul saat frekuensi tinggi terdengar.</small></span></label>
+</div>
+<p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
+</div>
+</details>
+<p class="hint">Pengaturan Bass, Mid, dan Treble tetap memakai analisis audio yang sama.</p>
+</div>
+</div>
+<footer class="editor-footer">
+<span id="editorSaveStatus">Perubahan terlihat langsung di preview.</span>
+<button class="primary" id="doneEditorBtn" type="button">Selesai</button>
+</footer>
+</section>
+</div>
 <section class="section" id="effects">
-  <div class="section-head"><h3>Beat Effects</h3><span id="effectSectionStatus">Pilih efek untuk preview</span></div>
-  <div class="quick">
-    <button id="magicParticlesBtn" type="button" aria-pressed="false"><i>✦</i><b>Magic Particles</b></button>
-    <button type="button" disabled style="opacity:.55"><i>❄</i><b>Snow — segera</b></button>
-    <button type="button" disabled style="opacity:.55"><i>⚡</i><b>Electric Storm — segera</b></button>
-    <button type="button" disabled style="opacity:.55"><i>✧</i><b>Galaxy — segera</b></button>
-  </div>
-  <div class="effect-controls">
-    <label><input id="particleIntensity" type="range" min="10" max="100" value="55"> Intensitas <b id="particleIntensityValue">55%</b></label>
-    <label><input id="beatSensitivity" type="range" min="20" max="100" value="70"> Sensitivitas beat <b id="beatSensitivityValue">70%</b></label>
-    <span class="effect-status" id="particleStatus">Magic Particles: OFF</span>
-    <span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
-    <span class="effect-status" id="bandStatus">Audio bands: menunggu musik</span>
-  </div>
-  
-  
+<div class="section-head"><h3>Beat Effects</h3><span id="effectSectionStatus">Pilih efek untuk preview</span></div>
+<div class="quick">
+<button aria-pressed="false" id="magicParticlesBtn" type="button"><i>✦</i><b>Magic Particles</b></button>
+<button disabled="" style="opacity:.55" type="button"><i>❄</i><b>Snow — segera</b></button>
+<button disabled="" style="opacity:.55" type="button"><i>⚡</i><b>Electric Storm — segera</b></button>
+<button disabled="" style="opacity:.55" type="button"><i>✧</i><b>Galaxy — segera</b></button>
+</div>
+<div class="effect-controls">
+<label><input id="particleIntensity" max="100" min="10" type="range" value="55"/> Intensitas <b id="particleIntensityValue">55%</b></label>
+<label><input id="beatSensitivity" max="100" min="20" type="range" value="70"/> Sensitivitas beat <b id="beatSensitivityValue">70%</b></label>
+<span class="effect-status" id="particleStatus">Magic Particles: OFF</span>
+<span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
+<span class="effect-status" id="bandStatus">Audio bands: menunggu musik</span>
+</div>
 </section>
 <section class="section" id="projects">
-  <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
-  <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
+<div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
+<div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
 <div class="footer">BEATFX DJ • v2.2 • Wave Composer Editor</div>
 </div>
