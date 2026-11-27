@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#090812">
-<title>BEATFX DJ v2.1 — Preset Visualizer Studio</title>
+<title>BEATFX DJ v2.2 — Wave Composer Editor</title>
 <style>
 :root{--bg:#080711;--panel:#121020;--panel2:#19152b;--line:#30264c;--purple:#9b55ff;--blue:#19c8ff;--pink:#ff42c8;--muted:#aaa4bd;--white:#f8f6ff}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#29205a 0%,var(--bg) 48%);color:var(--white);font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;min-height:100vh}
@@ -118,6 +118,48 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
 .impact-color-controls label{display:block;margin:0;color:#d8d1e8;font-size:11px}
 .impact-color-controls select,.impact-color-controls input[type=color]{width:100%;height:38px;margin-top:6px;padding:6px;background:#090812;color:#fff;border:1px solid var(--line);border-radius:9px}
 .impact-color-controls input:disabled{opacity:.42}
+
+.top-actions{display:flex;align-items:center;gap:8px}
+.editor-trigger{border:1px solid #7e62c5;border-radius:12px;padding:9px 15px;background:linear-gradient(120deg,#30205a,#142b48);color:#f7f3ff;font-weight:800;box-shadow:0 0 18px #7f52ff33}
+.editor-overlay{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:12px;background:#05040de8;backdrop-filter:blur(12px)}
+.editor-overlay.open{display:flex}
+.editor-shell{width:min(960px,100%);height:min(92dvh,900px);display:flex;flex-direction:column;overflow:hidden;border:1px solid #514078;border-radius:20px;background:linear-gradient(160deg,#171329,#090812 75%);box-shadow:0 25px 90px #000c}
+.editor-header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #30264c;background:linear-gradient(110deg,#241544,#11172b)}
+.editor-header h2{font-size:20px;margin:4px 0}
+.editor-header p{font-size:11px;color:var(--muted);margin:0}
+.editor-eyebrow{font-size:9px;letter-spacing:2px;color:#c4a2ff;font-weight:900}
+.editor-close{width:40px;height:40px;flex:0 0 40px;border:1px solid #6b548c;border-radius:50%;background:#211a34;color:#fff;font-size:26px;line-height:1}
+.editor-tabs{display:flex;gap:7px;padding:10px 13px;border-bottom:1px solid #30264c;background:#0e0c19}
+.editor-tab{flex:1;min-height:40px;border:1px solid #30264c;border-radius:10px;background:#151226;color:#dcd4ec;font-size:12px;font-weight:800}
+.editor-tab.active{border-color:#26d9ff;background:#102b40;color:#fff;box-shadow:0 0 15px #19c8ff22}
+.editor-content{flex:1;min-height:0;overflow:auto;padding:13px 16px 18px;overscroll-behavior:contain}
+.editor-page{display:none}
+.editor-page.active{display:block}
+.editor-page .editor-panel{margin-top:0;margin-bottom:10px}
+.editor-page .impact-style-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.editor-page .impact-style-btn{background:linear-gradient(145deg,#1b1830,#0e0d18)}
+.editor-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 15px;border-top:1px solid #30264c;background:#100e1c}
+.editor-footer span{font-size:11px;color:var(--muted)}
+.editor-footer .primary{padding:9px 18px}
+.layered-wave-art{background:radial-gradient(ellipse,#20134e,#060812 72%)}
+.layered-wave-art:before{width:78px;height:62px;border-radius:45%;background:conic-gradient(from 15deg,#ff27ca,#5c43ff,#13dfff,#31ff9b,#ff27ca);transform:translate(-50%,-50%) rotateX(56deg);filter:drop-shadow(0 0 10px #19dfff)}
+.layered-wave-art:after{width:43px;height:43px;border-radius:50%;background:#05050a;border:2px solid #dffaff;box-shadow:0 0 10px #19dfff}
+.wave-composer-controls{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:11px;background:#0d0b18}
+.wave-composer-controls label{display:block!important;margin:0!important;color:#d8d1e8!important;font-size:11px!important}
+.wave-composer-controls input{display:block;width:100%;margin-top:8px;accent-color:var(--blue)}
+.wave-composer-controls output{float:right;color:#fff;font-weight:800}
+@media(max-width:650px){
+ .editor-overlay{padding:0;align-items:stretch}
+ .editor-shell{width:100%;height:100dvh;max-height:100dvh;border-radius:0;border:0}
+ .editor-header{padding:13px 14px}
+ .editor-tabs{gap:5px;padding:8px}
+ .editor-tab{font-size:11px;min-width:0}
+ .editor-content{padding:11px 10px 16px}
+ .editor-page .impact-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .wave-composer-controls{grid-template-columns:1fr 1fr}
+ .editor-footer{padding-bottom:max(10px,env(safe-area-inset-bottom))}
+}
+
 @media(max-width:650px){.shape-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.editor-panel summary{padding:12px}.layer-presets{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-style-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.impact-color-controls{grid-template-columns:1fr 1fr}.premium-visual-controls{grid-template-columns:1fr 1fr}}
 
 @media(max-width:650px){.viz-gallery{grid-template-columns:repeat(2,minmax(0,1fr))}.viz-thumb{height:94px}}
@@ -133,7 +175,10 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
     </div>
     <div><h1>BEATFX DJ</h1><small>MUSIC VISUALIZER & DJ VIDEO MAKER</small></div>
   </div>
-  <button class="pro" id="proBtn">✦ PRO</button>
+  <div class="top-actions">
+    <button class="editor-trigger" id="openEditorBtn" type="button" aria-haspopup="dialog" aria-controls="editorOverlay">✎ Editor</button>
+    <button class="pro" id="proBtn">✦ PRO</button>
+  </div>
 </header>
 
 <section class="hero">
@@ -231,51 +276,42 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
       <label for="titleInput">Judul lagu</label><input id="titleInput" type="text" value="BEATFX DJ" placeholder="Judul lagu">
       <label for="artistInput">Nama penyanyi</label><input id="artistInput" type="text" value="Your Artist" placeholder="Nama penyanyi">
       <label for="accentInput">Warna visualizer</label><input id="accentInput" type="color" value="#9b55ff">
-      <p class="hint" id="visualizerHint">Neon Bass Circle: lingkaran neon bereaksi terhadap bass dan frekuensi musik. Pilih gaya visualizer melalui satu galeri di atas.</p>
-      <details class="editor-panel" id="photoShapePanel" open>
-        <summary>▦ Bentuk Foto Tengah</summary>
-        <div class="editor-panel-body">
-          <div class="shape-grid" id="photoShapePicker">
-            <button class="shape-option active" type="button" data-photo-shape="circle"><span class="shape-icon shape-circle"></span>Lingkaran</button>
-            <button class="shape-option" type="button" data-photo-shape="square"><span class="shape-icon shape-square"></span>Kotak</button>
-            <button class="shape-option" type="button" data-photo-shape="rounded"><span class="shape-icon shape-rounded"></span>Kotak bulat</button>
-            <button class="shape-option" type="button" data-photo-shape="rectangle"><span class="shape-icon shape-rectangle"></span>Persegi panjang</button>
-            <button class="shape-option" type="button" data-photo-shape="diamond"><span class="shape-icon shape-diamond"></span>Diamond</button>
-            <button class="shape-option" type="button" data-photo-shape="hexagon"><span class="shape-icon shape-hex"></span>Heksagon</button>
-            <button class="shape-option" type="button" data-photo-shape="triangle"><span class="shape-icon shape-triangle"></span>Segitiga</button>
-            <button class="shape-option" type="button" data-photo-shape="star"><span class="shape-icon shape-star"></span>Bintang</button>
-            <button class="shape-option" type="button" data-photo-shape="heart"><span class="shape-icon shape-heart"></span>Hati</button>
-          </div>
-          <p class="hint">Bentuk foto bisa diganti tanpa mengubah efek gelombang audio.</p>
-        </div>
-      </details>
-      <details class="editor-panel" id="photoSettings">
-        <summary>⚙ Atur Foto & Intensitas Bass</summary>
-        <div class="editor-panel-body photo-settings">
-          <label for="photoSizeInput">Ukuran foto tengah</label>
-          <input id="photoSizeInput" type="range" min="50" max="100" value="72">
-          <p class="hint"><span id="photoSizeValue">72%</span> · Ukuran foto tetap saat musik menghentak.</p>
-          <label for="bassImpactInput">Kekuatan efek bass</label>
-          <input id="bassImpactInput" type="range" min="0" max="150" value="90">
-          <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur kekuatan gelombang, bukan ukuran foto.</p>
-        </div>
-      </details>
-      <details class="editor-panel" id="bandEffectPanel">
-        <summary>♫ Efek Tambahan (Opsional)</summary>
-        <div class="editor-panel-body">
-          <div class="band-options">
-            <label class="band-option"><input id="bassEffectToggle" type="checkbox" checked> <span><b>Bass / Kick Impact</b><br><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
-            <label class="band-option"><input id="midEffectToggle" type="checkbox" checked> <span><b>Mid Wave</b><br><small class="hint">Gelombang kedua bergoyang secara terpisah.</small></span></label>
-            <label class="band-option"><input id="trebleEffectToggle" type="checkbox" checked> <span><b>Treble Sparks</b><br><small class="hint">Percikan kecil muncul saat frekuensi tinggi terdengar.</small></span></label>
-          </div>
-          <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
-        </div>
-      </details>
-      <details class="editor-panel" id="impactStylePanel" open>
+      <p class="hint" id="visualizerHint">Gunakan tombol Editor untuk memilih model gelombang, warna, foto, dan komposisi layer.</p>
+      
+      
+      
+      
+    </div>
+  </div>
+</section>
+
+
+<div class="editor-overlay" id="editorOverlay" aria-hidden="true">
+  <section class="editor-shell" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+    <header class="editor-header">
+      <div>
+        <div class="editor-eyebrow">BEATFX DJ STUDIO</div>
+        <h2 id="editorTitle">Editor Komposisi</h2>
+        <p>Pilih preset, susun gelombang, lalu lihat hasilnya di preview.</p>
+      </div>
+      <button class="editor-close" id="closeEditorBtn" type="button" aria-label="Tutup editor">×</button>
+    </header>
+    <nav class="editor-tabs" aria-label="Kategori editor">
+      <button class="editor-tab active" type="button" data-editor-tab="presets">◉ Preset</button>
+      <button class="editor-tab" type="button" data-editor-tab="photo">▣ Foto</button>
+      <button class="editor-tab" type="button" data-editor-tab="layers">☷ Layer</button>
+      <button class="editor-tab" type="button" data-editor-tab="audio">♫ Audio</button>
+    </nav>
+    <div class="editor-content">
+      <div class="editor-page active" id="editorPagePresets">
+        <details class="editor-panel" id="impactStylePanel" open>
         <summary>✦ Preset Visualizer Studio</summary>
         <div class="editor-panel-body">
           <div class="impact-style-grid" id="impactStylePicker">
-            <button class="impact-style-btn active" type="button" data-impact-style="neon-petals" aria-pressed="true">
+            <button class="impact-style-btn active" type="button" data-impact-style="layered-wave" aria-pressed="true">
+              <span class="impact-style-art layered-wave-art"></span><b>3D Organic Wave</b><small>Gelombang tebal berlapis mengikuti musik</small>
+            </button>
+            <button class="impact-style-btn" type="button" data-impact-style="neon-petals" aria-pressed="false">
               <span class="impact-style-art petals-art"></span><b>3D Petal Crown</b><small>Kelopak 3D berlapis metalik</small>
             </button>
             <button class="impact-style-btn" type="button" data-impact-style="double-pulse" aria-pressed="false">
@@ -326,13 +362,110 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
               <input id="visualRotationInput" type="range" min="0" max="100" value="55">
             </label>
           </div>
+          <div class="wave-composer-controls">
+            <label for="waveAmplitudeInput">Amplitudo gelombang <output id="waveAmplitudeValue">100%</output>
+              <input id="waveAmplitudeInput" type="range" min="50" max="160" value="100">
+            </label>
+            <label for="waveLayerCountInput">Jumlah lapisan <output id="waveLayerCountValue">5</output>
+              <input id="waveLayerCountInput" type="range" min="2" max="7" value="5">
+            </label>
+            <label for="waveThicknessInput">Ketebalan gelombang <output id="waveThicknessValue">18</output>
+              <input id="waveThicknessInput" type="range" min="8" max="30" value="18">
+            </label>
+          </div>
+
           <p class="hint" id="impactStyleStatus">Model 3D Petal Crown aktif. Pilih preset lain untuk mengganti bentuk utama.</p>
-          <p class="hint">Preset visualizer orisinal dengan kedalaman 3D, rotasi, warna, foto, dan layer yang dapat disesuaikan. Pilihan preset mengganti bentuk utama; efek tambahan tetap terpisah. Mesin deteksi bass dipertahankan.</p>
+          <p class="hint">Gelombang organik berlapis menjadi preset awal. Setiap preset mengganti bentuk utama; foto tetap stabil dan efek tambahan diatur terpisah.</p>
         </div>
       </details>
+      </div>
+      <div class="editor-page" id="editorPagePhoto">
+        <details class="editor-panel" id="photoShapePanel" open>
+        <summary>▦ Bentuk Foto Tengah</summary>
+        <div class="editor-panel-body">
+          <div class="shape-grid" id="photoShapePicker">
+            <button class="shape-option active" type="button" data-photo-shape="circle"><span class="shape-icon shape-circle"></span>Lingkaran</button>
+            <button class="shape-option" type="button" data-photo-shape="square"><span class="shape-icon shape-square"></span>Kotak</button>
+            <button class="shape-option" type="button" data-photo-shape="rounded"><span class="shape-icon shape-rounded"></span>Kotak bulat</button>
+            <button class="shape-option" type="button" data-photo-shape="rectangle"><span class="shape-icon shape-rectangle"></span>Persegi panjang</button>
+            <button class="shape-option" type="button" data-photo-shape="diamond"><span class="shape-icon shape-diamond"></span>Diamond</button>
+            <button class="shape-option" type="button" data-photo-shape="hexagon"><span class="shape-icon shape-hex"></span>Heksagon</button>
+            <button class="shape-option" type="button" data-photo-shape="triangle"><span class="shape-icon shape-triangle"></span>Segitiga</button>
+            <button class="shape-option" type="button" data-photo-shape="star"><span class="shape-icon shape-star"></span>Bintang</button>
+            <button class="shape-option" type="button" data-photo-shape="heart"><span class="shape-icon shape-heart"></span>Hati</button>
+          </div>
+          <p class="hint">Bentuk foto bisa diganti tanpa mengubah efek gelombang audio.</p>
+        </div>
+      </details>
+        <details class="editor-panel" id="photoSettings">
+        <summary>⚙ Atur Foto & Intensitas Bass</summary>
+        <div class="editor-panel-body photo-settings">
+          <label for="photoSizeInput">Ukuran foto tengah</label>
+          <input id="photoSizeInput" type="range" min="50" max="100" value="72">
+          <p class="hint"><span id="photoSizeValue">72%</span> · Ukuran foto tetap saat musik menghentak.</p>
+          <label for="bassImpactInput">Kekuatan efek bass</label>
+          <input id="bassImpactInput" type="range" min="0" max="150" value="90">
+          <p class="hint"><span id="bassImpactValue">90%</span> · Mengatur kekuatan gelombang, bukan ukuran foto.</p>
+        </div>
+      </details>
+      </div>
+      <div class="editor-page" id="editorPageLayers">
+        <details class="editor-panel" id="addLayerPanel">
+    <summary>✦ Tambah Efek yang Bisa Digeser</summary>
+    <div class="editor-panel-body">
+      <div class="layer-presets">
+        <button class="layer-preset" type="button" data-add-layer="halo">◎ Neon Halo<span>Cincin neon di preview</span></button>
+        <button class="layer-preset" type="button" data-add-layer="orbit">◌ Orbit Ring<span>Lingkaran putus-putus</span></button>
+        <button class="layer-preset" type="button" data-add-layer="spark">✦ Star Sparks<span>Hiasan kilau bintang</span></button>
+        <button class="layer-preset" type="button" data-add-layer="laser">━ Laser Beam<span>Garis laser bercahaya</span></button>
+        <button class="layer-preset" type="button" data-add-layer="frame">▢ Neon Frame<span>Bingkai neon</span></button>
+      </div>
+      <p class="hint">Pilih efek, lalu geser langsung di area Live Studio Preview untuk menentukan posisinya.</p>
     </div>
-  </div>
-</section>
+  </details>
+        <details class="editor-panel" id="layerManagerPanel">
+    <summary>☷ Atur Layer</summary>
+    <div class="editor-panel-body">
+      <div class="layer-list" id="layerList"><div class="layer-empty">Belum ada layer tambahan.</div></div>
+      <div class="layer-controls">
+        <label for="layerSizeInput">Ukuran layer <span id="layerSizeValue">35%</span></label>
+        <input id="layerSizeInput" type="range" min="8" max="100" value="35" disabled>
+        <label for="layerOpacityInput">Transparansi <span id="layerOpacityValue">100%</span></label>
+        <input id="layerOpacityInput" type="range" min="10" max="100" value="100" disabled>
+        <label for="layerRotationInput">Rotasi <span id="layerRotationValue">0°</span></label>
+        <input id="layerRotationInput" type="range" min="-180" max="180" value="0" disabled>
+      </div>
+      <div class="layer-action-row">
+        <button type="button" id="layerFrontBtn" disabled>Ke depan</button>
+        <button type="button" id="layerBackBtn" disabled>Ke belakang</button>
+        <button type="button" id="layerDuplicateBtn" disabled>Duplikat</button>
+        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus layer terpilih</button>
+      </div>
+      <p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
+    </div>
+  </details>
+      </div>
+      <div class="editor-page" id="editorPageAudio">
+        <details class="editor-panel" id="bandEffectPanel">
+        <summary>♫ Efek Tambahan (Opsional)</summary>
+        <div class="editor-panel-body">
+          <div class="band-options">
+            <label class="band-option"><input id="bassEffectToggle" type="checkbox" checked> <span><b>Bass / Kick Impact</b><br><small class="hint">Gelombang melebar dengan warna yang berganti saat hentakan.</small></span></label>
+            <label class="band-option"><input id="midEffectToggle" type="checkbox" checked> <span><b>Mid Wave</b><br><small class="hint">Gelombang kedua bergoyang secara terpisah.</small></span></label>
+            <label class="band-option"><input id="trebleEffectToggle" type="checkbox" checked> <span><b>Treble Sparks</b><br><small class="hint">Percikan kecil muncul saat frekuensi tinggi terdengar.</small></span></label>
+          </div>
+          <p class="hint" id="bandEffectStatus">Bass, mid, dan treble aktif secara terpisah.</p>
+        </div>
+      </details>
+        <p class="hint">Pengaturan Bass, Mid, dan Treble tetap memakai analisis audio yang sama.</p>
+      </div>
+    </div>
+    <footer class="editor-footer">
+      <span id="editorSaveStatus">Perubahan terlihat langsung di preview.</span>
+      <button class="primary" id="doneEditorBtn" type="button">Selesai</button>
+    </footer>
+  </section>
+</div>
 
 <section class="section" id="effects">
   <div class="section-head"><h3>Beat Effects</h3><span id="effectSectionStatus">Pilih efek untuk preview</span></div>
@@ -349,45 +482,14 @@ button,input{font:inherit}button{cursor:pointer}.app{max-width:1180px;margin:aut
     <span class="effect-status" id="beatStatus">Beat Sync: menunggu musik</span>
     <span class="effect-status" id="bandStatus">Audio bands: menunggu musik</span>
   </div>
-  <details class="editor-panel" id="addLayerPanel">
-    <summary>✦ Tambah Efek yang Bisa Digeser</summary>
-    <div class="editor-panel-body">
-      <div class="layer-presets">
-        <button class="layer-preset" type="button" data-add-layer="halo">◎ Neon Halo<span>Cincin neon di preview</span></button>
-        <button class="layer-preset" type="button" data-add-layer="orbit">◌ Orbit Ring<span>Lingkaran putus-putus</span></button>
-        <button class="layer-preset" type="button" data-add-layer="spark">✦ Star Sparks<span>Hiasan kilau bintang</span></button>
-        <button class="layer-preset" type="button" data-add-layer="laser">━ Laser Beam<span>Garis laser bercahaya</span></button>
-        <button class="layer-preset" type="button" data-add-layer="frame">▢ Neon Frame<span>Bingkai neon</span></button>
-      </div>
-      <p class="hint">Pilih efek, lalu geser langsung di area Live Studio Preview untuk menentukan posisinya.</p>
-    </div>
-  </details>
-  <details class="editor-panel" id="layerManagerPanel">
-    <summary>☷ Atur Layer</summary>
-    <div class="editor-panel-body">
-      <div class="layer-list" id="layerList"><div class="layer-empty">Belum ada layer tambahan.</div></div>
-      <div class="layer-controls">
-        <label for="layerSizeInput">Ukuran layer <span id="layerSizeValue">35%</span></label>
-        <input id="layerSizeInput" type="range" min="8" max="100" value="35" disabled>
-        <label for="layerOpacityInput">Transparansi <span id="layerOpacityValue">100%</span></label>
-        <input id="layerOpacityInput" type="range" min="10" max="100" value="100" disabled>
-        <label for="layerRotationInput">Rotasi <span id="layerRotationValue">0°</span></label>
-        <input id="layerRotationInput" type="range" min="-180" max="180" value="0" disabled>
-      </div>
-      <div class="layer-action-row">
-        <button type="button" id="layerFrontBtn" disabled>Ke depan</button>
-        <button type="button" id="layerBackBtn" disabled>Ke belakang</button>
-        <button type="button" id="layerDeleteBtn" class="danger" disabled>Hapus layer terpilih</button>
-      </div>
-      <p class="hint">Posisi, ukuran, rotasi, dan transparansi layer disimpan di browser perangkat ini.</p>
-    </div>
-  </details>
+  
+  
 </section>
 <section class="section" id="projects">
   <div class="section-head"><h3>My Projects</h3><span>Local preview</span></div>
   <div class="preview"><p style="margin:0;color:var(--muted);font-size:13px">Belum ada proyek tersimpan. Sistem penyimpanan proyek akan ditambahkan pada tahap berikutnya.</p></div>
 </section>
-<div class="footer">BEATFX DJ • v2.1 • Preset Visualizer Studio</div>
+<div class="footer">BEATFX DJ • v2.2 • Wave Composer Editor</div>
 </div>
 <script>
 const audio = document.getElementById('audio');
@@ -425,7 +527,10 @@ let lastTrebleAt = 0;
 const bassPalette = ['#19c8ff','#388bff','#9b55ff','#ff42c8','#38e6c2','#f5a623'];
 const midPalette = ['#ff42c8','#bd68ff','#ff8d5b','#e75cff'];
 const treblePalette = ['#c7ff50','#fff06a','#5dffd1','#8eeaff'];
-let impactStyle = 'neon-petals';
+let impactStyle = 'layered-wave';
+let waveAmplitude = 100;
+let waveLayerCount = 5;
+let waveThickness = 18;
 let visualDepth = 70;
 let visualRotation = 55;
 let effectColorMode = 'rainbow';
@@ -1083,6 +1188,110 @@ function drawSelectedImpactStyle(style, innerBase, sample, hit, now) {
   }
   ctx.restore();
 }
+
+function drawLayeredAudioWave(innerBase, sample, bands, hit, now) {
+  const layers = Math.max(2, Math.min(7, waveLayerCount));
+  const depth = 0.35 + (visualDepth / 100) * 1.05;
+  const rotateSpeed = visualRotation / 55;
+  const amplitudeScale = waveAmplitude / 100;
+  const thickness = waveThickness;
+  const bassDrive = clamp((bands.bass * 0.90 + bands.mid * 0.15) * 1.25 + hit * 0.48, 0, 1.35);
+  const spectrumDrive = clamp(bands.bass * 0.65 + hit * 0.65, 0, 1.4);
+  const points = 240;
+  const TAU = Math.PI * 2;
+
+  // Draw rear-to-front filled contours. The center photo is painted afterwards,
+  // so these overlapping shapes become a continuous, layered audio-wave rim.
+  for (let layer = 0; layer < layers; layer++) {
+    const layerFromFront = layers - 1 - layer;
+    const layerOffset = 8 + layerFromFront * (thickness * 0.78 + depth * 2.3);
+    const phase = now * 0.00022 * rotateSpeed + layer * 0.11;
+    const outerPoints = [];
+
+    for (let i = 0; i <= points; i++) {
+      const a = i / points * TAU;
+      const sampleValue = sample(i, points);
+      const lowWave = Math.sin(a * 4 + phase) * 0.52 +
+                      Math.cos(a * 6 - phase * 0.72) * 0.27 +
+                      Math.sin(a * 9 + phase * 0.48) * 0.12;
+      const audioWave = (sampleValue - 0.18) * (8 + spectrumDrive * 15);
+      const impactWave = bassDrive * (5 + 13 * amplitudeScale);
+      const organicWave = lowWave * (5 + bassDrive * 13) * amplitudeScale;
+      const r = innerBase + layerOffset + 4 + impactWave +
+                organicWave + audioWave * amplitudeScale;
+      outerPoints.push([Math.cos(a) * r, Math.sin(a) * r * 0.92]);
+    }
+
+    const colorA = getEffectColor(layer * 2, 'bass');
+    const colorB = getEffectColor(layer * 2 + 2, 'bass');
+    const colorC = getEffectColor(layer * 2 + 4, 'bass');
+
+    // Extruded lower edge supplies depth without moving or scaling the photo.
+    ctx.save();
+    ctx.beginPath();
+    outerPoints.forEach((p, i) => i ? ctx.lineTo(p[0] + 1.5, p[1] + 5 + depth * 2) : ctx.moveTo(p[0] + 1.5, p[1] + 5 + depth * 2));
+    ctx.closePath();
+    ctx.fillStyle = 'rgba(2,4,16,0.92)';
+    ctx.shadowColor = colorA;
+    ctx.shadowBlur = 7 + bassDrive * 12;
+    ctx.fill();
+
+    ctx.beginPath();
+    outerPoints.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+    ctx.closePath();
+    const grad = ctx.createLinearGradient(-innerBase, -innerBase * 0.8, innerBase, innerBase);
+    grad.addColorStop(0, '#f9ffff');
+    grad.addColorStop(0.10, colorA);
+    grad.addColorStop(0.38, colorB);
+    grad.addColorStop(0.68, colorC);
+    grad.addColorStop(0.88, shadeWaveColor(colorB, 0.62));
+    grad.addColorStop(1, shadeWaveColor(colorA, 0.35));
+    ctx.fillStyle = grad;
+    ctx.shadowColor = colorB;
+    ctx.shadowBlur = 12 + bassDrive * 17;
+    ctx.fill();
+
+    // Thin specular crest makes the filled wave read as a glossy 3D surface.
+    ctx.beginPath();
+    outerPoints.forEach((p, i) => i ? ctx.lineTo(p[0], p[1] - 1) : ctx.moveTo(p[0], p[1] - 1));
+    ctx.closePath();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.05 + depth * 0.25;
+    ctx.globalAlpha = 0.38 + bassDrive * 0.24;
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 5;
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Dark inner bevel under the photograph joins the wave to its edge.
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(0, 0, innerBase + 2, 0, TAU);
+  ctx.strokeStyle = 'rgba(2,5,18,0.92)';
+  ctx.lineWidth = 7 + depth * 2;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(0, 0, innerBase + 1, 0, TAU);
+  ctx.strokeStyle = '#dffbff';
+  ctx.lineWidth = 1.2;
+  ctx.globalAlpha = 0.65;
+  ctx.shadowColor = getEffectColor(0, 'bass');
+  ctx.shadowBlur = 8;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function shadeWaveColor(hex, amount) {
+  const clean = String(hex).replace('#', '');
+  const full = clean.length === 3 ? clean.split('').map(c => c + c).join('') : clean;
+  const n = parseInt(full, 16);
+  const r = Math.max(0, Math.min(255, Math.round(((n >> 16) & 255) * amount)));
+  const g = Math.max(0, Math.min(255, Math.round(((n >> 8) & 255) * amount)));
+  const b = Math.max(0, Math.min(255, Math.round((n & 255) * amount)));
+  return `rgb(${r},${g},${b})`;
+}
+
 function drawPhotoBassCircle(radius, bands, sample, now) {
   const impact = bassImpact / 100;
   const base = radius * 0.66 * (photoSize / 72);
@@ -1096,7 +1305,9 @@ function drawPhotoBassCircle(radius, bands, sample, now) {
   // Render exactly one selected bass-impact model; no generic ring is layered underneath.
   const selectedModelButton = document.querySelector('[data-impact-style].active');
   const selectedModel = selectedModelButton ? selectedModelButton.dataset.impactStyle : impactStyle;
-  if (bassEffectEnabled && bassImpactPulse > 0.035) {
+  if (bassEffectEnabled && selectedModel === 'layered-wave') {
+    drawLayeredAudioWave(outerBase, sample, bands, bassImpactPulse, now);
+  } else if (bassEffectEnabled && bassImpactPulse > 0.035) {
     drawSelectedImpactStyle(selectedModel, outerBase, sample, bassImpactPulse, now);
   }
 
@@ -1476,6 +1687,7 @@ function updateBandEffectState() {
 });
 
 const impactStyleNames = {
+  'layered-wave':'3D Organic Wave',
   'neon-petals':'3D Petal Crown',
   'double-pulse':'3D Thunder Orbit',
   'energy-burst':'3D Reactor Burst',
@@ -1532,6 +1744,18 @@ document.getElementById('visualRotationInput').addEventListener('input', event =
   visualRotation = Number(event.target.value);
   document.getElementById('visualRotationValue').textContent = visualRotation + '%';
 });
+document.getElementById('waveAmplitudeInput').addEventListener('input', event => {
+  waveAmplitude = Number(event.target.value);
+  document.getElementById('waveAmplitudeValue').textContent = waveAmplitude + '%';
+});
+document.getElementById('waveLayerCountInput').addEventListener('input', event => {
+  waveLayerCount = Number(event.target.value);
+  document.getElementById('waveLayerCountValue').textContent = String(waveLayerCount);
+});
+document.getElementById('waveThicknessInput').addEventListener('input', event => {
+  waveThickness = Number(event.target.value);
+  document.getElementById('waveThicknessValue').textContent = String(waveThickness);
+});
 
 const centerPhotoInput = document.getElementById('centerPhotoFile');
 centerPhotoInput.addEventListener('change', event => {
@@ -1564,6 +1788,39 @@ const bassImpactInput = document.getElementById('bassImpactInput');
 bassImpactInput.addEventListener('input', event => {
   bassImpact = Number(event.target.value);
   document.getElementById('bassImpactValue').textContent = bassImpact + '%';
+});
+
+// Editor overlay: open settings only on demand, without forcing page scrolling.
+const editorOverlay = document.getElementById('editorOverlay');
+const openEditorButton = document.getElementById('openEditorBtn');
+const closeEditor = () => {
+  editorOverlay.classList.remove('open');
+  editorOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  openEditorButton.focus();
+};
+openEditorButton.addEventListener('click', () => {
+  editorOverlay.classList.add('open');
+  editorOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('doneEditorBtn').focus();
+});
+document.getElementById('closeEditorBtn').addEventListener('click', closeEditor);
+document.getElementById('doneEditorBtn').addEventListener('click', closeEditor);
+editorOverlay.addEventListener('click', event => {
+  if (event.target === editorOverlay) closeEditor();
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && editorOverlay.classList.contains('open')) closeEditor();
+});
+document.querySelectorAll('[data-editor-tab]').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const target = tab.dataset.editorTab;
+    document.querySelectorAll('[data-editor-tab]').forEach(item => item.classList.toggle('active', item === tab));
+    document.querySelectorAll('.editor-page').forEach(page => page.classList.toggle('active', page.id === 'editorPage' + target.charAt(0).toUpperCase() + target.slice(1)));
+    const labels = {presets:'Preset visualizer terbuka',photo:'Pengaturan foto terbuka',layers:'Editor layer terbuka',audio:'Pengaturan audio terbuka'};
+    document.getElementById('editorSaveStatus').textContent = labels[target] || 'Perubahan terlihat langsung di preview.';
+  });
 });
 
 // Movable effect overlays: positions/settings are stored locally on this device.
@@ -1617,7 +1874,7 @@ function renderLayers() {
       document.getElementById('layerSizeValue').textContent = Math.round(layer.width) + '%';
       document.getElementById('layerOpacityValue').textContent = Math.round(layer.opacity) + '%';
       document.getElementById('layerRotationValue').textContent = Math.round(layer.rotation || 0) + '°';
-      ['layerFrontBtn','layerBackBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = false);
+      ['layerFrontBtn','layerBackBtn','layerDuplicateBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = false);
       const rect = document.querySelector('.preview-screen').getBoundingClientRect();
       const startX = event.clientX, startY = event.clientY;
       const originX = layer.x, originY = layer.y;
@@ -1676,7 +1933,7 @@ function renderLayers() {
   document.getElementById('layerSizeValue').textContent = layer ? Math.round(layer.width)+'%' : '—';
   document.getElementById('layerOpacityValue').textContent = layer ? Math.round(layer.opacity)+'%' : '—';
   document.getElementById('layerRotationValue').textContent = layer ? Math.round(layer.rotation)+'°' : '—';
-  ['layerFrontBtn','layerBackBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = !layer);
+  ['layerFrontBtn','layerBackBtn','layerDuplicateBtn','layerDeleteBtn'].forEach(id => document.getElementById(id).disabled = !layer);
 }
 
 document.querySelectorAll('[data-add-layer]').forEach(button => {
@@ -1709,6 +1966,15 @@ document.getElementById('layerOpacityInput').addEventListener('input', event => 
 document.getElementById('layerRotationInput').addEventListener('input', event => updateSelectedLayer('rotation',event.target.value));
 document.getElementById('layerFrontBtn').addEventListener('click', () => { const l=selectedLayer();if(!l)return;l.z=Math.max(1,...effectLayers.map(x=>x.z||1))+1;renderLayers();saveLayers(); });
 document.getElementById('layerBackBtn').addEventListener('click', () => { const l=selectedLayer();if(!l)return;l.z=Math.min(0,...effectLayers.map(x=>x.z||1))-1;renderLayers();saveLayers(); });
+document.getElementById('layerDuplicateBtn').addEventListener('click', () => {
+  const layer = selectedLayer();
+  if (!layer) return;
+  const copy = {...layer, id:layerIdCounter++, x:clamp(layer.x + 5,4,96), y:clamp(layer.y + 5,5,95), z:Math.max(1,...effectLayers.map(item=>item.z||1))+1};
+  effectLayers.push(copy);
+  selectedLayerId = copy.id;
+  renderLayers();
+  saveLayers();
+});
 document.getElementById('layerDeleteBtn').addEventListener('click', () => { if(!selectedLayer())return;effectLayers=effectLayers.filter(x=>x.id!==selectedLayerId);selectedLayerId=effectLayers.length?effectLayers[effectLayers.length-1].id:null;renderLayers();saveLayers(); });
 try {
   const saved = JSON.parse(localStorage.getItem('beatfx_v07_layers') || '[]');
